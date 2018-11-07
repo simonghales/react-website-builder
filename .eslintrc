@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "eslint-config-kyt",
+    "plugin:flowtype/recommended"
+  ],
+  "globals": {
+    "graphql": true
+  },
+  "plugins": [
+    "emotion",
+    "flowtype"
+  ],
+  "rules": {
+    "import/extensions": "off",
+    "import/no-unresolved": "off",
+    "import/prefer-default-export": "off",
+    "jsx-a11y/href-no-hash": "off",
+    "jsx-a11y/anchor-is-valid": [
+      "warn",
+      {
+        "aspects": [
+          "invalidHref"
+        ]
+      }
+    ]
+  }
+}
