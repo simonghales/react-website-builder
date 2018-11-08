@@ -1,35 +1,34 @@
 // @flow
 
 import { css } from 'emotion';
-import colors from '../../../styles/utils/colors';
+import spacing from '../../../styles/utils/spacing';
 
 const containerClass = css`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  color: ${colors.white};
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const headerClass = css`
-  height: 80px;
+  margin-top: ${spacing.mediumPlus}px;
+  margin-bottom: ${spacing.mediumPlus}px;
+  padding: 0 ${spacing.medium}px;
 `;
 
 const mainClass = css`
   display: flex;
-  height: 100%;
+  flex: 1;
 `;
 
 const editorClass = css`
-  width: 200px;
   height: 100%;
+  width: 700px;
 `;
 
 const previewClass = css`
-  flex: 1;
   height: 100%;
-  background: linear-gradient(to bottom right, #1d253f, #172538);
+  flex: 1;
 `;
 
 export default {

@@ -1,11 +1,11 @@
 // @flow
 
 import { css } from 'emotion';
+import spacing from '../../../styles/utils/spacing';
 
 const containerClass = css`
-  width: 100%;
-  height: 100vh;
-  background-color: #bad6fd;
+  height: 100%;
+  padding: 0 ${spacing.medium}px;
 `;
 
 export default {

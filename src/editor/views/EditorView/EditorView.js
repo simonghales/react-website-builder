@@ -1,14 +1,20 @@
 // @flow
 import React from 'react';
 import styles from './styles';
-import EditorPreviewIframe from '../../components/EditorPreviewIframe/EditorPreviewIframe';
+import EditorSidebar from '../../components/EditorSidebar/EditorSidebar';
+import EditorBlockView from '../EditorBlockView/EditorBlockView';
 
 const EditorView = () => (
   <div className={styles.containerClass}>
-    <div className={styles.editorClass}>SIDE EDIT STUFF</div>
-    <div className={styles.previewClass}>
-      <EditorPreviewIframe />
-    </div>
+    <header className={styles.headerClass}>header..</header>
+    <main className={styles.mainClass}>
+      <div className={styles.editorClass}>
+        <EditorSidebar />
+      </div>
+      <div className={styles.previewClass}>
+        <EditorBlockView />
+      </div>
+    </main>
   </div>
 );
 

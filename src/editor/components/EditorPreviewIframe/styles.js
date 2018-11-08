@@ -1,11 +1,19 @@
 // @flow
 
 import { css } from 'emotion';
+import spacing from '../../../styles/utils/spacing';
 
 const containerClass = css`
-  width: 100%;
   height: 100%;
+  padding: 0 ${spacing.medium}px;
+`;
+
+const iframeWrapperClass = css`
+  font-size: 0;
+  padding-bottom: 65%;
   position: relative;
+  width: 100%;
+  margin-top: 60px;
 `;
 
 const iframeClass = css`
@@ -20,5 +28,6 @@ const iframeClass = css`
 
 export default {
   containerClass,
+  iframeWrapperClass,
   iframeClass,
 };

@@ -68,12 +68,14 @@ class EditorPreviewIframe extends Component<Props, State> {
   render() {
     return (
       <div className={styles.containerClass}>
-        <iframe
-          className={styles.iframeClass}
-          ref={this.iframeRef}
-          src={`${window.location.origin}/preview`}
-          title="Preview"
-        />
+        <div className={styles.iframeWrapperClass}>
+          <iframe
+            className={styles.iframeClass}
+            ref={this.iframeRef}
+            src={`${window.location.origin}/preview`}
+            title="Preview"
+          />
+        </div>
       </div>
     );
   }

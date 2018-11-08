@@ -1,5 +1,7 @@
 import { injectGlobal } from 'emotion';
 import reset from './reset';
+import colors from './utils/colors';
+import fontFamilies from './utils/fontFamilies';
 
 export default injectGlobal`
     ${reset};
@@ -9,6 +11,9 @@ export default injectGlobal`
     }
     
     body {
+        ${fontFamilies.body};
+        background-color: ${colors.siteBackground};
+        font-size: 15px;
         line-height: 1;
     }
     
