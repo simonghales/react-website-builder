@@ -1,7 +1,7 @@
 // @flow
 
 import { css } from 'emotion';
-import spacing from '../../../styles/utils/spacing';
+import spacing from '../../../styles/config/spacing';
 
 const containerClass = css`
   width: 100%;
@@ -11,8 +11,8 @@ const containerClass = css`
 `;
 
 const headerClass = css`
-  margin-top: ${spacing.mediumPlus}px;
-  margin-bottom: ${spacing.mediumPlus}px;
+  margin-top: ${spacing.medium}px;
+  margin-bottom: ${spacing.medium}px;
   padding: 0 ${spacing.medium}px;
 `;
 
@@ -24,11 +24,13 @@ const mainClass = css`
 const editorClass = css`
   height: 100%;
   width: 700px;
+  padding: 0 ${spacing.medium}px;
 `;
 
 const previewClass = css`
   height: 100%;
   flex: 1;
+  padding-right: ${spacing.medium}px;
 `;
 
 export default {

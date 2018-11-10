@@ -2,11 +2,17 @@
 
 import type { BlockGroupModel, BlockModel } from './models';
 import Heading from './Heading/Heading';
+import Container from './Container/Container';
+
+export const BLOCK_GROUP_HTML = 'HTML';
+export const BLOCK_TYPE_CUSTOM = 'custom';
+export const BLOCK_TYPE_HTML = 'html';
 
 export const basicBlocks: BlockGroupModel = {
   key: 'Basic',
   blocks: {
     [Heading.key]: Heading,
+    [Container.key]: Container,
   },
 };
 

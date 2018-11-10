@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { PREVIEW_IFRAME_BROADCAST_INIT } from '../../../preview/constants';
 import { PREVIEW_CONTENT_UPDATE_EVENT } from '../../../preview/event';
-import { DUMMY_PAGE_DATA } from '../../../data/dummy';
+import { DUMMY_PAGE_DATA } from '../../../data/blocks/dummy';
 import styles from './styles';
 
 type Props = {};

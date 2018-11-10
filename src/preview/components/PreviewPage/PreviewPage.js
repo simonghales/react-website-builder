@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import { previewBlocksParser } from '../../parser';
-import type { SitePageDataModel } from '../../../data/models';
+import { previewBlocksParser } from '../../../parser/parser';
+import type { SitePageDataModel } from '../../../data/blocks/models';
 import styles from './styles';
 
 type Props = {

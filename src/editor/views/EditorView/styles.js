@@ -1,7 +1,7 @@
 // @flow
 
 import { css } from 'emotion';
-import colors from '../../../styles/utils/colors';
+import colors from '../../../styles/config/colors';
 
 const containerClass = css`
   position: fixed;

@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
-import { DUMMY_PAGE_DATA } from '../data/dummy';
-import type { SitePageDataBlockModel, SitePageDataBlocks } from '../data/models';
-import { getBlock, getBlockGroup } from '../blocks/blocks';
+import { DUMMY_PAGE_DATA } from '../data/blocks/dummy';
+import type { SitePageDataBlockModel, SitePageDataBlocks } from '../data/blocks/models';
+import { BLOCK_TYPE_HTML, getBlock, getBlockGroup } from '../blocks/blocks';
 import type { BlockModel } from '../blocks/models';
+import { parsePropValue } from './props';
 
 function getProps(
   block: BlockModel,
@@ -11,13 +12,26 @@ function getProps(
 ): {
   [string]: any,
 } {
-  return {
+  const props = {
     ...block.defaultProps,
     ...blockData.props,
   };
+  const parsedProps = {};
+  Object.keys(props).forEach(propKey => {
+    const propConfig = blockData.propsConfig[propKey] ? blockData.propsConfig[propKey] : {};
+    parsedProps[propKey] = parsePropValue(propKey, props[propKey], propConfig);
+  });
+  return parsedProps;
+}
+
+function renderHTMLBlock(blockData: SitePageDataBlockModel) {
+  return <blockData.blockKey {...blockData.props} key={blockData.key} />;
 }
 
 function renderBlock(blockData: SitePageDataBlockModel) {
+  if (blockData.blockType === BLOCK_TYPE_HTML) {
+    return renderHTMLBlock(blockData);
+  }
   const blockGroup = getBlockGroup(blockData.groupKey);
   if (!blockGroup) {
     console.warn(`Unable to match block groupKey "${blockData.groupKey}"`);
@@ -33,5 +47,5 @@ function renderBlock(blockData: SitePageDataBlockModel) {
 }
 
 export function previewBlocksParser(blocks: SitePageDataBlocks) {
-  return <React.Fragment>{blocks.map(renderBlock)}</React.Fragment>;
+  return blocks.map(renderBlock);
 }

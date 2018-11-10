@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PreviewPage from '../../components/PreviewPage/PreviewPage';
 import { PREVIEW_IFRAME_BROADCAST_INIT } from '../../constants';
 import { PREVIEW_CONTENT_UPDATE_EVENT } from '../../event';
-import type { SitePageDataModel } from '../../../data/models';
+import type { SitePageDataModel } from '../../../data/blocks/models';
 
 type Props = {};
 
