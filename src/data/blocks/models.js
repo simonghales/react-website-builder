@@ -27,9 +27,11 @@ export type SitePageDataBlockModel = {
 
 export type SitePageDataBlocks = Array<SitePageDataBlockModel>;
 
-export type SitePageDataModel = {
+export type OLDSitePageDataModel = {
   blocks: SitePageDataBlocks,
 };
+
+export type SitePageDataModel = {};
 
 export function getDataBlockGroupKey(data: SitePageDataBlockModel): string {
   return data.groupKey;

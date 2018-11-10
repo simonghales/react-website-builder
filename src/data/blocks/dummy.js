@@ -1,11 +1,11 @@
 // @flow
+import type { OLDSitePageDataModel } from './models';
+import { getBlockUniqueId } from '../../blocks/utils';
 
-import type { SitePageDataModel } from './models';
-
-export const DUMMY_PAGE_DATA: SitePageDataModel = {
+export const DUMMY_PAGE_DATA: OLDSitePageDataModel = {
   blocks: [
     {
-      key: 'uniqueHeading1',
+      key: getBlockUniqueId(),
       groupKey: `Basic`,
       blockKey: `Heading`,
       blockType: 'custom',
@@ -20,7 +20,7 @@ export const DUMMY_PAGE_DATA: SitePageDataModel = {
       },
     },
     {
-      key: 'uniqueHeading2',
+      key: getBlockUniqueId(),
       groupKey: `Basic`,
       blockKey: `Heading`,
       blockType: 'custom',
@@ -35,7 +35,7 @@ export const DUMMY_PAGE_DATA: SitePageDataModel = {
       },
     },
     {
-      key: 'uniqueContainer',
+      key: getBlockUniqueId(),
       groupKey: `Basic`,
       blockKey: `Container`,
       blockType: 'custom',
@@ -43,7 +43,7 @@ export const DUMMY_PAGE_DATA: SitePageDataModel = {
       props: {
         children: [
           {
-            key: 'uniqueParagraph',
+            key: getBlockUniqueId(),
             groupKey: `HTML`,
             blockKey: `p`,
             blockType: 'html',
@@ -61,7 +61,7 @@ export const DUMMY_PAGE_DATA: SitePageDataModel = {
       },
       propsConfig: {
         children: {
-          label: 'HIDDEN',
+          label: 'Content',
           type: 'blocks',
         },
       },

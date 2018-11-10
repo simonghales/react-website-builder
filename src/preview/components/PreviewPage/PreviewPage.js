@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
 import { previewBlocksParser } from '../../../parser/parser';
-import type { SitePageDataModel } from '../../../data/blocks/models';
+import type { OLDSitePageDataModel } from '../../../data/blocks/models';
 import styles from './styles';
 
 type Props = {
-  data: SitePageDataModel,
+  data: OLDSitePageDataModel,
 };
 
 const PreviewPage = ({ data }: Props) => (
