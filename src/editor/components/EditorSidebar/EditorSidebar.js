@@ -1,71 +1,107 @@
 // @flow
 import React from 'react';
 import { cx } from 'emotion';
+import { connect } from 'react-redux';
 import styles from './styles';
-import type { SitePageDataBlockModel, SitePageDataBlocks } from '../../../data/blocks/models';
-import {
-  blockPropsConfigTypes,
-  getDataBlockLabel,
-  getDataBlockType,
-} from '../../../data/blocks/models';
+import type { DataBlockModelMapped, MappedDataBlocks } from '../../../data/blocks/models';
+import { getDataBlockLabel, getDataBlockType } from '../../../data/blocks/models';
+import type { ReduxState } from '../../../state/redux/store';
+import { getEditorMappedBlocks, getSelectedBlockKey } from '../../../state/redux/editor/state';
+import { setSelectedBlock } from '../../../state/redux/editor/reducer';
 
-function getBlockBlockChildren(block: SitePageDataBlockModel): Array<SitePageDataBlockModel> {
-  if (Object.keys(block.props).includes('children')) {
-    const propConfig = block.propsConfig.children;
-    if (propConfig) {
-      if (propConfig.type && propConfig.type === blockPropsConfigTypes.blocks) {
-        return block.props.children;
-      }
-    }
-  }
-  return [];
+function getBlockBlockChildren(block: DataBlockModelMapped): Array<DataBlockModelMapped> {
+  return block.blockChildren ? block.blockChildren : [];
 }
 
 type BlockPreviewProps = {
   type: string,
   label: string,
   selected: boolean,
-  blockChildren: Array<SitePageDataBlockModel>,
+  blockChildren: MappedDataBlocks,
+  blockKey: string,
+  selectBlock: (blockKey: string) => void,
+  selectedBlock: string,
 };
 
-const BlockPreview = ({ type, label, selected, blockChildren }: BlockPreviewProps) => (
+const BlockPreview = ({
+  type,
+  label,
+  selected,
+  blockChildren,
+  blockKey,
+  selectBlock,
+  selectedBlock,
+}: BlockPreviewProps) => (
   <div
     className={cx(styles.classNames.block, styles.blockPreviewClass, {
       [styles.selectedBlockClass]: selected,
       [styles.classNames.selectedBlock]: selected,
     })}
   >
-    <div className={styles.blockPreviewTextClass}>
+    <div
+      className={styles.blockPreviewTextClass}
+      onClick={e => {
+        selectBlock(blockKey);
+        e.stopPropagation();
+      }}
+    >
       <div className={styles.blockPreviewTypeClass}>{type}</div>
       <div className={styles.blockPreviewLabelClass}>{label}</div>
     </div>
     {blockChildren.length > 0 && (
       <div className={styles.blockPreviewChildrenClass}>
-        <BlocksList blocks={blockChildren} />
+        <BlocksList
+          blocks={blockChildren}
+          selectBlock={selectBlock}
+          selectedBlock={selectedBlock}
+        />
       </div>
     )}
   </div>
 );
 
-const BlocksList = ({ blocks }: { blocks: SitePageDataBlocks }) =>
-  blocks.map((block, index) => (
+type BlocksListProps = {
+  blocks: MappedDataBlocks,
+  selectBlock: (blockKey: string) => void,
+  selectedBlock: string,
+};
+
+const BlocksList = ({ blocks, selectBlock, selectedBlock }: BlocksListProps) =>
+  blocks.map(block => (
     <BlockPreview
       type={getDataBlockType(block)}
       label={getDataBlockLabel(block)}
       blockChildren={getBlockBlockChildren(block)}
       key={block.key}
-      selected={index === 2}
+      blockKey={block.key}
+      selected={selectedBlock === block.key}
+      selectBlock={selectBlock}
+      selectedBlock={selectedBlock}
     />
   ));
 
 type Props = {
-  blocks: SitePageDataBlocks,
+  blocks: MappedDataBlocks,
+  selectBlock: (blockKey: string) => void,
+  selectedBlock: string,
 };
 
-const EditorSidebar = ({ blocks }: Props) => (
+const EditorSidebar = ({ blocks, selectBlock, selectedBlock }: Props) => (
   <div className={styles.containerClass}>
-    <BlocksList blocks={blocks} />
+    <BlocksList blocks={blocks} selectBlock={selectBlock} selectedBlock={selectedBlock} />
   </div>
 );
 
-export default EditorSidebar;
+const mapStateToProps = (state: ReduxState) => ({
+  blocks: getEditorMappedBlocks(state.editor),
+  selectedBlock: getSelectedBlockKey(state.editor),
+});
+
+const mapDispatchToProps = {
+  selectBlock: (blockKey: string) => setSelectedBlock(blockKey),
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditorSidebar);

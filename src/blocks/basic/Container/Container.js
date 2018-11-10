@@ -1,13 +1,14 @@
 // @flow
 
-import type { BlockModel } from '../models';
+import type { BlockModel } from '../../models';
 import ContainerComponent from './component';
-import { containerDefaultProps } from './props';
+import { containerDefaultProps, containerPropsConfig } from './props';
 
 const containerBlock: BlockModel = {
   component: ContainerComponent,
   key: `Container`,
   defaultProps: containerDefaultProps,
+  propsConfig: containerPropsConfig,
 };
 
 export default containerBlock;

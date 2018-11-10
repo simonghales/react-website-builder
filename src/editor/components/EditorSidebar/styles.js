@@ -18,18 +18,13 @@ const classNames = {
   selectedBlock: 'selectedBlock',
 };
 
-const activeBgColor = `rgba(16, 25, 44, 1)`;
+const activeBgColor = colors.blackBlue;
 
 const blockPreviewClass = css`
-  background: rgba(16, 25, 44, 0.5);
-  padding: 5px 0 5px 10px;
+  background: ${transparentize(0.7, colors.blackBlue)};
+  padding: 0 0 0 10px;
   position: relative;
-  cursor: pointer;
-  transition: background 150ms ease;
-
-  &:hover {
-    background: ${activeBgColor};
-  }
+  //transition: background 150ms ease;
 `;
 
 const selectedBlockClass = css`
@@ -48,10 +43,11 @@ const selectedBlockClass = css`
 `;
 
 const blockPreviewTextClass = css`
-  padding-right: 10px;
+  padding: 5px 10px 5px 0;
   opacity: 0.5;
+  cursor: pointer;
 
-  .${classNames.block}:hover > &,
+  &:hover,
   .${classNames.selectedBlock} > & {
     opacity: 1;
   }
@@ -60,7 +56,7 @@ const blockPreviewTextClass = css`
 const blockPreviewTypeClass = css`
   font-size: 12px;
   font-weight: ${fontWeights.bold};
-  color: ${transparentize(0.6, colors.light)};
+  color: ${transparentize(0.5, colors.light)};
 `;
 
 const blockPreviewLabelClass = css`
@@ -69,7 +65,9 @@ const blockPreviewLabelClass = css`
   color: ${colors.light};
 `;
 
-const blockPreviewChildrenClass = css``;
+const blockPreviewChildrenClass = css`
+  padding: 5px 0;
+`;
 
 export default {
   containerClass,

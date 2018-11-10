@@ -5,13 +5,15 @@ import Input, { inputStyleTypes } from '../Input/Input';
 
 type Props = {
   label: string,
+  value: any,
+  onUpdate: (value: any) => void,
 };
 
-const Field = ({ label }: Props) => (
+const Field = ({ label, value, onUpdate }: Props) => (
   <div className={styles.containerClass}>
     <div className={styles.labelClass}>{label}:</div>
     <div className={styles.valueClass}>
-      <Input styleType={inputStyleTypes.dark} />
+      <Input styleType={inputStyleTypes.dark} value={value} onChange={onUpdate} />
     </div>
   </div>
 );

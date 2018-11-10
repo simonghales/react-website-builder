@@ -1,11 +1,18 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { PREVIEW_IFRAME_BROADCAST_INIT } from '../../../preview/constants';
 import { PREVIEW_CONTENT_UPDATE_EVENT } from '../../../preview/event';
 import { DUMMY_PAGE_DATA } from '../../../data/blocks/dummy';
 import styles from './styles';
+import { getMappedDataBlocks } from '../../../data/blocks/models';
+import type { ReduxState } from '../../../state/redux/store';
+import { getEditorMappedBlocks } from '../../../state/redux/editor/state';
+import type { MappedDataBlocks } from '../../../data/blocks/models';
 
-type Props = {};
+type Props = {
+  blocks: MappedDataBlocks,
+};
 
 type State = {
   iframeInit: boolean,
@@ -58,9 +65,10 @@ class EditorPreviewIframe extends Component<Props, State> {
     if (!iframeInit) return;
     const iframe = this.iframeRef.current;
     if (!iframe) return;
+    const { blocks } = this.props;
     iframe.contentWindow.dispatchEvent(
       new CustomEvent(PREVIEW_CONTENT_UPDATE_EVENT, {
-        detail: DUMMY_PAGE_DATA,
+        detail: blocks,
       })
     );
   }
@@ -81,4 +89,8 @@ class EditorPreviewIframe extends Component<Props, State> {
   }
 }
 
-export default EditorPreviewIframe;
+const mapStateToProps = (state: ReduxState) => ({
+  blocks: getEditorMappedBlocks(state.editor),
+});
+
+export default connect(mapStateToProps)(EditorPreviewIframe);

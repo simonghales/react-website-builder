@@ -1,18 +1,41 @@
 // @flow
 
 import type { BlockGroupModel, BlockModel } from './models';
-import Heading from './Heading/Heading';
-import Container from './Container/Container';
+import Heading from './basic/Heading/Heading';
+import Container from './basic/Container/Container';
+import Module from './Module/Module';
+import Element from './html/Element/Element';
 
-export const BLOCK_GROUP_HTML = 'HTML';
-export const BLOCK_TYPE_CUSTOM = 'custom';
-export const BLOCK_TYPE_HTML = 'html';
+export const blockGroups = {
+  Basic: 'Basic',
+  Module: 'Module',
+  HTML: 'HTML',
+};
+
+export const blockTypes = {
+  html: 'html',
+  module: 'module',
+};
 
 export const basicBlocks: BlockGroupModel = {
-  key: 'Basic',
+  key: blockGroups.Basic,
   blocks: {
     [Heading.key]: Heading,
     [Container.key]: Container,
+  },
+};
+
+export const moduleBlocks: BlockGroupModel = {
+  key: blockGroups.Module,
+  blocks: {
+    [Module.key]: Module,
+  },
+};
+
+export const htmlBlocks: BlockGroupModel = {
+  key: blockGroups.HTML,
+  blocks: {
+    [Element.key]: Element,
   },
 };
 
@@ -22,6 +45,8 @@ type AllBlocksModel = {
 
 export const allBlocks: AllBlocksModel = {
   [basicBlocks.key]: basicBlocks,
+  [moduleBlocks.key]: moduleBlocks,
+  [htmlBlocks.key]: htmlBlocks,
 };
 
 export function getBlockGroup(groupKey: string): BlockGroupModel | null {

@@ -4,10 +4,10 @@ import styles from './styles';
 import EditorComponentTabs from './components/EditorComponentTabs/EditorComponentTabs';
 import EditorComponentProps from './components/EditorComponentProps/EditorComponentProps';
 import Button, { buttonTypes } from '../../../components/Button/Button';
-import type { SitePageDataBlockModel } from '../../../data/blocks/models';
+import type { DataBlockModel } from '../../../data/blocks/models';
 
 type Props = {
-  selectedBlock: SitePageDataBlockModel,
+  selectedBlock: DataBlockModel,
 };
 
 const EditorContent = ({ selectedBlock }: Props) => (
