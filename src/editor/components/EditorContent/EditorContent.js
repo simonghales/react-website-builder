@@ -8,6 +8,7 @@ import EditorComponentProps from './components/EditorComponentProps/EditorCompon
 import Button, { buttonTypes } from '../../../components/Button/Button';
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { EditorComponentTabsOptions } from './components/EditorComponentTabs/EditorComponentTabs';
+import EditorComponentStyles from './components/EditorComponentStyles/EditorComponentStyles';
 
 type Props = {
   selectedBlock: DataBlockModel,
@@ -21,7 +22,7 @@ class EditorContent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selectedTab: editorComponentTabs.Props,
+      selectedTab: editorComponentTabs.Styles,
     };
   }
 
@@ -38,10 +39,11 @@ class EditorContent extends Component<Props, State> {
       <div className={styles.containerClass}>
         <EditorComponentTabs selectedTab={selectedTab} selectTab={this.handleSelectTab} />
         <div className={styles.mainClass}>
-          <div className={styles.addPropClass}>
-            <Button type={buttonTypes.slim}>Add Prop</Button>
-          </div>
-          <EditorComponentProps selectedBlock={selectedBlock} />
+          {selectedTab === editorComponentTabs.Props ? (
+            <EditorComponentProps selectedBlock={selectedBlock} />
+          ) : (
+            <EditorComponentStyles />
+          )}
         </div>
       </div>
     );

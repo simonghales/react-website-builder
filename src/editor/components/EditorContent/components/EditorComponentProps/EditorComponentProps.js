@@ -8,6 +8,7 @@ import { getBlockPropLabel } from '../../../../../data/blocks/models';
 import { setBlockPropValue } from '../../../../../state/redux/editor/reducer';
 import { getBlock, getBlockGroup } from '../../../../../blocks/blocks';
 import type { BlockModel, BlockModelPropsConfig } from '../../../../../blocks/models';
+import Button, { buttonTypes } from '../../../../../components/Button/Button';
 
 type PropFieldProps = {
   blockKey: string,
@@ -63,22 +64,27 @@ const EditorComponentProps = ({ selectedBlock, updateProp }: Props) => {
   }
   return (
     <div className={styles.containerClass}>
-      {filterVisiblePropsFields(selectedBlock, block).map(propKey => {
-        const value = selectedBlock.props[propKey];
-        const propConfig = getMergedPropConfig(selectedBlock, block, propKey);
-        const label = getBlockPropLabel(propKey, propConfig);
-        const blockKey = selectedBlock.key;
-        return (
-          <PropField
-            key={`${blockKey}:${propKey}`}
-            blockKey={blockKey}
-            propKey={propKey}
-            value={value}
-            label={label}
-            updateProp={updateProp}
-          />
-        );
-      })}
+      <div className={styles.addPropClass}>
+        <Button type={buttonTypes.slim}>Add Prop</Button>
+      </div>
+      <div>
+        {filterVisiblePropsFields(selectedBlock, block).map(propKey => {
+          const value = selectedBlock.props[propKey];
+          const propConfig = getMergedPropConfig(selectedBlock, block, propKey);
+          const label = getBlockPropLabel(propKey, propConfig);
+          const blockKey = selectedBlock.key;
+          return (
+            <PropField
+              key={`${blockKey}:${propKey}`}
+              blockKey={blockKey}
+              propKey={propKey}
+              value={value}
+              label={label}
+              updateProp={updateProp}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };

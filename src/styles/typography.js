@@ -47,3 +47,13 @@ export const mediumLargeHeading = css`
   color: ${colors.light};
   font-weight: ${fontWeights.medium};
 `;
+
+export const tinyFont = css`
+  font-size: ${getFontSize(fontSizes.tiny)};
+  line-height: 1;
+`;
+
+export const tinyLabel = css`
+  ${tinyFont};
+  color: ${colors.lightMid};
+`;

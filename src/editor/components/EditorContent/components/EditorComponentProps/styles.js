@@ -5,6 +5,10 @@ import spacing from '../../../../../styles/config/spacing';
 
 const containerClass = css``;
 
+const addPropClass = css`
+  margin-bottom: ${spacing.medium}px;
+`;
+
 const fieldClass = css`
   &:not(:first-child) {
     margin-top: ${spacing.smallPlus}px;
@@ -14,4 +18,5 @@ const fieldClass = css`
 export default {
   containerClass,
   fieldClass,
+  addPropClass,
 };
