@@ -30,10 +30,10 @@ const fontWeight: StylePropModel = {
   defaultValue: '',
 };
 
-const textStyle: StylePropModel = {
-  label: 'text-style',
-  cssKey: 'textStyle',
-  type: 'textStyle',
+const fontStyle: StylePropModel = {
+  label: 'font-style',
+  cssKey: 'fontStyle',
+  type: 'fontStyle',
   defaultValue: '',
 };
 
@@ -56,7 +56,7 @@ export default {
   fontSize,
   color,
   fontWeight,
-  textStyle,
+  fontStyle,
   lineHeight,
   textAlign,
 };

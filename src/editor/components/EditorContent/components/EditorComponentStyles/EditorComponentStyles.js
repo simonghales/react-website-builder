@@ -43,7 +43,7 @@ const Main = () => (
       <StyleProp columns={1} styleProp={styleProps.fontSize} />
       <StyleProp columns={3} styleProp={styleProps.fontWeight} />
       <StyleProp columns={1} styleProp={styleProps.color} />
-      <StyleProp columns={3} styleProp={styleProps.textStyle} />
+      <StyleProp columns={3} styleProp={styleProps.fontStyle} />
       <StyleProp columns={1} styleProp={styleProps.lineHeight} />
       <StyleProp columns={4} styleProp={styleProps.textAlign} />
     </StyleSection>

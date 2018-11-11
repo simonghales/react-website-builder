@@ -5,7 +5,7 @@ import { smallPlusText } from '../../../../../styles/typography';
 
 const containerClass = css`
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(8, 1fr);
   grid-column-gap: 10px;
 `;
 
@@ -15,8 +15,8 @@ const mainClass = css`
 `;
 
 const sideClass = css`
-  grid-column-start: 5;
-  grid-column-end: 7;
+  grid-column-start: 6;
+  grid-column-end: 9;
 `;
 
 const sectionClass = css`

@@ -15,7 +15,9 @@ const labelTextClass = css`
   ${tinyLabel};
 `;
 
-const inputContainerClass = css``;
+const inputContainerClass = css`
+  margin-top: 5px;
+`;
 
 export default {
   containerClass,

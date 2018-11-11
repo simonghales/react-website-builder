@@ -1,7 +1,7 @@
 // @flow
-import { transparentize } from 'polished';
 import { css } from 'emotion';
 import colors from '../../styles/config/colors';
+import measurements from '../../styles/config/measurements';
 
 const inputReset = css`
   font: inherit;
@@ -17,15 +17,15 @@ const inputClass = css`
 `;
 
 const darkInputClass = css`
-  background: ${transparentize(0.65, '#000626')};
-  height: 40px;
+  background: ${colors.darkInput};
+  height: ${measurements.inputHeight}px;
   border-radius: 3px;
   color: ${colors.light};
   padding: 0 10px;
 
   &:focus {
     outline: none;
-    background: ${transparentize(0.45, '#000626')};
+    background: ${colors.darkInputFocused};
   }
 `;
 
