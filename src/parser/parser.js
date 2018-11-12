@@ -20,11 +20,9 @@ function getProps(
     const propConfig = blockData.propsConfig[propKey] ? blockData.propsConfig[propKey] : {};
     parsedProps[propKey] = parsePropValue(blockData, propKey, props[propKey], propConfig);
   });
+  const customStyles = blockData.styles ? blockData.styles : {};
+  parsedProps.customStyles = customStyles;
   return parsedProps;
-}
-
-function renderHTMLBlock(blockData: DataBlockModel) {
-  return <blockData.blockKey {...blockData.props} key={blockData.key} />;
 }
 
 function renderBlock(blockData: DataBlockModelMapped) {

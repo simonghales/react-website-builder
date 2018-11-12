@@ -5,13 +5,14 @@ import EditorComponentTabs, {
   editorComponentTabs,
 } from './components/EditorComponentTabs/EditorComponentTabs';
 import EditorComponentProps from './components/EditorComponentProps/EditorComponentProps';
-import Button, { buttonTypes } from '../../../components/Button/Button';
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { EditorComponentTabsOptions } from './components/EditorComponentTabs/EditorComponentTabs';
 import EditorComponentStyles from './components/EditorComponentStyles/EditorComponentStyles';
+import type { BlockStyles } from '../../../data/styles/models';
 
 type Props = {
   selectedBlock: DataBlockModel,
+  selectedBlockStyle: BlockStyles | null,
 };
 
 type State = {
@@ -33,16 +34,16 @@ class EditorContent extends Component<Props, State> {
   };
 
   render() {
-    const { selectedBlock } = this.props;
+    const { selectedBlock, selectedBlockStyle } = this.props;
     const { selectedTab } = this.state;
     return (
       <div className={styles.containerClass}>
         <EditorComponentTabs selectedTab={selectedTab} selectTab={this.handleSelectTab} />
         <div className={styles.mainClass}>
           {selectedTab === editorComponentTabs.Props ? (
-            <EditorComponentProps selectedBlock={selectedBlock} />
+            <EditorComponentProps selectedBlock={selectedBlock} key={selectedBlock.key} />
           ) : (
-            <EditorComponentStyles />
+            <EditorComponentStyles blockStyles={selectedBlockStyle} key={selectedBlock.key} />
           )}
         </div>
       </div>

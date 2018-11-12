@@ -2,13 +2,15 @@
 
 import type { SitePageDataBlocks } from '../../../data/blocks/models';
 import { DUMMY_PAGE_DATA } from '../../../data/blocks/dummy';
-import { getBlockViaKey } from './state';
-import { updateBlockProp } from './modifiers';
+import { getBlockStyleViaKey, getBlockViaKey } from './state';
+import { updateBlockProp, updateBlockStyle } from './modifiers';
+import type { AllBlockStyles } from '../../../data/styles/models';
 
 export type EditorReduxState = {
   blocks: SitePageDataBlocks,
   rootBlocks: Array<string>,
   selectedBlock: string,
+  blockStyles: AllBlockStyles,
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
@@ -40,6 +42,54 @@ function handleSetSelectedBlock(
   return {
     ...state,
     selectedBlock: blockKey,
+  };
+}
+
+const SET_BLOCK_STYLE_VALUE = 'SET_BLOCK_STYLE_VALUE';
+
+type SetBlockStyleValuePayload = {
+  styleKey: string,
+  cssKey: string,
+  modifier: string,
+  section: string,
+  value: string,
+};
+
+type SetBlockStyleValueAction = {
+  type: string,
+  payload: SetBlockStyleValuePayload,
+};
+
+export function setBlockStyleValue(
+  styleKey: string,
+  cssKey: string,
+  modifier: string,
+  section: string,
+  value: string
+): SetBlockStyleValueAction {
+  return {
+    type: SET_BLOCK_STYLE_VALUE,
+    payload: {
+      styleKey,
+      cssKey,
+      modifier,
+      section,
+      value,
+    },
+  };
+}
+
+function handleSetBlockStyleValue(
+  state: EditorReduxState,
+  { styleKey, cssKey, modifier, section, value }: SetBlockStyleValuePayload
+): EditorReduxState {
+  const blockStyle = getBlockStyleViaKey(state, styleKey);
+  return {
+    ...state,
+    blockStyles: {
+      ...state.blockStyles,
+      [styleKey]: updateBlockStyle(blockStyle, modifier, section, cssKey, value),
+    },
   };
 }
 
@@ -89,6 +139,7 @@ type Actions = SetSelectedBlockAction;
 
 const ACTION_HANDLERS = {
   [SET_SELECTED_BLOCK]: handleSetSelectedBlock,
+  [SET_BLOCK_STYLE_VALUE]: handleSetBlockStyleValue,
   [SET_BLOCK_PROP_VALUE]: handleSetBlockPropValue,
 };
 

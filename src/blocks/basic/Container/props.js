@@ -1,7 +1,10 @@
 // @flow
 
+import type { MappedStyleModel } from '../../../data/styles/models';
+
 export type ContainerProps = {
   children: any,
+  customStyles: MappedStyleModel,
 };
 
 export const containerDefaultProps = {

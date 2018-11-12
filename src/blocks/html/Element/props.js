@@ -1,8 +1,11 @@
 // @flow
 
+import type { MappedStyleModel } from '../../../data/styles/models';
+
 export type ElementProps = {
   element: string,
   children: any,
+  customStyles: MappedStyleModel,
   [string]: any,
 };
 

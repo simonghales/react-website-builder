@@ -1,9 +1,14 @@
 // @flow
 import React from 'react';
-import { cx } from 'emotion';
+import { css, cx } from 'emotion';
+import { connect } from 'react-redux';
 import styles from './styles';
 import StyleProp from '../../../../../components/StyleProp/StyleProp';
 import styleProps from '../../../../../data/styles/styleProps';
+import type { BlockStyles, StylePropModel } from '../../../../../data/styles/models';
+import { appearanceStyleSection, dimensionsStyleSection, textStyleSection } from './data';
+import type { StyleSectionModel } from './data';
+import { setBlockStyleValue } from '../../../../../state/redux/editor/reducer';
 
 const SectionHeader = ({ text }: { text: string }) => (
   <header className={styles.sectionHeaderClass}>
@@ -36,30 +41,63 @@ StyleSection.defaultProps = {
   gridBody: true,
 };
 
-const Main = () => (
-  <div className={styles.mainClass}>
-    <StyleSection title="Text">
-      <StyleProp columns={3} styleProp={styleProps.fontFamily} />
-      <StyleProp columns={1} styleProp={styleProps.fontSize} />
-      <StyleProp columns={3} styleProp={styleProps.fontWeight} />
-      <StyleProp columns={1} styleProp={styleProps.color} />
-      <StyleProp columns={3} styleProp={styleProps.fontStyle} />
-      <StyleProp columns={1} styleProp={styleProps.lineHeight} />
-      <StyleProp columns={4} styleProp={styleProps.textAlign} />
-    </StyleSection>
-    <StyleSection title="Appearance">
-      <StyleProp columns={3} styleProp={styleProps.fontFamily} />
-      <StyleProp columns={1} styleProp={styleProps.fontFamily} />
-    </StyleSection>
-    <StyleSection title="Layout">
-      <StyleProp columns={3} styleProp={styleProps.fontFamily} />
-      <StyleProp columns={1} styleProp={styleProps.fontFamily} />
-    </StyleSection>
-    <StyleSection title="Custom" gridBody={false}>
-      <div>Custom style</div>
-    </StyleSection>
-  </div>
+type StyleSectionWrapperProps = {
+  blockStyles: BlockStyles | null,
+  data: StyleSectionModel,
+  updateStyle: (cssKey: string, value: string) => void,
+};
+
+const StyleSectionWrapper = ({ data, blockStyles, updateStyle }: StyleSectionWrapperProps) => (
+  <StyleSection title={data.title} gridBody>
+    {data.styles.map(style => (
+      <StyleProp
+        styleProp={style.styleProp}
+        columns={style.columns}
+        key={style.styleProp.cssKey}
+        blockStyles={blockStyles}
+        updateStyle={updateStyle}
+      />
+    ))}
+  </StyleSection>
 );
+
+type Props = {
+  blockStyles: BlockStyles | null,
+  updateStyle: (
+    styleKey: string,
+    cssKey: string,
+    modifier: string,
+    section: string,
+    value: string
+  ) => void,
+};
+
+const Main = ({ blockStyles, updateStyle }: Props) => {
+  const styleKey = blockStyles ? blockStyles.key : '';
+  const modifier = 'default'; // todo - variable
+  const section = 'editor'; // todo - variable
+  const update = (cssKey: string, value: string) => {
+    updateStyle(styleKey, cssKey, modifier, section, value);
+  };
+  return (
+    <div className={styles.mainClass}>
+      <StyleSectionWrapper data={textStyleSection} blockStyles={blockStyles} updateStyle={update} />
+      <StyleSectionWrapper
+        data={appearanceStyleSection}
+        blockStyles={blockStyles}
+        updateStyle={update}
+      />
+      <StyleSectionWrapper
+        data={dimensionsStyleSection}
+        blockStyles={blockStyles}
+        updateStyle={update}
+      />
+      <StyleSection title="Custom" gridBody={false}>
+        <div>Custom style</div>
+      </StyleSection>
+    </div>
+  );
+};
 
 const Side = () => (
   <div className={styles.sideClass}>
@@ -72,11 +110,24 @@ const Side = () => (
   </div>
 );
 
-const EditorComponentStyles = () => (
+const EditorComponentStyles = (props: Props) => (
   <div className={styles.containerClass}>
-    <Main />
-    <Side />
+    <Main {...props} />
+    <Side {...props} />
   </div>
 );
 
-export default EditorComponentStyles;
+const mapDispatchToProps = {
+  updateStyle: (
+    styleKey: string,
+    cssKey: string,
+    modifier: string,
+    section: string,
+    value: string
+  ) => setBlockStyleValue(styleKey, cssKey, modifier, section, value),
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(EditorComponentStyles);

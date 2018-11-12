@@ -6,6 +6,7 @@ import { blockGroups, blockTypes } from '../../blocks/blocks';
 import Module from '../../blocks/Module/Module';
 import Heading from '../../blocks/basic/Heading/Heading';
 import Container from '../../blocks/basic/Container/Container';
+import { DUMMY_STYLE_TEST, DUMMY_STYLES } from '../styles/dummy';
 
 const DUMMY_BLOCK_HEADING = {
   key: getBlockUniqueId(),
@@ -43,6 +44,7 @@ const DUMMY_BLOCK_SUBHEADING = {
   },
   blockChildrenKeys: [],
   isParentModule: false,
+  styleKey: DUMMY_STYLE_TEST.key,
 };
 
 const DUMMY_BLOCK_PARAGRAPH = {
@@ -114,4 +116,5 @@ export const DUMMY_PAGE_DATA: EditorReduxState = {
   },
   rootBlocks: [DUMMY_BLOCK_MODULE.key],
   selectedBlock: DUMMY_BLOCK_SUBHEADING.key,
+  blockStyles: DUMMY_STYLES,
 };

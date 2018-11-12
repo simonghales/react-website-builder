@@ -13,6 +13,7 @@ const labelClass = css`
 
 const labelTextClass = css`
   ${tinyLabel};
+  padding-left: 3px;
 `;
 
 const inputContainerClass = css`

@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import SelectInput from './SelectInput/SelectInput';
+import type { StylePropInputProps } from './models';
 
 const options = [
   {
@@ -13,6 +14,14 @@ const options = [
   },
 ];
 
-const FontStyleInput = () => <SelectInput isMulti={false} isCreatable options={options} />;
+const FontStyleInput = ({ styleValue, updateStyle }: StylePropInputProps) => (
+  <SelectInput
+    isMulti={false}
+    isCreatable
+    options={options}
+    styleValue={styleValue}
+    updateStyle={updateStyle}
+  />
+);
 
 export default FontStyleInput;

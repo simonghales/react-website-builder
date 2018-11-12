@@ -4,6 +4,7 @@ import Select from 'react-select';
 import CreatableSelect from 'react-select/lib/Creatable';
 import colors from '../../../../styles/config/colors';
 import measurements from '../../../../styles/config/measurements';
+import { parseSelectInputStyleValue } from './state';
 
 const customStyles = {
   control: (baseStyles, state) => ({
@@ -109,13 +110,14 @@ type Props = {
   isMulti: boolean,
   noOptionsMessage?: string,
   options: Array<SelectOption>,
+  styleValue: string,
+  updateStyle: (value: string) => void,
 };
 
+type Selected = Array<SelectOption> | SelectOption | null;
+
 type State = {
-  selected: Array<{
-    value: string,
-    label: string,
-  }> | null,
+  selected: Selected,
 };
 
 class SelectInput extends Component<Props, State> {
@@ -126,16 +128,22 @@ class SelectInput extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selected: null,
+      selected: parseSelectInputStyleValue(props.styleValue),
     };
   }
 
-  handleChange = (newValue: any) => {
-    console.log('Value Changed');
-    console.log('newValue', newValue);
+  handleChange = (newValue: Selected) => {
+    const { updateStyle } = this.props;
     this.setState({
       selected: newValue,
     });
+    if (!newValue) {
+      updateStyle(''); // todo - handle better
+    } else if (newValue instanceof Array) {
+      updateStyle(newValue.map(value => value.value).join(', '));
+    } else {
+      updateStyle(newValue.value);
+    }
   };
 
   render() {
