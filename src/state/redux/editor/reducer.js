@@ -3,7 +3,13 @@
 import type { SitePageDataBlocks } from '../../../data/blocks/models';
 import { DUMMY_PAGE_DATA } from '../../../data/blocks/dummy';
 import { getBlockViaKey } from './state';
-import { updateBlockProp, updateBlocksOrder, updateBlockStyle } from './modifiers';
+import {
+  updateAllBlocksOrder,
+  updateBlockProp,
+  updateBlocksOrder,
+  updateBlockStyle,
+} from './modifiers';
+import type { BlocksOrder } from './modifiers';
 
 export type EditorReduxState = {
   blocks: SitePageDataBlocks,
@@ -91,6 +97,36 @@ function handleSetBlockStyleValue(
         rawStyles: updateBlockStyle(block, modifier, section, cssKey, value),
       },
     },
+  };
+}
+
+const SET_BLOCKS_ORDER = 'SET_BLOCKS_ORDER';
+
+type SetBlocksOrderPayload = {
+  blocksOrder: BlocksOrder,
+};
+
+type SetBlocksOrderAction = {
+  type: string,
+  payload: SetBlocksOrderPayload,
+};
+
+export function setBlocksOrder(blocksOrder: BlocksOrder): SetBlocksOrderAction {
+  return {
+    type: SET_BLOCKS_ORDER,
+    payload: {
+      blocksOrder,
+    },
+  };
+}
+
+function handleSetBlocksOrder(
+  state: EditorReduxState,
+  { blocksOrder }: SetBlocksOrderPayload
+): EditorReduxState {
+  return {
+    ...state,
+    blocks: updateAllBlocksOrder(blocksOrder, state.blocks),
   };
 }
 
@@ -188,6 +224,7 @@ const ACTION_HANDLERS = {
   [SET_BLOCK_STYLE_VALUE]: handleSetBlockStyleValue,
   [SET_BLOCK_PROP_VALUE]: handleSetBlockPropValue,
   [UPDATE_BLOCK_ORDER]: handleUpdateBlockOrder,
+  [SET_BLOCKS_ORDER]: handleSetBlocksOrder,
 };
 
 export default function editorReducer(

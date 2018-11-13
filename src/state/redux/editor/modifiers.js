@@ -105,3 +105,33 @@ export function updateBlocksOrder(
     [destinationKey]: addBlockToBlockChildren(blocks[destinationKey], targetKey, destinationIndex),
   };
 }
+
+export type BlockOrder = {
+  children: Array<string>,
+};
+
+export type BlocksOrder = {
+  [string]: BlockOrder,
+};
+
+function updateBlockOrder(block: DataBlockModel, blockOrder: BlockOrder): DataBlockModel {
+  return {
+    ...block,
+    blockChildrenKeys: blockOrder.children,
+  };
+}
+
+export function updateAllBlocksOrder(
+  blocksOrder: BlocksOrder,
+  blocks: SitePageDataBlocks
+): SitePageDataBlocks {
+  const updatedBlocks = {};
+  Object.keys(blocks).forEach(blockKey => {
+    const block = blocks[blockKey];
+    updatedBlocks[block.key] = updateBlockOrder(block, blocksOrder[block.key]);
+  });
+  return {
+    ...blocks,
+    ...updatedBlocks,
+  };
+}
