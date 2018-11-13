@@ -27,6 +27,8 @@ export function getSelectedBlockStyle(state: EditorReduxState): BlockStyles {
 }
 
 export function getEditorMappedBlocks(state: EditorReduxState): MappedDataBlocks {
-  const { blocks, rootBlocks } = state;
-  return getMappedDataBlocks(rootBlocks, blocks);
+  const { blocks, rootBlock } = state;
+  const mappedBlocks = getMappedDataBlocks(rootBlock, blocks);
+  console.log('mappedBlocks', mappedBlocks);
+  return mappedBlocks;
 }

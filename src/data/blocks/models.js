@@ -41,11 +41,6 @@ export type SitePageDataBlocks = {
   [string]: DataBlockModel,
 };
 
-export type SitePageDataModel = {
-  blocks: SitePageDataBlocks,
-  rootBlocks: Array<string>,
-};
-
 export function getBlockFromBlocks(blocks: SitePageDataBlocks, key: string): DataBlockModel {
   const block = blocks[key];
   if (!block) {
@@ -66,10 +61,10 @@ function mapDataBlock(blockKey: string, blocks: SitePageDataBlocks): DataBlockMo
 }
 
 export function getMappedDataBlocks(
-  rootBlocks: Array<string>,
+  rootBlock: string,
   blocks: SitePageDataBlocks
 ): MappedDataBlocks {
-  return rootBlocks.map(blockKey => mapDataBlock(blockKey, blocks));
+  return [mapDataBlock(rootBlock, blocks)];
 }
 
 export function getDataBlockGroupKey(data: DataBlockModel): string {

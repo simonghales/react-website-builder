@@ -119,6 +119,6 @@ export const DUMMY_PAGE_DATA: EditorReduxState = {
     [DUMMY_BLOCK_PARAGRAPH.key]: DUMMY_BLOCK_PARAGRAPH,
     [DUMMY_BLOCK_MODULE.key]: DUMMY_BLOCK_MODULE,
   },
-  rootBlocks: [DUMMY_BLOCK_MODULE.key],
+  rootBlock: DUMMY_BLOCK_MODULE.key,
   selectedBlock: DUMMY_BLOCK_SUBHEADING.key,
 };

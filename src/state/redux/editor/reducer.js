@@ -3,11 +3,11 @@
 import type { SitePageDataBlocks } from '../../../data/blocks/models';
 import { DUMMY_PAGE_DATA } from '../../../data/blocks/dummy';
 import { getBlockViaKey } from './state';
-import { updateBlockProp, updateBlockStyle } from './modifiers';
+import { updateBlockProp, updateBlocksOrder, updateBlockStyle } from './modifiers';
 
 export type EditorReduxState = {
   blocks: SitePageDataBlocks,
-  rootBlocks: Array<string>,
+  rootBlock: string,
   selectedBlock: string,
 };
 
@@ -94,6 +94,47 @@ function handleSetBlockStyleValue(
   };
 }
 
+const UPDATE_BLOCK_ORDER = 'UPDATE_BLOCK_ORDER';
+
+type UpdateBlockOrderPayload = {
+  targetKey: string,
+  destinationKey: string,
+  destinationIndex: number,
+  sourceKey: string,
+};
+
+type UpdateBlockOrderAction = {
+  type: string,
+  payload: UpdateBlockOrderPayload,
+};
+
+export function updateBlockOrder(
+  targetKey: string,
+  destinationKey: string,
+  destinationIndex: number,
+  sourceKey: string
+): UpdateBlockOrderAction {
+  return {
+    type: UPDATE_BLOCK_ORDER,
+    payload: {
+      targetKey,
+      destinationKey,
+      destinationIndex,
+      sourceKey,
+    },
+  };
+}
+
+function handleUpdateBlockOrder(
+  state: EditorReduxState,
+  { targetKey, destinationKey, destinationIndex, sourceKey }: UpdateBlockOrderPayload
+): EditorReduxState {
+  return {
+    ...state,
+    blocks: updateBlocksOrder(targetKey, destinationKey, destinationIndex, sourceKey, state.blocks),
+  };
+}
+
 const SET_BLOCK_PROP_VALUE = 'SET_BLOCK_PROP_VALUE';
 
 type SetBlockPropValuePayload = {
@@ -136,12 +177,17 @@ function handleSetBlockPropValue(
   };
 }
 
-type Actions = SetSelectedBlockAction;
+type Actions =
+  | SetSelectedBlockAction
+  | SetBlockPropValueAction
+  | SetBlockStyleValueAction
+  | UpdateBlockOrderAction;
 
 const ACTION_HANDLERS = {
   [SET_SELECTED_BLOCK]: handleSetSelectedBlock,
   [SET_BLOCK_STYLE_VALUE]: handleSetBlockStyleValue,
   [SET_BLOCK_PROP_VALUE]: handleSetBlockPropValue,
+  [UPDATE_BLOCK_ORDER]: handleUpdateBlockOrder,
 };
 
 export default function editorReducer(

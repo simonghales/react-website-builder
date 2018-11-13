@@ -1,96 +1,51 @@
 // @flow
-import React from 'react';
-import { cx } from 'emotion';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { DragDropContext } from 'react-beautiful-dnd';
+import type { DropResult, ResponderProvided } from 'react-beautiful-dnd';
 import styles from './styles';
-import type { DataBlockModelMapped, MappedDataBlocks } from '../../../data/blocks/models';
-import { getDataBlockLabel, getDataBlockType } from '../../../data/blocks/models';
+import type { MappedDataBlocks } from '../../../data/blocks/models';
 import type { ReduxState } from '../../../state/redux/store';
 import { getEditorMappedBlocks, getSelectedBlockKey } from '../../../state/redux/editor/state';
-import { setSelectedBlock } from '../../../state/redux/editor/reducer';
-
-function getBlockBlockChildren(block: DataBlockModelMapped): Array<DataBlockModelMapped> {
-  return block.blockChildren ? block.blockChildren : [];
-}
-
-type BlockPreviewProps = {
-  type: string,
-  label: string,
-  selected: boolean,
-  blockChildren: MappedDataBlocks,
-  blockKey: string,
-  selectBlock: (blockKey: string) => void,
-  selectedBlock: string,
-};
-
-const BlockPreview = ({
-  type,
-  label,
-  selected,
-  blockChildren,
-  blockKey,
-  selectBlock,
-  selectedBlock,
-}: BlockPreviewProps) => (
-  <div
-    className={cx(styles.classNames.block, styles.blockPreviewClass, {
-      [styles.selectedBlockClass]: selected,
-      [styles.classNames.selectedBlock]: selected,
-    })}
-  >
-    <div
-      className={styles.blockPreviewTextClass}
-      onClick={e => {
-        selectBlock(blockKey);
-        e.stopPropagation();
-      }}
-    >
-      <div className={styles.blockPreviewTypeClass}>{type}</div>
-      <div className={styles.blockPreviewLabelClass}>{label}</div>
-    </div>
-    {blockChildren.length > 0 && (
-      <div className={styles.blockPreviewChildrenClass}>
-        <BlocksList
-          blocks={blockChildren}
-          selectBlock={selectBlock}
-          selectedBlock={selectedBlock}
-        />
-      </div>
-    )}
-  </div>
-);
-
-type BlocksListProps = {
-  blocks: MappedDataBlocks,
-  selectBlock: (blockKey: string) => void,
-  selectedBlock: string,
-};
-
-const BlocksList = ({ blocks, selectBlock, selectedBlock }: BlocksListProps) =>
-  blocks.map(block => (
-    <BlockPreview
-      type={getDataBlockType(block)}
-      label={getDataBlockLabel(block)}
-      blockChildren={getBlockBlockChildren(block)}
-      key={block.key}
-      blockKey={block.key}
-      selected={selectedBlock === block.key}
-      selectBlock={selectBlock}
-      selectedBlock={selectedBlock}
-    />
-  ));
+import { setSelectedBlock, updateBlockOrder } from '../../../state/redux/editor/reducer';
+import BlocksList from './components/BlocksList/BlocksList';
 
 type Props = {
   blocks: MappedDataBlocks,
   selectBlock: (blockKey: string) => void,
   selectedBlock: string,
+  updateBlocks: (
+    targetKey: string,
+    destinationKey: string,
+    destinationIndex: number,
+    sourceKey: string
+  ) => void,
 };
 
-const EditorSidebar = ({ blocks, selectBlock, selectedBlock }: Props) => (
-  <div className={styles.containerClass}>
-    <BlocksList blocks={blocks} selectBlock={selectBlock} selectedBlock={selectedBlock} />
-  </div>
-);
+class EditorSidebar extends Component<Props> {
+  onDragEnd = (result: DropResult, provided: ResponderProvided) => {
+    console.log('drag ended', result, provided);
+    const { updateBlocks } = this.props;
+    const targetKey = result.draggableId;
+    const destinationKey = result.destination ? result.destination.droppableId : '';
+    const destinationIndex = result.destination ? result.destination.index : -1;
+    const sourceKey = result.source ? result.source.droppableId : '';
+    if (targetKey && destinationKey && sourceKey) {
+      updateBlocks(targetKey, destinationKey, destinationIndex, sourceKey);
+    }
+  };
+
+  render() {
+    const { blocks, selectBlock, selectedBlock } = this.props;
+    return (
+      <DragDropContext onDragEnd={this.onDragEnd}>
+        <div className={styles.containerClass}>
+          <BlocksList blocks={blocks} selectBlock={selectBlock} selectedBlock={selectedBlock} />
+        </div>
+      </DragDropContext>
+    );
+  }
+}
 
 const mapStateToProps = (state: ReduxState) => ({
   blocks: getEditorMappedBlocks(state.editor),
@@ -99,6 +54,12 @@ const mapStateToProps = (state: ReduxState) => ({
 
 const mapDispatchToProps = {
   selectBlock: (blockKey: string) => setSelectedBlock(blockKey),
+  updateBlocks: (
+    targetKey: string,
+    destinationKey: string,
+    destinationIndex: number,
+    sourceKey: string
+  ) => updateBlockOrder(targetKey, destinationKey, destinationIndex, sourceKey),
 };
 
 export default connect(
