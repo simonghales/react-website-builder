@@ -31,7 +31,7 @@ function getStyleInputComponent(type: string) {
 type Props = {
   columns: number,
   styleProp: StylePropModel,
-  blockStyles: BlockStyles | null,
+  blockStyles: BlockStyles,
   updateStyle: (cssKey: string, value: string) => void,
 };
 

@@ -1,6 +1,6 @@
 // @flow
 
-import type { AllBlockStyles, BlockModifierStyles, BlockStyles, MappedStyleModel } from './models';
+import type { BlockModifierStyles, BlockStyles, MappedStyleModel } from './models';
 import type { DataBlockModel } from '../blocks/models';
 
 function getModifierStyleValue(cssKey: string, modifierStyles: BlockModifierStyles): string {
@@ -11,19 +11,9 @@ function getModifierStyleValue(cssKey: string, modifierStyles: BlockModifierStyl
   return '';
 }
 
-export function getStyleValue(cssKey: string, blockStyles: BlockStyles | null): string {
-  if (!blockStyles) return '';
+export function getStyleValue(cssKey: string, blockStyles: BlockStyles): string {
   const { styles } = blockStyles;
   return getModifierStyleValue(cssKey, styles.default);
-}
-
-export function getBlockStylesFromBlockStyles(
-  block: DataBlockModel,
-  blockStyles: AllBlockStyles
-): BlockStyles | null {
-  const { styleKey } = block;
-  if (!styleKey) return null;
-  return blockStyles[styleKey];
 }
 
 function getEditorStyles(styles: BlockModifierStyles): {} {
@@ -36,13 +26,12 @@ function getCustomStyles(styles: BlockModifierStyles): {} {
   return custom;
 }
 
-export function getMappedBlockStyles(
-  block: DataBlockModel,
-  allBlockStyles: AllBlockStyles
-): MappedStyleModel {
-  const blockStyles = getBlockStylesFromBlockStyles(block, allBlockStyles);
-  if (!blockStyles) return {};
-  const { styles } = blockStyles;
+export function getMappedBlockStyles(block: DataBlockModel): MappedStyleModel {
+  const { rawStyles } = block;
+  if (!rawStyles) {
+    return {};
+  }
+  const { styles } = rawStyles;
   if (!styles) return {};
   const editorStyles = getEditorStyles(styles.default);
   const customStyles = getCustomStyles(styles.default);
@@ -50,4 +39,9 @@ export function getMappedBlockStyles(
     ...editorStyles,
     ...customStyles,
   };
+}
+
+export function getBlockStyles(block: DataBlockModel): BlockStyles {
+  const { rawStyles } = block;
+  return rawStyles;
 }

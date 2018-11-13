@@ -2,15 +2,13 @@
 
 import type { SitePageDataBlocks } from '../../../data/blocks/models';
 import { DUMMY_PAGE_DATA } from '../../../data/blocks/dummy';
-import { getBlockStyleViaKey, getBlockViaKey } from './state';
+import { getBlockViaKey } from './state';
 import { updateBlockProp, updateBlockStyle } from './modifiers';
-import type { AllBlockStyles } from '../../../data/styles/models';
 
 export type EditorReduxState = {
   blocks: SitePageDataBlocks,
   rootBlocks: Array<string>,
   selectedBlock: string,
-  blockStyles: AllBlockStyles,
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
@@ -48,7 +46,7 @@ function handleSetSelectedBlock(
 const SET_BLOCK_STYLE_VALUE = 'SET_BLOCK_STYLE_VALUE';
 
 type SetBlockStyleValuePayload = {
-  styleKey: string,
+  blockKey: string,
   cssKey: string,
   modifier: string,
   section: string,
@@ -61,7 +59,7 @@ type SetBlockStyleValueAction = {
 };
 
 export function setBlockStyleValue(
-  styleKey: string,
+  blockKey: string,
   cssKey: string,
   modifier: string,
   section: string,
@@ -70,7 +68,7 @@ export function setBlockStyleValue(
   return {
     type: SET_BLOCK_STYLE_VALUE,
     payload: {
-      styleKey,
+      blockKey,
       cssKey,
       modifier,
       section,
@@ -81,14 +79,17 @@ export function setBlockStyleValue(
 
 function handleSetBlockStyleValue(
   state: EditorReduxState,
-  { styleKey, cssKey, modifier, section, value }: SetBlockStyleValuePayload
+  { blockKey, cssKey, modifier, section, value }: SetBlockStyleValuePayload
 ): EditorReduxState {
-  const blockStyle = getBlockStyleViaKey(state, styleKey);
+  const block = getBlockViaKey(state, blockKey);
   return {
     ...state,
-    blockStyles: {
-      ...state.blockStyles,
-      [styleKey]: updateBlockStyle(blockStyle, modifier, section, cssKey, value),
+    blocks: {
+      ...state.blocks,
+      [blockKey]: {
+        ...block,
+        rawStyles: updateBlockStyle(block, modifier, section, cssKey, value),
+      },
     },
   };
 }

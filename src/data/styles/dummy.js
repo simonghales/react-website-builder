@@ -1,6 +1,6 @@
 // @flow
 
-import type { AllBlockStyles, BlockStyles } from './models';
+import type { BlockStyles } from './models';
 
 export const DUMMY_STYLE_TEST: BlockStyles = {
   key: 'test',
@@ -17,6 +17,10 @@ export const DUMMY_STYLE_TEST: BlockStyles = {
   },
 };
 
-export const DUMMY_STYLES: AllBlockStyles = {
-  [DUMMY_STYLE_TEST.key]: DUMMY_STYLE_TEST,
+export const DUMMY_STYLE_EMPTY: BlockStyles = {
+  styles: {
+    default: {
+      editor: {},
+    },
+  },
 };

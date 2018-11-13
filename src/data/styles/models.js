@@ -17,14 +17,9 @@ export type BlockModifierStyles = {
 };
 
 export type BlockStyles = {
-  key: string,
   styles: {
     [string]: BlockModifierStyles,
   },
-};
-
-export type AllBlockStyles = {
-  [string]: BlockStyles,
 };
 
 export type MappedStyleModel = {

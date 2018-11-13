@@ -6,9 +6,10 @@ import { blockGroups, blockTypes } from '../../blocks/blocks';
 import Module from '../../blocks/Module/Module';
 import Heading from '../../blocks/basic/Heading/Heading';
 import Container from '../../blocks/basic/Container/Container';
-import { DUMMY_STYLE_TEST, DUMMY_STYLES } from '../styles/dummy';
+import { DUMMY_STYLE_EMPTY, DUMMY_STYLE_TEST } from '../styles/dummy';
+import type { DataBlockModel } from './models';
 
-const DUMMY_BLOCK_HEADING = {
+const DUMMY_BLOCK_HEADING: DataBlockModel = {
   key: getBlockUniqueId(),
   groupKey: blockGroups.Basic,
   blockKey: Heading.key,
@@ -25,9 +26,10 @@ const DUMMY_BLOCK_HEADING = {
   },
   blockChildrenKeys: [],
   isParentModule: false,
+  rawStyles: DUMMY_STYLE_EMPTY,
 };
 
-const DUMMY_BLOCK_SUBHEADING = {
+const DUMMY_BLOCK_SUBHEADING: DataBlockModel = {
   key: getBlockUniqueId(),
   groupKey: blockGroups.Basic,
   blockKey: Heading.key,
@@ -44,10 +46,10 @@ const DUMMY_BLOCK_SUBHEADING = {
   },
   blockChildrenKeys: [],
   isParentModule: false,
-  styleKey: DUMMY_STYLE_TEST.key,
+  rawStyles: DUMMY_STYLE_TEST,
 };
 
-const DUMMY_BLOCK_PARAGRAPH = {
+const DUMMY_BLOCK_PARAGRAPH: DataBlockModel = {
   key: getBlockUniqueId(),
   groupKey: blockGroups.HTML,
   blockKey: Element.key,
@@ -62,9 +64,10 @@ const DUMMY_BLOCK_PARAGRAPH = {
   },
   blockChildrenKeys: [],
   isParentModule: false,
+  rawStyles: DUMMY_STYLE_EMPTY,
 };
 
-const DUMMY_BLOCK_CONTAINER = {
+const DUMMY_BLOCK_CONTAINER: DataBlockModel = {
   key: getBlockUniqueId(),
   groupKey: blockGroups.Basic,
   blockKey: Container.key,
@@ -81,9 +84,10 @@ const DUMMY_BLOCK_CONTAINER = {
   },
   blockChildrenKeys: [DUMMY_BLOCK_PARAGRAPH.key],
   isParentModule: false,
+  rawStyles: DUMMY_STYLE_EMPTY,
 };
 
-const DUMMY_BLOCK_MODULE = {
+const DUMMY_BLOCK_MODULE: DataBlockModel = {
   key: getBlockUniqueId(),
   groupKey: blockGroups.Module,
   blockKey: Module.key,
@@ -104,6 +108,7 @@ const DUMMY_BLOCK_MODULE = {
     DUMMY_BLOCK_CONTAINER.key,
   ],
   isParentModule: true,
+  rawStyles: DUMMY_STYLE_EMPTY,
 };
 
 export const DUMMY_PAGE_DATA: EditorReduxState = {
@@ -116,5 +121,4 @@ export const DUMMY_PAGE_DATA: EditorReduxState = {
   },
   rootBlocks: [DUMMY_BLOCK_MODULE.key],
   selectedBlock: DUMMY_BLOCK_SUBHEADING.key,
-  blockStyles: DUMMY_STYLES,
 };

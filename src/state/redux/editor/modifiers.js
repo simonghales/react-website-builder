@@ -2,6 +2,7 @@
 
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { BlockStyles } from '../../../data/styles/models';
+import { getBlockStyles } from '../../../data/styles/state';
 
 export function updateBlockProp(
   block: DataBlockModel,
@@ -18,20 +19,20 @@ export function updateBlockProp(
 }
 
 export function updateBlockStyle(
-  blockStyle: BlockStyles | null,
+  block: DataBlockModel,
   modifier: string,
   section: string,
   cssKey: string,
   value: string
-): BlockStyles | null {
-  if (!blockStyle) return null;
+): BlockStyles {
+  const blockStyles = getBlockStyles(block);
   return {
-    ...blockStyle,
+    ...blockStyles,
     styles: {
       [modifier]: {
-        ...blockStyle.styles[modifier],
+        ...blockStyles.styles[modifier],
         [section]: {
-          ...blockStyle.styles[modifier][section],
+          ...blockStyles.styles[modifier][section],
           [cssKey]: value,
         },
       },

@@ -18,7 +18,7 @@ import type { BlockStyles } from '../../../data/styles/models';
 
 type Props = {
   selectedBlock: DataBlockModel,
-  selectedBlockStyle: BlockStyles | null,
+  selectedBlockStyle: BlockStyles,
 };
 
 const EditorBlockView = ({ selectedBlock, selectedBlockStyle }: Props) => (
@@ -31,10 +31,7 @@ const EditorBlockView = ({ selectedBlock, selectedBlockStyle }: Props) => (
     </header>
     <div className={styles.mainClass}>
       <div className={styles.editorClass}>
-        <EditorContent
-          selectedBlock={selectedBlock}
-          selectedBlockStyle={selectedBlockStyle}
-        />
+        <EditorContent selectedBlock={selectedBlock} selectedBlockStyle={selectedBlockStyle} />
       </div>
       <div className={styles.previewClass}>
         <EditorPreviewIframe />

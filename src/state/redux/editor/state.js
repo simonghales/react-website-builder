@@ -4,6 +4,7 @@ import type { DataBlockModel, MappedDataBlocks } from '../../../data/blocks/mode
 import type { EditorReduxState } from './reducer';
 import { getBlockFromBlocks, getMappedDataBlocks } from '../../../data/blocks/models';
 import type { BlockStyles } from '../../../data/styles/models';
+import { getBlockStyles } from '../../../data/styles/state';
 
 export function getBlockViaKey(state: EditorReduxState, blockKey: string): DataBlockModel {
   const { blocks } = state;
@@ -20,20 +21,12 @@ export function getSelectedBlock(state: EditorReduxState): DataBlockModel {
   return getBlockViaKey(state, selectedBlock);
 }
 
-export function getBlockStyleViaKey(state: EditorReduxState, styleKey: string): BlockStyles {
-  const { blockStyles } = state;
-  return blockStyles[styleKey];
-}
-
-export function getSelectedBlockStyle(state: EditorReduxState): BlockStyles | null {
+export function getSelectedBlockStyle(state: EditorReduxState): BlockStyles {
   const selectedBlock = getSelectedBlock(state);
-  const { styleKey } = selectedBlock;
-  if (!styleKey) return null;
-  const blockStyle = getBlockStyleViaKey(state, styleKey);
-  return blockStyle;
+  return getBlockStyles(selectedBlock);
 }
 
 export function getEditorMappedBlocks(state: EditorReduxState): MappedDataBlocks {
-  const { blocks, rootBlocks, blockStyles } = state;
-  return getMappedDataBlocks(rootBlocks, blocks, blockStyles);
+  const { blocks, rootBlocks } = state;
+  return getMappedDataBlocks(rootBlocks, blocks);
 }

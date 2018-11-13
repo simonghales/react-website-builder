@@ -2,11 +2,12 @@
 
 import type { BlockModelPropsConfig } from '../../blocks/models';
 import { blockTypes } from '../../blocks/blocks';
-import type { AllBlockStyles, MappedStyleModel } from '../styles/models';
+import type { BlockStyles, MappedStyleModel } from '../styles/models';
 import { getMappedBlockStyles } from '../styles/state';
 
 export const blockPropsConfigTypes = {
   blocks: 'blocks',
+  string: 'string',
 };
 
 export type BlockPropsConfigTypes = $Keys<typeof blockPropsConfigTypes>;
@@ -26,6 +27,7 @@ export type DataBlockModel = {
   blockChildrenKeys: Array<string>,
   isParentModule: boolean,
   styleKey?: string,
+  rawStyles: BlockStyles,
 };
 
 export type DataBlockModelMapped = DataBlockModel & {
@@ -52,27 +54,22 @@ export function getBlockFromBlocks(blocks: SitePageDataBlocks, key: string): Dat
   return block;
 }
 
-function mapDataBlock(
-  blockKey: string,
-  blocks: SitePageDataBlocks,
-  blockStyles: AllBlockStyles
-): DataBlockModelMapped {
+function mapDataBlock(blockKey: string, blocks: SitePageDataBlocks): DataBlockModelMapped {
   const block = getBlockFromBlocks(blocks, blockKey);
   return {
     ...block,
     blockChildren: block.blockChildrenKeys.map((childBlockKey: string) =>
-      mapDataBlock(childBlockKey, blocks, blockStyles)
+      mapDataBlock(childBlockKey, blocks)
     ),
-    styles: getMappedBlockStyles(block, blockStyles),
+    styles: getMappedBlockStyles(block),
   };
 }
 
 export function getMappedDataBlocks(
   rootBlocks: Array<string>,
-  blocks: SitePageDataBlocks,
-  blockStyles: AllBlockStyles
+  blocks: SitePageDataBlocks
 ): MappedDataBlocks {
-  return rootBlocks.map(blockKey => mapDataBlock(blockKey, blocks, blockStyles));
+  return rootBlocks.map(blockKey => mapDataBlock(blockKey, blocks));
 }
 
 export function getDataBlockGroupKey(data: DataBlockModel): string {

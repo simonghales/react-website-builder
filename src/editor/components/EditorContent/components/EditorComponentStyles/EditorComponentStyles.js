@@ -1,11 +1,10 @@
 // @flow
 import React from 'react';
-import { css, cx } from 'emotion';
+import { cx } from 'emotion';
 import { connect } from 'react-redux';
 import styles from './styles';
 import StyleProp from '../../../../../components/StyleProp/StyleProp';
-import styleProps from '../../../../../data/styles/styleProps';
-import type { BlockStyles, StylePropModel } from '../../../../../data/styles/models';
+import type { BlockStyles } from '../../../../../data/styles/models';
 import { appearanceStyleSection, dimensionsStyleSection, textStyleSection } from './data';
 import type { StyleSectionModel } from './data';
 import { setBlockStyleValue } from '../../../../../state/redux/editor/reducer';
@@ -42,7 +41,7 @@ StyleSection.defaultProps = {
 };
 
 type StyleSectionWrapperProps = {
-  blockStyles: BlockStyles | null,
+  blockStyles: BlockStyles,
   data: StyleSectionModel,
   updateStyle: (cssKey: string, value: string) => void,
 };
@@ -62,9 +61,10 @@ const StyleSectionWrapper = ({ data, blockStyles, updateStyle }: StyleSectionWra
 );
 
 type Props = {
-  blockStyles: BlockStyles | null,
+  blockStyles: BlockStyles,
+  blockKey: string,
   updateStyle: (
-    styleKey: string,
+    blockKey: string,
     cssKey: string,
     modifier: string,
     section: string,
@@ -72,12 +72,11 @@ type Props = {
   ) => void,
 };
 
-const Main = ({ blockStyles, updateStyle }: Props) => {
-  const styleKey = blockStyles ? blockStyles.key : '';
+const Main = ({ blockKey, blockStyles, updateStyle }: Props) => {
   const modifier = 'default'; // todo - variable
   const section = 'editor'; // todo - variable
   const update = (cssKey: string, value: string) => {
-    updateStyle(styleKey, cssKey, modifier, section, value);
+    updateStyle(blockKey, cssKey, modifier, section, value);
   };
   return (
     <div className={styles.mainClass}>
@@ -119,12 +118,12 @@ const EditorComponentStyles = (props: Props) => (
 
 const mapDispatchToProps = {
   updateStyle: (
-    styleKey: string,
+    blockKey: string,
     cssKey: string,
     modifier: string,
     section: string,
     value: string
-  ) => setBlockStyleValue(styleKey, cssKey, modifier, section, value),
+  ) => setBlockStyleValue(blockKey, cssKey, modifier, section, value),
 };
 
 export default connect(

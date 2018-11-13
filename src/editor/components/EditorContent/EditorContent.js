@@ -12,7 +12,7 @@ import type { BlockStyles } from '../../../data/styles/models';
 
 type Props = {
   selectedBlock: DataBlockModel,
-  selectedBlockStyle: BlockStyles | null,
+  selectedBlockStyle: BlockStyles,
 };
 
 type State = {
@@ -43,7 +43,11 @@ class EditorContent extends Component<Props, State> {
           {selectedTab === editorComponentTabs.Props ? (
             <EditorComponentProps selectedBlock={selectedBlock} key={selectedBlock.key} />
           ) : (
-            <EditorComponentStyles blockStyles={selectedBlockStyle} key={selectedBlock.key} />
+            <EditorComponentStyles
+              blockKey={selectedBlock.key}
+              blockStyles={selectedBlockStyle}
+              key={selectedBlock.key}
+            />
           )}
         </div>
       </div>
