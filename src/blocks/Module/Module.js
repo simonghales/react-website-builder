@@ -9,6 +9,7 @@ const moduleBlock: BlockModel = {
   key: `Module`,
   defaultProps: moduleDefaultProps,
   propsConfig: modulePropsConfig,
+  childrenAllowed: true,
 };
 
 export default moduleBlock;

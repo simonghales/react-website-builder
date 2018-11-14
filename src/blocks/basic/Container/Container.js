@@ -9,6 +9,7 @@ const containerBlock: BlockModel = {
   key: `Container`,
   defaultProps: containerDefaultProps,
   propsConfig: containerPropsConfig,
+  childrenAllowed: true,
 };
 
 export default containerBlock;

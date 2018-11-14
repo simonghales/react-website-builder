@@ -9,6 +9,7 @@ const headingBlock: BlockModel = {
   key: `Heading`,
   defaultProps: headingDefaultProps,
   propsConfig: {},
+  childrenAllowed: false,
 };
 
 export default headingBlock;

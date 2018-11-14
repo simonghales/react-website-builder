@@ -15,6 +15,7 @@ export type BlockModel = {
     [string]: any,
   },
   propsConfig: BlockModelPropsConfig,
+  childrenAllowed: boolean,
 };
 
 export type BlockGroupModel = {

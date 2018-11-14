@@ -1,7 +1,7 @@
 // @flow
 
 import type { BlockModelPropsConfig } from '../../blocks/models';
-import { blockTypes } from '../../blocks/blocks';
+import { blockTypes, getBlockFromDataBlock } from '../../blocks/blocks';
 import type { BlockStyles, MappedStyleModel } from '../styles/models';
 import { getMappedBlockStyles } from '../styles/state';
 
@@ -33,6 +33,7 @@ export type DataBlockModel = {
 export type DataBlockModelMapped = DataBlockModel & {
   blockChildren?: Array<DataBlockModelMapped>,
   styles: MappedStyleModel,
+  childrenAllowed: boolean,
 };
 
 export type MappedDataBlocks = Array<DataBlockModelMapped>;
@@ -50,13 +51,15 @@ export function getBlockFromBlocks(blocks: SitePageDataBlocks, key: string): Dat
 }
 
 function mapDataBlock(blockKey: string, blocks: SitePageDataBlocks): DataBlockModelMapped {
-  const block = getBlockFromBlocks(blocks, blockKey);
+  const dataBlock = getBlockFromBlocks(blocks, blockKey);
+  const block = getBlockFromDataBlock(dataBlock);
   return {
-    ...block,
-    blockChildren: block.blockChildrenKeys.map((childBlockKey: string) =>
+    ...dataBlock,
+    blockChildren: dataBlock.blockChildrenKeys.map((childBlockKey: string) =>
       mapDataBlock(childBlockKey, blocks)
     ),
-    styles: getMappedBlockStyles(block),
+    styles: getMappedBlockStyles(dataBlock),
+    childrenAllowed: block.childrenAllowed,
   };
 }
 

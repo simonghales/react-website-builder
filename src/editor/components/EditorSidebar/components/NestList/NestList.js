@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Nestable from 'react-nestable';
+import { cx } from 'emotion';
 import type { DataBlockModelMapped, MappedDataBlocks } from '../../../../../data/blocks/models';
 import { getDataBlockLabel, getDataBlockType } from '../../../../../data/blocks/models';
 import BlockPreview from '../BlockPreview/BlockPreview';
@@ -13,6 +14,8 @@ export type NestItem = {
   children: Array<NestItem>,
   selectedBlock: string,
   selectBlock: (blockKey: string) => void,
+  childrenEnabled: boolean,
+  classes: string,
 };
 
 function mapBlocksToNestItems(
@@ -27,6 +30,10 @@ function mapBlocksToNestItems(
       children: [],
       selectedBlock,
       selectBlock,
+      childrenEnabled: block.childrenAllowed,
+      classes: cx({
+        [styles.classNames.nestItemSelected]: selectedBlock === block.key,
+      }),
     };
     if (block.blockChildren) {
       item.children = mapBlocksToNestItems(block.blockChildren, selectedBlock, selectBlock);

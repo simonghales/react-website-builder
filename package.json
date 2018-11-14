@@ -12,7 +12,7 @@
     "react-dom": "^16.6.1",
     "react-emotion": "^9.2.12",
     "react-icons": "^3.2.2",
-    "react-nestable": "^1.1.0",
+    "react-nestable": "simonghales/react-nestable",
     "react-redux": "^5.1.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1",

@@ -5,6 +5,7 @@ import Heading from './basic/Heading/Heading';
 import Container from './basic/Container/Container';
 import Module from './Module/Module';
 import Element from './html/Element/Element';
+import type { DataBlockModel } from '../data/blocks/models';
 
 export const blockGroups = {
   Basic: 'Basic',
@@ -55,4 +56,16 @@ export function getBlockGroup(groupKey: string): BlockGroupModel | null {
 
 export function getBlock(blockGroup: BlockGroupModel, blockKey: string): BlockModel | null {
   return blockGroup.blocks[blockKey] ? blockGroup.blocks[blockKey] : null;
+}
+
+export function getBlockFromDataBlock(dataBlock: DataBlockModel): BlockModel {
+  const blockGroup = getBlockGroup(dataBlock.groupKey);
+  if (!blockGroup) {
+    throw new Error(`Couldn't match block group.`);
+  }
+  const block = getBlock(blockGroup, dataBlock.blockKey);
+  if (!block) {
+    throw new Error(`Couldn't match block.`);
+  }
+  return block;
 }
