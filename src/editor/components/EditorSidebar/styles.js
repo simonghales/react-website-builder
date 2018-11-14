@@ -22,10 +22,11 @@ const activeBgColor = colors.blackBlue;
 
 const blockPreviewClass = css`
   background: ${transparentize(0.7, colors.blackBlue)};
-  padding: 0 0 0 10px;
   position: relative;
   //transition: background 150ms ease;
 `;
+
+const rootBlockPreviewClass = css``;
 
 const selectedBlockClass = css`
   background: ${activeBgColor};
@@ -43,7 +44,7 @@ const selectedBlockClass = css`
 `;
 
 const blockPreviewTextClass = css`
-  padding: 5px 10px 5px 0;
+  padding: 5px 10px 5px 10px;
   opacity: 0.5;
   cursor: pointer;
 
@@ -72,6 +73,7 @@ const blockPreviewChildrenClass = css`
 export default {
   containerClass,
   blockPreviewClass,
+  rootBlockPreviewClass,
   selectedBlockClass,
   blockPreviewTextClass,
   blockPreviewTypeClass,

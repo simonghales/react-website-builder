@@ -13,7 +13,8 @@ type Props = {
   blockKey: string,
   selectBlock: (blockKey: string) => void,
   selectedBlock: string,
-  isParentModule: boolean,
+  isRootBlock?: boolean,
+  children?: any,
 };
 
 const BlockPreview = ({
@@ -24,11 +25,14 @@ const BlockPreview = ({
   blockKey,
   selectBlock,
   selectedBlock,
+  isRootBlock,
+  children,
 }: Props) => (
   <div
     className={cx(styles.classNames.block, styles.blockPreviewClass, {
       [styles.selectedBlockClass]: selected,
       [styles.classNames.selectedBlock]: selected,
+      [styles.rootBlockPreviewClass]: isRootBlock,
     })}
   >
     <div
@@ -41,6 +45,7 @@ const BlockPreview = ({
       <div className={styles.blockPreviewTypeClass}>{type}</div>
       <div className={styles.blockPreviewLabelClass}>{label}</div>
     </div>
+    {children && <div className={styles.blockPreviewChildrenClass}>{children}</div>}
     {blockChildren.length > 0 && (
       <div className={styles.blockPreviewChildrenClass}>
         <BlocksList
@@ -52,5 +57,10 @@ const BlockPreview = ({
     )}
   </div>
 );
+
+BlockPreview.defaultProps = {
+  children: undefined,
+  isRootBlock: false,
+};
 
 export default BlockPreview;

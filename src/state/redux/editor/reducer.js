@@ -104,6 +104,7 @@ const SET_BLOCKS_ORDER = 'SET_BLOCKS_ORDER';
 
 type SetBlocksOrderPayload = {
   blocksOrder: BlocksOrder,
+  rootBlocksOrder: Array<string>,
 };
 
 type SetBlocksOrderAction = {
@@ -111,22 +112,26 @@ type SetBlocksOrderAction = {
   payload: SetBlocksOrderPayload,
 };
 
-export function setBlocksOrder(blocksOrder: BlocksOrder): SetBlocksOrderAction {
+export function setBlocksOrder(
+  blocksOrder: BlocksOrder,
+  rootBlocksOrder: Array<string>
+): SetBlocksOrderAction {
   return {
     type: SET_BLOCKS_ORDER,
     payload: {
       blocksOrder,
+      rootBlocksOrder,
     },
   };
 }
 
 function handleSetBlocksOrder(
   state: EditorReduxState,
-  { blocksOrder }: SetBlocksOrderPayload
+  { blocksOrder, rootBlocksOrder }: SetBlocksOrderPayload
 ): EditorReduxState {
   return {
     ...state,
-    blocks: updateAllBlocksOrder(blocksOrder, state.blocks),
+    blocks: updateAllBlocksOrder(blocksOrder, state.blocks, rootBlocksOrder),
   };
 }
 

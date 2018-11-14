@@ -114,21 +114,30 @@ export type BlocksOrder = {
   [string]: BlockOrder,
 };
 
-function updateBlockOrder(block: DataBlockModel, blockOrder: BlockOrder): DataBlockModel {
+function updateBlockOrder(
+  block: DataBlockModel,
+  blockOrder: BlockOrder,
+  rootBlocksOrder: Array<string>
+): DataBlockModel {
+  const blockChildrenKeys =
+    block.isParentModule && !blockOrder ? rootBlocksOrder : blockOrder.children;
   return {
     ...block,
-    blockChildrenKeys: blockOrder.children,
+    blockChildrenKeys,
   };
 }
 
 export function updateAllBlocksOrder(
   blocksOrder: BlocksOrder,
-  blocks: SitePageDataBlocks
+  blocks: SitePageDataBlocks,
+  rootBlocksOrder: Array<string>
 ): SitePageDataBlocks {
   const updatedBlocks = {};
+  console.log('update blocks', blocks);
+  console.log('update blocksOrder', blocksOrder);
   Object.keys(blocks).forEach(blockKey => {
     const block = blocks[blockKey];
-    updatedBlocks[block.key] = updateBlockOrder(block, blocksOrder[block.key]);
+    updatedBlocks[block.key] = updateBlockOrder(block, blocksOrder[block.key], rootBlocksOrder);
   });
   return {
     ...blocks,
