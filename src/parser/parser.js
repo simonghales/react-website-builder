@@ -17,8 +17,14 @@ function getProps(
   };
   const parsedProps = {};
   Object.keys(props).forEach(propKey => {
-    const propConfig = blockData.propsConfig[propKey] ? blockData.propsConfig[propKey] : {};
-    parsedProps[propKey] = parsePropValue(blockData, propKey, props[propKey], propConfig);
+    const sourcePropConfig = block.propsConfig[propKey] ? block.propsConfig[propKey] : {};
+    const dataPropConfig = blockData.propsConfig[propKey] ? blockData.propsConfig[propKey] : {};
+    const combinedPropConfig = {
+      ...sourcePropConfig,
+      ...dataPropConfig,
+    };
+    console.log('combinedPropConfig', propKey, combinedPropConfig);
+    parsedProps[propKey] = parsePropValue(blockData, propKey, props[propKey], combinedPropConfig);
   });
   const customStyles = blockData.styles ? blockData.styles : {};
   parsedProps.customStyles = customStyles;

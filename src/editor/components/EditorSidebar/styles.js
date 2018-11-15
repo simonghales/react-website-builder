@@ -21,7 +21,8 @@ const classNames = {
 const activeBgColor = colors.blackBlue;
 
 const blockPreviewClass = css`
-  background: ${transparentize(0.7, colors.blackBlue)};
+  //background: ${transparentize(0.7, colors.blackBlue)};
+  background: ${colors.blackInactiveBlue};
   position: relative;
   //transition: background 150ms ease;
 `;
@@ -41,6 +42,10 @@ const selectedBlockClass = css`
     width: 3px;
     background-color: ${colors.light};
   }
+
+  .${classNames.block} {
+    background: ${activeBgColor};
+  }
 `;
 
 const blockPreviewTextClass = css`
@@ -48,6 +53,7 @@ const blockPreviewTextClass = css`
   opacity: 0.5;
   cursor: pointer;
 
+  .nestable-drag-layer .nestable-item-copy &,
   &:hover,
   .${classNames.selectedBlock} > & {
     opacity: 1;

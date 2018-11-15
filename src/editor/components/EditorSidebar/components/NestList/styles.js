@@ -22,9 +22,26 @@ const containerClass = css`
     margin: 0;
   }
 
+  .nestable-drag-layer .nestable-item-copy {
+    background-color: ${colors.blackInactiveBlue};
+
+    .block {
+      background-color: ${colors.blackInactiveBlue};
+    }
+  }
+
+  .nestable-drag-layer
+    .nestable-item-copy.${classNames.nestItemSelected},
+    .nestable-item.is-hovered,
   .${classNames.nestItemSelected} > .nestable-list {
     background-color: ${colors.blackBlue};
 
+    .block {
+      background-color: ${colors.blackBlue};
+    }
+  }
+
+  .${classNames.nestItemSelected} > .nestable-list {
     &::after {
       content: '';
       pointer-events: none;
@@ -35,6 +52,11 @@ const containerClass = css`
       width: 3px;
       background-color: ${colors.light};
     }
+  }
+
+  .nestable-item.is-dragging:before {
+    background-color: ${colors.blackBlue};
+    border: 2px solid ${colors.light};
   }
 `;
 

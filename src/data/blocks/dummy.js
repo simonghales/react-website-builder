@@ -57,11 +57,9 @@ const DUMMY_BLOCK_PARAGRAPH: DataBlockModel = {
   label: 'Site Description',
   props: {
     element: 'p',
-    children: 'Hello Chiao',
+    content: 'Hello Chiao',
   },
-  propsConfig: {
-    children: {},
-  },
+  propsConfig: {},
   blockChildrenKeys: [],
   isParentModule: false,
   rawStyles: DUMMY_STYLE_EMPTY,
@@ -76,12 +74,7 @@ const DUMMY_BLOCK_CONTAINER: DataBlockModel = {
   props: {
     children: null,
   },
-  propsConfig: {
-    children: {
-      label: 'Content',
-      type: 'blocks',
-    },
-  },
+  propsConfig: {},
   blockChildrenKeys: [DUMMY_BLOCK_PARAGRAPH.key],
   isParentModule: false,
   rawStyles: DUMMY_STYLE_EMPTY,

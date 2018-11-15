@@ -14,5 +14,6 @@ export const containerDefaultProps = {
 export const containerPropsConfig = {
   children: {
     hidden: true,
+    type: 'blocks',
   },
 };

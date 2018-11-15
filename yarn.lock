@@ -7726,7 +7726,7 @@ react-motion@^0.5.2:
 
 react-nestable@simonghales/react-nestable:
   version "1.1.0"
-  resolved "https://codeload.github.com/simonghales/react-nestable/tar.gz/a76ae44dd0a5a46b2ffbf8e8e61a691cef894c33"
+  resolved "https://codeload.github.com/simonghales/react-nestable/tar.gz/d5816db9b4b94257fb886b84d9b03b102f470248"
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.6.0"
