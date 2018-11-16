@@ -1,13 +1,15 @@
 // @flow
 import React from 'react';
-import type { DataBlockModel, DataBlockModelMapped, MappedDataBlocks } from '../data/blocks/models';
+import type { DataBlockModel, MappedDataBlockModel, MappedDataBlocks } from '../data/blocks/models';
 import { getBlock, getBlockGroup } from '../blocks/blocks';
 import type { BlockModel } from '../blocks/models';
 import { parsePropValue } from './props';
+import type { DataModules, MappedDataModule } from '../data/modules/models';
+import { getModuleFromModules } from '../data/modules/state';
 
 function getProps(
   block: BlockModel,
-  blockData: DataBlockModelMapped
+  blockData: MappedDataBlockModel
 ): {
   [string]: any,
 } {
@@ -23,7 +25,6 @@ function getProps(
       ...sourcePropConfig,
       ...dataPropConfig,
     };
-    console.log('combinedPropConfig', propKey, combinedPropConfig);
     parsedProps[propKey] = parsePropValue(blockData, propKey, props[propKey], combinedPropConfig);
   });
   const customStyles = blockData.styles ? blockData.styles : {};
@@ -31,7 +32,7 @@ function getProps(
   return parsedProps;
 }
 
-function renderBlock(blockData: DataBlockModelMapped) {
+function renderBlock(blockData: MappedDataBlockModel) {
   const blockGroup = getBlockGroup(blockData.groupKey);
   if (!blockGroup) {
     console.warn(`Unable to match block groupKey "${blockData.groupKey}"`);
@@ -48,4 +49,9 @@ function renderBlock(blockData: DataBlockModelMapped) {
 
 export function previewBlocksParser(blocks: MappedDataBlocks) {
   return blocks.map(renderBlock);
+}
+
+export function previewModuleParser(module: MappedDataModule) {
+  const { blocks } = module;
+  return previewBlocksParser(blocks);
 }

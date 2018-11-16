@@ -5,11 +5,7 @@ import styles from './styles';
 import type { MappedDataBlocks } from '../../../data/blocks/models';
 import type { ReduxState } from '../../../state/redux/store';
 import { getEditorMappedBlocks, getSelectedBlockKey } from '../../../state/redux/editor/state';
-import {
-  setBlocksOrder,
-  setSelectedBlock,
-  updateBlockOrder,
-} from '../../../state/redux/editor/reducer';
+import { setBlocksOrder, setSelectedBlock } from '../../../state/redux/editor/reducer';
 import NestList from './components/NestList/NestList';
 import type { NestItem } from './components/NestList/NestList';
 import type { BlocksOrder } from '../../../state/redux/editor/modifiers';
@@ -38,12 +34,6 @@ type Props = {
   blocks: MappedDataBlocks,
   selectBlock: (blockKey: string) => void,
   selectedBlock: string,
-  updateBlocks: (
-    targetKey: string,
-    destinationKey: string,
-    destinationIndex: number,
-    sourceKey: string
-  ) => void,
   updateBlocksOrder: (blocksOrder: BlocksOrder, rootBlocksOrder: Array<string>) => void,
 };
 
@@ -84,12 +74,6 @@ const mapStateToProps = (state: ReduxState) => ({
 
 const mapDispatchToProps = {
   selectBlock: (blockKey: string) => setSelectedBlock(blockKey),
-  updateBlocks: (
-    targetKey: string,
-    destinationKey: string,
-    destinationIndex: number,
-    sourceKey: string
-  ) => updateBlockOrder(targetKey, destinationKey, destinationIndex, sourceKey),
   updateBlocksOrder: (blocksOrder: BlocksOrder, rootBlocksOrder: Array<string>) =>
     setBlocksOrder(blocksOrder, rootBlocksOrder),
 };

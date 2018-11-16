@@ -10,6 +10,7 @@ const elementBlock: BlockModel = {
   defaultProps: elementDefaultProps,
   propsConfig: elementPropsConfig,
   childrenAllowed: true,
+  stylesEnabled: true,
 };
 
 export default elementBlock;

@@ -10,6 +10,7 @@ const headingBlock: BlockModel = {
   defaultProps: headingDefaultProps,
   propsConfig: {},
   childrenAllowed: false,
+  stylesEnabled: true,
 };
 
 export default headingBlock;

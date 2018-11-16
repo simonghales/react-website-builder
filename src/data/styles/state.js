@@ -1,7 +1,14 @@
 // @flow
 
-import type { BlockModifierStyles, BlockStyles, MappedStyleModel } from './models';
-import type { DataBlockModel } from '../blocks/models';
+import type { BlockModifierStyles, BlockStyles, MappedStyleModel, StylesModel } from './models';
+import type {
+  DataBlockMixinModel,
+  DataBlockMixinStylesModel,
+  DataBlockModel,
+} from '../blocks/models';
+import { blockStylesModifiers } from './models';
+import type { MixinModel, MixinsModel } from '../mixins/models';
+import { getMixinFromMixins } from '../mixins/state';
 
 function getModifierStyleValue(cssKey: string, modifierStyles: BlockModifierStyles): string {
   const { editor } = modifierStyles;
@@ -13,7 +20,7 @@ function getModifierStyleValue(cssKey: string, modifierStyles: BlockModifierStyl
 
 export function getStyleValue(cssKey: string, blockStyles: BlockStyles): string {
   const { styles } = blockStyles;
-  return getModifierStyleValue(cssKey, styles.default);
+  return getModifierStyleValue(cssKey, styles[blockStylesModifiers.default]);
 }
 
 function getEditorStyles(styles: BlockModifierStyles): {} {
@@ -26,17 +33,49 @@ function getCustomStyles(styles: BlockModifierStyles): {} {
   return custom;
 }
 
-export function getMappedBlockStyles(block: DataBlockModel): MappedStyleModel {
-  const { rawStyles } = block;
-  if (!rawStyles) {
-    return {};
-  }
-  const { styles } = rawStyles;
+export function getMappedStyles(styles: StylesModel): MappedStyleModel {
   if (!styles) return {};
-  const editorStyles = getEditorStyles(styles.default);
-  const customStyles = getCustomStyles(styles.default);
+  const editorStyles = getEditorStyles(styles[blockStylesModifiers.default]);
+  const customStyles = getCustomStyles(styles[blockStylesModifiers.default]);
   return {
     ...editorStyles,
+    ...customStyles,
+  };
+}
+
+function getMappedMixinStyles(mixin: MixinModel): MappedStyleModel {
+  const { styles } = mixin;
+  return getMappedStyles(styles);
+}
+
+export function getMappedMixinsStyles(
+  mixinStyles: DataBlockMixinStylesModel,
+  mixins: MixinsModel
+): Array<MappedStyleModel> {
+  return mixinStyles.map((mixinData: DataBlockMixinModel) => {
+    const mixin = getMixinFromMixins(mixinData.key, mixins);
+    return getMappedMixinStyles(mixin);
+  });
+}
+
+export function getMappedBlockStyles(block: DataBlockModel, mixins: MixinsModel): MappedStyleModel {
+  const { mixinStyles, rawStyles } = block;
+
+  const mappedMixinStyles = mixinStyles ? getMappedMixinsStyles(mixinStyles, mixins) : [];
+
+  const customStyles = rawStyles && rawStyles.styles ? getMappedStyles(rawStyles.styles) : {};
+
+  let mappedStyles = {};
+
+  mappedMixinStyles.forEach((styles: MappedStyleModel) => {
+    mappedStyles = {
+      ...mappedStyles,
+      ...styles,
+    };
+  });
+
+  return {
+    ...mappedStyles,
     ...customStyles,
   };
 }

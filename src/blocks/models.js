@@ -16,6 +16,7 @@ export type BlockModel = {
   },
   propsConfig: BlockModelPropsConfig,
   childrenAllowed: boolean,
+  stylesEnabled: boolean,
 };
 
 export type BlockGroupModel = {

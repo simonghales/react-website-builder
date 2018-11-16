@@ -3,7 +3,8 @@
 import type { BlockGroupModel, BlockModel } from './models';
 import Heading from './basic/Heading/Heading';
 import Container from './basic/Container/Container';
-import Module from './Module/Module';
+import Module from './module/Module/Module';
+import ModuleImport from './module/ModuleImport/ModuleImport';
 import Element from './html/Element/Element';
 import type { DataBlockModel } from '../data/blocks/models';
 
@@ -30,6 +31,7 @@ export const moduleBlocks: BlockGroupModel = {
   key: blockGroups.Module,
   blocks: {
     [Module.key]: Module,
+    [ModuleImport.key]: ModuleImport,
   },
 };
 

@@ -3,14 +3,14 @@
 import React from 'react';
 import Nestable from 'react-nestable';
 import { cx } from 'emotion';
-import type { DataBlockModelMapped, MappedDataBlocks } from '../../../../../data/blocks/models';
+import type { MappedDataBlockModel, MappedDataBlocks } from '../../../../../data/blocks/models';
 import { getDataBlockLabel, getDataBlockType } from '../../../../../data/blocks/models';
 import BlockPreview from '../BlockPreview/BlockPreview';
 import styles from './styles';
 
 export type NestItem = {
   id: string,
-  block: DataBlockModelMapped,
+  block: MappedDataBlockModel,
   children: Array<NestItem>,
   selectedBlock: string,
   selectBlock: (blockKey: string) => void,
@@ -19,11 +19,11 @@ export type NestItem = {
 };
 
 function mapBlocksToNestItems(
-  blocks: Array<DataBlockModelMapped>,
+  blocks: Array<MappedDataBlockModel>,
   selectedBlock: string,
   selectBlock: (blockKey: string) => void
 ): Array<NestItem> {
-  return blocks.map((block: DataBlockModelMapped) => {
+  return blocks.map((block: MappedDataBlockModel) => {
     const item: NestItem = {
       id: block.key,
       block,
@@ -46,7 +46,7 @@ function renderNestItem({ item }: { item: NestItem }) {
   const { block, selectedBlock, selectBlock } = item;
   return (
     <BlockPreview
-      type={getDataBlockType(block)}
+      type={block.blockLabel}
       label={getDataBlockLabel(block)}
       blockChildren={[]}
       key={block.key}

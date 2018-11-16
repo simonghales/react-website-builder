@@ -10,6 +10,7 @@ const containerBlock: BlockModel = {
   defaultProps: containerDefaultProps,
   propsConfig: containerPropsConfig,
   childrenAllowed: true,
+  stylesEnabled: true,
 };
 
 export default containerBlock;

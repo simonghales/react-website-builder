@@ -1,9 +1,9 @@
 // @flow
 import { getBlockUniqueId } from '../../blocks/utils';
-import type { EditorReduxState } from '../../state/redux/editor/reducer';
 import Element from '../../blocks/html/Element/Element';
 import { blockGroups, blockTypes } from '../../blocks/blocks';
-import Module from '../../blocks/Module/Module';
+import Module from '../../blocks/module/Module/Module';
+import ModuleImport from '../../blocks/module/ModuleImport/ModuleImport';
 import Heading from '../../blocks/basic/Heading/Heading';
 import Container from '../../blocks/basic/Container/Container';
 import { DUMMY_STYLE_EMPTY, DUMMY_STYLE_TEST } from '../styles/dummy';
@@ -80,7 +80,7 @@ const DUMMY_BLOCK_CONTAINER: DataBlockModel = {
   rawStyles: DUMMY_STYLE_EMPTY,
 };
 
-const DUMMY_BLOCK_MODULE: DataBlockModel = {
+export const DUMMY_BLOCK_MODULE: DataBlockModel = {
   key: getBlockUniqueId(),
   groupKey: blockGroups.Module,
   blockKey: Module.key,
@@ -89,12 +89,7 @@ const DUMMY_BLOCK_MODULE: DataBlockModel = {
   props: {
     children: null,
   },
-  propsConfig: {
-    children: {
-      label: 'Content',
-      type: 'blocks',
-    },
-  },
+  propsConfig: {},
   blockChildrenKeys: [
     DUMMY_BLOCK_HEADING.key,
     DUMMY_BLOCK_SUBHEADING.key,
@@ -104,14 +99,69 @@ const DUMMY_BLOCK_MODULE: DataBlockModel = {
   rawStyles: DUMMY_STYLE_EMPTY,
 };
 
-export const DUMMY_PAGE_DATA: EditorReduxState = {
-  blocks: {
-    [DUMMY_BLOCK_HEADING.key]: DUMMY_BLOCK_HEADING,
-    [DUMMY_BLOCK_SUBHEADING.key]: DUMMY_BLOCK_SUBHEADING,
-    [DUMMY_BLOCK_CONTAINER.key]: DUMMY_BLOCK_CONTAINER,
-    [DUMMY_BLOCK_PARAGRAPH.key]: DUMMY_BLOCK_PARAGRAPH,
-    [DUMMY_BLOCK_MODULE.key]: DUMMY_BLOCK_MODULE,
+export const DUMMY_BLOCKS = {
+  [DUMMY_BLOCK_HEADING.key]: DUMMY_BLOCK_HEADING,
+  [DUMMY_BLOCK_SUBHEADING.key]: DUMMY_BLOCK_SUBHEADING,
+  [DUMMY_BLOCK_CONTAINER.key]: DUMMY_BLOCK_CONTAINER,
+  [DUMMY_BLOCK_PARAGRAPH.key]: DUMMY_BLOCK_PARAGRAPH,
+  [DUMMY_BLOCK_MODULE.key]: DUMMY_BLOCK_MODULE,
+};
+
+export const DUMMY_BLOCK_PAGE_INTRO_MODULE: DataBlockModel = {
+  key: getBlockUniqueId(),
+  groupKey: blockGroups.Module,
+  blockKey: ModuleImport.key,
+  blockType: blockTypes.module,
+  label: 'Home Page',
+  props: {
+    children: null,
   },
-  rootBlock: DUMMY_BLOCK_MODULE.key,
-  selectedBlock: DUMMY_BLOCK_SUBHEADING.key,
+  propsConfig: {},
+  blockChildrenKeys: [],
+  moduleKey: 'DUMMY_INTRO_MODULE',
+  linkedModuleKey: 'DUMMY_MODULE_TEMPLATE_INTRO',
+  isParentModule: false,
+  rawStyles: DUMMY_STYLE_EMPTY,
+};
+
+export const DUMMY_BLOCK_PAGE_PARAGRAPH: DataBlockModel = {
+  key: getBlockUniqueId(),
+  groupKey: blockGroups.HTML,
+  blockKey: Element.key,
+  blockType: blockTypes.html,
+  label: 'Site Description',
+  props: {
+    element: 'p',
+    content: 'Testing',
+  },
+  propsConfig: {},
+  blockChildrenKeys: [],
+  isParentModule: false,
+  rawStyles: DUMMY_STYLE_EMPTY,
+  mixinStyles: [
+    {
+      key: 'DUMMY_MIXIN_CENTERED',
+      disabledModifiers: {},
+    },
+  ],
+};
+
+export const DUMMY_BLOCK_PAGE_MODULE: DataBlockModel = {
+  key: getBlockUniqueId(),
+  groupKey: blockGroups.Module,
+  blockKey: Module.key,
+  blockType: blockTypes.module,
+  label: 'Home Page',
+  props: {
+    children: null,
+  },
+  propsConfig: {
+    children: {
+      label: 'Content',
+      type: 'blocks',
+    },
+  },
+  blockChildrenKeys: [DUMMY_BLOCK_PAGE_INTRO_MODULE.key, DUMMY_BLOCK_PAGE_PARAGRAPH.key],
+  isParentModule: true,
+  rawStyles: DUMMY_STYLE_EMPTY,
 };

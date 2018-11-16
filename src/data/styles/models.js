@@ -1,5 +1,9 @@
 // @flow
 
+export const blockStylesModifiers = {
+  default: 'default',
+};
+
 export type StylePropModel = {
   label: string,
   cssKey: string,
@@ -16,12 +20,14 @@ export type BlockModifierStyles = {
   },
 };
 
+export type StylesModel = {
+  [string]: BlockModifierStyles,
+};
+
 export type BlockStyles = {
-  styles: {
-    [string]: BlockModifierStyles,
-  },
+  styles: StylesModel,
 };
 
 export type MappedStyleModel = {
-  [string]: string | MappedStyleModel,
+  [string]: string,
 };

@@ -1,6 +1,6 @@
 // @flow
 
-import type { BlockModel } from '../models';
+import type { BlockModel } from '../../models';
 import ModuleComponent from './component';
 import { moduleDefaultProps, modulePropsConfig } from './props';
 
@@ -10,6 +10,7 @@ const moduleBlock: BlockModel = {
   defaultProps: moduleDefaultProps,
   propsConfig: modulePropsConfig,
   childrenAllowed: true,
+  stylesEnabled: false,
 };
 
 export default moduleBlock;

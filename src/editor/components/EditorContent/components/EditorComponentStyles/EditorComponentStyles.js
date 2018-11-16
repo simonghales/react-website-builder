@@ -63,6 +63,7 @@ const StyleSectionWrapper = ({ data, blockStyles, updateStyle }: StyleSectionWra
 type Props = {
   blockStyles: BlockStyles,
   blockKey: string,
+  disabled: boolean,
   updateStyle: (
     blockKey: string,
     cssKey: string,
@@ -109,12 +110,18 @@ const Side = () => (
   </div>
 );
 
-const EditorComponentStyles = (props: Props) => (
-  <div className={styles.containerClass}>
-    <Main {...props} />
-    <Side {...props} />
-  </div>
-);
+const EditorComponentStyles = (props: Props) => {
+  const { disabled } = props;
+  if (disabled) {
+    return <div>This block cannot be styled.</div>;
+  }
+  return (
+    <div className={styles.containerClass}>
+      <Main {...props} />
+      <Side {...props} />
+    </div>
+  );
+};
 
 const mapDispatchToProps = {
   updateStyle: (

@@ -9,6 +9,7 @@ import type { DataBlockModel } from '../../../data/blocks/models';
 import type { EditorComponentTabsOptions } from './components/EditorComponentTabs/EditorComponentTabs';
 import EditorComponentStyles from './components/EditorComponentStyles/EditorComponentStyles';
 import type { BlockStyles } from '../../../data/styles/models';
+import { doesBlockAllowStyles } from '../../../data/blocks/state';
 
 type Props = {
   selectedBlock: DataBlockModel,
@@ -23,7 +24,7 @@ class EditorContent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selectedTab: editorComponentTabs.Styles,
+      selectedTab: editorComponentTabs.Props,
     };
   }
 
@@ -47,6 +48,7 @@ class EditorContent extends Component<Props, State> {
               blockKey={selectedBlock.key}
               blockStyles={selectedBlockStyle}
               key={selectedBlock.key}
+              disabled={!doesBlockAllowStyles(selectedBlock)}
             />
           )}
         </div>

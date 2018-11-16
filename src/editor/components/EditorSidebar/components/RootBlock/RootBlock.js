@@ -2,18 +2,18 @@
 import React from 'react';
 import { getDataBlockLabel, getDataBlockType } from '../../../../../data/blocks/models';
 import BlockPreview from '../BlockPreview/BlockPreview';
-import type { DataBlockModelMapped } from '../../../../../data/blocks/models';
+import type { MappedDataBlockModel } from '../../../../../data/blocks/models';
 
 type Props = {
   children: any,
-  block: DataBlockModelMapped,
+  block: MappedDataBlockModel,
   selectBlock: (blockKey: string) => void,
   selectedBlock: string,
 };
 
 const RootBlock = ({ children, block, selectBlock, selectedBlock }: Props) => (
   <BlockPreview
-    type={getDataBlockType(block)}
+    type={block.blockLabel}
     label={getDataBlockLabel(block)}
     blockChildren={[]}
     key={block.key}

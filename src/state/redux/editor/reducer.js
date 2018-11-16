@@ -1,20 +1,19 @@
 // @flow
 
-import type { SitePageDataBlocks } from '../../../data/blocks/models';
-import { DUMMY_PAGE_DATA } from '../../../data/blocks/dummy';
-import { getBlockViaKey } from './state';
-import {
-  updateAllBlocksOrder,
-  updateBlockProp,
-  updateBlocksOrder,
-  updateBlockStyle,
-} from './modifiers';
+import { DUMMY_PAGE_DATA } from '../../../data/redux';
+import { getBlockViaKey, getSelectedModuleKey } from './state';
+import { updateAllBlocksOrder, updateBlockProp, updateBlockStyle } from './modifiers';
 import type { BlocksOrder } from './modifiers';
+import type { ModuleTemplates } from '../../../data/moduleTemplates/models';
+import type { DataModules } from '../../../data/modules/models';
+import type { MixinsModel } from '../../../data/mixins/models';
 
 export type EditorReduxState = {
-  blocks: SitePageDataBlocks,
-  rootBlock: string,
+  modules: DataModules,
+  moduleTemplates: ModuleTemplates,
+  selectedModule: string,
   selectedBlock: string,
+  mixinStyles: MixinsModel,
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
@@ -87,14 +86,21 @@ function handleSetBlockStyleValue(
   state: EditorReduxState,
   { blockKey, cssKey, modifier, section, value }: SetBlockStyleValuePayload
 ): EditorReduxState {
+  const selectedModule = getSelectedModuleKey(state);
   const block = getBlockViaKey(state, blockKey);
   return {
     ...state,
-    blocks: {
-      ...state.blocks,
-      [blockKey]: {
-        ...block,
-        rawStyles: updateBlockStyle(block, modifier, section, cssKey, value),
+    modules: {
+      ...state.modules,
+      [selectedModule]: {
+        ...state.modules[selectedModule],
+        blocks: {
+          ...state.modules[selectedModule].blocks,
+          [blockKey]: {
+            ...block,
+            rawStyles: updateBlockStyle(block, modifier, section, cssKey, value),
+          },
+        },
       },
     },
   };
@@ -129,50 +135,20 @@ function handleSetBlocksOrder(
   state: EditorReduxState,
   { blocksOrder, rootBlocksOrder }: SetBlocksOrderPayload
 ): EditorReduxState {
+  const selectedModule = getSelectedModuleKey(state);
   return {
     ...state,
-    blocks: updateAllBlocksOrder(blocksOrder, state.blocks, rootBlocksOrder),
-  };
-}
-
-const UPDATE_BLOCK_ORDER = 'UPDATE_BLOCK_ORDER';
-
-type UpdateBlockOrderPayload = {
-  targetKey: string,
-  destinationKey: string,
-  destinationIndex: number,
-  sourceKey: string,
-};
-
-type UpdateBlockOrderAction = {
-  type: string,
-  payload: UpdateBlockOrderPayload,
-};
-
-export function updateBlockOrder(
-  targetKey: string,
-  destinationKey: string,
-  destinationIndex: number,
-  sourceKey: string
-): UpdateBlockOrderAction {
-  return {
-    type: UPDATE_BLOCK_ORDER,
-    payload: {
-      targetKey,
-      destinationKey,
-      destinationIndex,
-      sourceKey,
+    modules: {
+      ...state.modules,
+      [selectedModule]: {
+        ...state.modules[selectedModule],
+        blocks: updateAllBlocksOrder(
+          blocksOrder,
+          state.modules[selectedModule].blocks,
+          rootBlocksOrder
+        ),
+      },
     },
-  };
-}
-
-function handleUpdateBlockOrder(
-  state: EditorReduxState,
-  { targetKey, destinationKey, destinationIndex, sourceKey }: UpdateBlockOrderPayload
-): EditorReduxState {
-  return {
-    ...state,
-    blocks: updateBlocksOrder(targetKey, destinationKey, destinationIndex, sourceKey, state.blocks),
   };
 }
 
@@ -208,27 +184,29 @@ function handleSetBlockPropValue(
   state: EditorReduxState,
   { blockKey, propKey, value }: SetBlockPropValuePayload
 ): EditorReduxState {
+  const selectedModule = getSelectedModuleKey(state);
   const block = getBlockViaKey(state, blockKey);
   return {
     ...state,
-    blocks: {
-      ...state.blocks,
-      [blockKey]: updateBlockProp(block, propKey, value),
+    modules: {
+      ...state.modules,
+      [selectedModule]: {
+        ...state.modules[selectedModule],
+        blocks: {
+          ...state.modules[selectedModule].blocks,
+          [blockKey]: updateBlockProp(block, propKey, value),
+        },
+      },
     },
   };
 }
 
-type Actions =
-  | SetSelectedBlockAction
-  | SetBlockPropValueAction
-  | SetBlockStyleValueAction
-  | UpdateBlockOrderAction;
+type Actions = SetSelectedBlockAction | SetBlockPropValueAction | SetBlockStyleValueAction;
 
 const ACTION_HANDLERS = {
   [SET_SELECTED_BLOCK]: handleSetSelectedBlock,
   [SET_BLOCK_STYLE_VALUE]: handleSetBlockStyleValue,
   [SET_BLOCK_PROP_VALUE]: handleSetBlockPropValue,
-  [UPDATE_BLOCK_ORDER]: handleUpdateBlockOrder,
   [SET_BLOCKS_ORDER]: handleSetBlocksOrder,
 };
 
