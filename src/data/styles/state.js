@@ -23,14 +23,25 @@ export function getStyleValue(cssKey: string, blockStyles: BlockStyles): string 
   return getModifierStyleValue(cssKey, styles[blockStylesModifiers.default]);
 }
 
+function getValidStyles(styles: { [string]: string }): { [string]: string } {
+  const validStyles = {};
+  Object.keys(styles).forEach(styleKey => {
+    const value = styles[styleKey];
+    if (value !== '') {
+      validStyles[styleKey] = value;
+    }
+  });
+  return validStyles;
+}
+
 function getEditorStyles(styles: BlockModifierStyles): {} {
   const { editor = {} } = styles;
-  return editor;
+  return getValidStyles(editor);
 }
 
 function getCustomStyles(styles: BlockModifierStyles): {} {
   const { custom = {} } = styles;
-  return custom;
+  return getValidStyles(custom);
 }
 
 export function getMappedStyles(styles: StylesModel): MappedStyleModel {

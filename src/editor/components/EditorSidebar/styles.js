@@ -48,16 +48,22 @@ const selectedBlockClass = css`
   }
 `;
 
-const blockPreviewTextClass = css`
-  padding: 5px 10px 5px 10px;
+const blockPreviewInfoClass = css`
+  padding: 5px 5px 5px 10px;
   opacity: 0.5;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 
   .nestable-drag-layer .nestable-item-copy &,
   &:hover,
   .${classNames.selectedBlock} > & {
     opacity: 1;
   }
+`;
+
+const blockPreviewTextClass = css`
+  flex: 1;
 `;
 
 const blockPreviewTypeClass = css`
@@ -72,6 +78,23 @@ const blockPreviewLabelClass = css`
   color: ${colors.light};
 `;
 
+const blockPreviewEnterClass = css`
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-radius: 3px;
+  color: ${colors.light};
+
+  &:hover {
+    background-color: ${colors.light};
+    color: ${colors.blackBlue};
+  }
+
+  svg {
+  }
+`;
+
 const blockPreviewChildrenClass = css`
   padding: 5px 0;
 `;
@@ -81,9 +104,11 @@ export default {
   blockPreviewClass,
   rootBlockPreviewClass,
   selectedBlockClass,
+  blockPreviewInfoClass,
   blockPreviewTextClass,
   blockPreviewTypeClass,
   blockPreviewLabelClass,
+  blockPreviewEnterClass,
   blockPreviewChildrenClass,
   classNames,
 };

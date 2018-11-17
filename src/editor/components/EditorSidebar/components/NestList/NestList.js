@@ -7,6 +7,7 @@ import type { MappedDataBlockModel, MappedDataBlocks } from '../../../../../data
 import { getDataBlockLabel, getDataBlockType } from '../../../../../data/blocks/models';
 import BlockPreview from '../BlockPreview/BlockPreview';
 import styles from './styles';
+import { isBlockModuleBlock } from '../../../../../data/blocks/state';
 
 export type NestItem = {
   id: string,
@@ -14,6 +15,7 @@ export type NestItem = {
   children: Array<NestItem>,
   selectedBlock: string,
   selectBlock: (blockKey: string) => void,
+  selectModule: (moduleKey: string) => void,
   childrenEnabled: boolean,
   classes: string,
 };
@@ -21,7 +23,8 @@ export type NestItem = {
 function mapBlocksToNestItems(
   blocks: Array<MappedDataBlockModel>,
   selectedBlock: string,
-  selectBlock: (blockKey: string) => void
+  selectBlock: (blockKey: string) => void,
+  selectModule: (moduleKey: string) => void
 ): Array<NestItem> {
   return blocks.map((block: MappedDataBlockModel) => {
     const item: NestItem = {
@@ -30,20 +33,26 @@ function mapBlocksToNestItems(
       children: [],
       selectedBlock,
       selectBlock,
+      selectModule,
       childrenEnabled: block.childrenAllowed,
       classes: cx({
         [styles.classNames.nestItemSelected]: selectedBlock === block.key,
       }),
     };
     if (block.blockChildren) {
-      item.children = mapBlocksToNestItems(block.blockChildren, selectedBlock, selectBlock);
+      item.children = mapBlocksToNestItems(
+        block.blockChildren,
+        selectedBlock,
+        selectBlock,
+        selectModule
+      );
     }
     return item;
   });
 }
 
 function renderNestItem({ item }: { item: NestItem }) {
-  const { block, selectedBlock, selectBlock } = item;
+  const { block, selectedBlock, selectBlock, selectModule } = item;
   return (
     <BlockPreview
       type={block.blockLabel}
@@ -54,7 +63,14 @@ function renderNestItem({ item }: { item: NestItem }) {
       selected={selectedBlock === block.key}
       selectBlock={selectBlock}
       selectedBlock={selectedBlock}
+      selectModule={() => {
+        const { moduleKey } = block;
+        if (moduleKey) {
+          selectModule(moduleKey);
+        }
+      }}
       isParentModule={block.isParentModule}
+      isModule={isBlockModuleBlock(block)}
     />
   );
 }
@@ -64,12 +80,13 @@ type Props = {
   onChange: (items: Array<NestItem>, item: NestItem) => void,
   selectedBlock: string,
   selectBlock: (blockKey: string) => void,
+  selectModule: (moduleKey: string) => void,
 };
 
-const NestList = ({ blocks, onChange, selectedBlock, selectBlock }: Props) => (
+const NestList = ({ blocks, onChange, selectedBlock, selectBlock, selectModule }: Props) => (
   <div className={styles.containerClass}>
     <Nestable
-      items={mapBlocksToNestItems(blocks, selectedBlock, selectBlock)}
+      items={mapBlocksToNestItems(blocks, selectedBlock, selectBlock, selectModule)}
       renderItem={renderNestItem}
       onChange={onChange}
       maxDepth={50}

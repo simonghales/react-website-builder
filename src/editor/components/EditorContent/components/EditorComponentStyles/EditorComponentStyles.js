@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { cx } from 'emotion';
 import { connect } from 'react-redux';
 import styles from './styles';
 import StyleProp from '../../../../../components/StyleProp/StyleProp';
@@ -8,37 +7,8 @@ import type { BlockStyles } from '../../../../../data/styles/models';
 import { appearanceStyleSection, dimensionsStyleSection, textStyleSection } from './data';
 import type { StyleSectionModel } from './data';
 import { setBlockStyleValue } from '../../../../../state/redux/editor/reducer';
-
-const SectionHeader = ({ text }: { text: string }) => (
-  <header className={styles.sectionHeaderClass}>
-    <div className={styles.sectionHeaderTitleClass}>{text}</div>
-  </header>
-);
-
-const StyleSection = ({
-  children,
-  title,
-  gridBody,
-}: {
-  children: any,
-  title: string,
-  gridBody?: boolean,
-}) => (
-  <div className={styles.sectionClass}>
-    <SectionHeader text={title} />
-    <div
-      className={cx(styles.sectionBodyClass, {
-        [styles.sectionBodyGridClass]: gridBody,
-      })}
-    >
-      {children}
-    </div>
-  </div>
-);
-
-StyleSection.defaultProps = {
-  gridBody: true,
-};
+import EditorStylesMixins from './components/EditorStylesMixins/EditorStylesMixins';
+import StyleSection from './components/StyleSection/StyleSection';
 
 type StyleSectionWrapperProps = {
   blockStyles: BlockStyles,
@@ -101,9 +71,7 @@ const Main = ({ blockKey, blockStyles, updateStyle }: Props) => {
 
 const Side = () => (
   <div className={styles.sideClass}>
-    <StyleSection title="Mixins" gridBody={false}>
-      <div>Mixins</div>
-    </StyleSection>
+    <EditorStylesMixins />
     <StyleSection title="Modifiers" gridBody={false}>
       <div>Modifiers</div>
     </StyleSection>

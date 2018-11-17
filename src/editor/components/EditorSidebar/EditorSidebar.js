@@ -4,8 +4,15 @@ import { connect } from 'react-redux';
 import styles from './styles';
 import type { MappedDataBlocks } from '../../../data/blocks/models';
 import type { ReduxState } from '../../../state/redux/store';
-import { getEditorMappedBlocks, getSelectedBlockKey } from '../../../state/redux/editor/state';
-import { setBlocksOrder, setSelectedBlock } from '../../../state/redux/editor/reducer';
+import {
+  getEditorMappedBlocks,
+  getSelectedModuleSelectedBlockKey,
+} from '../../../state/redux/editor/state';
+import {
+  setBlocksOrder,
+  setSelectedBlock,
+  setSelectedModule,
+} from '../../../state/redux/editor/reducer';
 import NestList from './components/NestList/NestList';
 import type { NestItem } from './components/NestList/NestList';
 import type { BlocksOrder } from '../../../state/redux/editor/modifiers';
@@ -33,6 +40,7 @@ function mapRootBlocksOrder(items: Array<NestItem>): Array<string> {
 type Props = {
   blocks: MappedDataBlocks,
   selectBlock: (blockKey: string) => void,
+  selectModule: (moduleKey: string) => void,
   selectedBlock: string,
   updateBlocksOrder: (blocksOrder: BlocksOrder, rootBlocksOrder: Array<string>) => void,
 };
@@ -48,7 +56,7 @@ class EditorSidebar extends Component<Props> {
   };
 
   render() {
-    const { blocks, selectBlock, selectedBlock } = this.props;
+    const { blocks, selectBlock, selectModule, selectedBlock } = this.props;
     const rootBlock = blocks[0];
     const nestBlocks = rootBlock.blockChildren ? rootBlock.blockChildren : [];
     return (
@@ -58,6 +66,7 @@ class EditorSidebar extends Component<Props> {
             blocks={nestBlocks}
             onChange={this.handleChange}
             selectBlock={selectBlock}
+            selectModule={selectModule}
             selectedBlock={selectedBlock}
           />
         </RootBlock>
@@ -69,11 +78,12 @@ class EditorSidebar extends Component<Props> {
 
 const mapStateToProps = (state: ReduxState) => ({
   blocks: getEditorMappedBlocks(state.editor),
-  selectedBlock: getSelectedBlockKey(state.editor),
+  selectedBlock: getSelectedModuleSelectedBlockKey(state.editor),
 });
 
 const mapDispatchToProps = {
   selectBlock: (blockKey: string) => setSelectedBlock(blockKey),
+  selectModule: (moduleKey: string) => setSelectedModule(moduleKey),
   updateBlocksOrder: (blocksOrder: BlocksOrder, rootBlocksOrder: Array<string>) =>
     setBlocksOrder(blocksOrder, rootBlocksOrder),
 };

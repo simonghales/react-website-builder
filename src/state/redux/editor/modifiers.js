@@ -9,13 +9,14 @@ export function updateBlockProp(
   propKey: string,
   value: any
 ): DataBlockModel {
-  return {
+  const updatedBlock = {
     ...block,
     props: {
       ...block.props,
       [propKey]: value,
     },
   };
+  return updatedBlock;
 }
 
 export function updateBlockStyle(

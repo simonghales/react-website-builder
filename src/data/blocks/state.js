@@ -1,6 +1,6 @@
 // @flow
 
-import type { DataBlockModel } from './models';
+import type { DataBlockMappedMixinsModel, DataBlockModel } from './models';
 import { blockGroups, getBlockFromDataBlock } from '../../blocks/blocks';
 import type { BlockModel } from '../../blocks/models';
 import { getDataBlockType } from './models';
@@ -12,6 +12,8 @@ import {
 } from '../moduleTemplates/state';
 import type { DataModules } from '../modules/models';
 import { getModuleFromModules } from '../modules/state';
+import type { MixinsModel } from '../mixins/models';
+import { getMixinFromMixins } from '../mixins/state';
 
 export function doesBlockAllowStyles(dataBlock: DataBlockModel): boolean {
   const block = getBlockFromDataBlock(dataBlock);
@@ -23,7 +25,6 @@ export function getBlockLabel(
   modules: DataModules,
   moduleTemplates: ModuleTemplates
 ): string {
-  console.log('dataBlock', dataBlock);
   if (dataBlock.groupKey === blockGroups.Module && dataBlock.blockKey === ModuleImport.key) {
     if (dataBlock.linkedModuleKey) {
       const moduleTemplate = getModuleTemplateFromModuleTemplates(
@@ -37,4 +38,27 @@ export function getBlockLabel(
     return `Custom Module`;
   }
   return getDataBlockType(dataBlock);
+}
+
+export function isBlockModuleBlock(dataBlock: DataBlockModel): boolean {
+  return (
+    dataBlock.groupKey === blockGroups.Module &&
+    (!!dataBlock.moduleKey || !!dataBlock.linkedModuleKey)
+  );
+}
+
+export function getDataBlockMappedMixins(
+  dataBlock: DataBlockModel,
+  mixins: MixinsModel
+): DataBlockMappedMixinsModel {
+  const { mixinStyles } = dataBlock;
+  if (!mixinStyles) return [];
+  return mixinStyles.map(blockMixin => {
+    const mixin = getMixinFromMixins(blockMixin.key, mixins);
+    return {
+      key: blockMixin.key,
+      name: mixin.name,
+      groupKey: mixin.groupKey,
+    };
+  });
 }

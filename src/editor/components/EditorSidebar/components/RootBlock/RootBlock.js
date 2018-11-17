@@ -22,6 +22,7 @@ const RootBlock = ({ children, block, selectBlock, selectedBlock }: Props) => (
     selectBlock={selectBlock}
     selectedBlock={selectedBlock}
     isRootBlock
+    isModule={false}
   >
     {children}
   </BlockPreview>

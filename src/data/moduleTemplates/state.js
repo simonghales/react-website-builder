@@ -3,6 +3,7 @@
 import type { DataModules, MappedDataModule } from '../modules/models';
 import { getMappedDataModule } from '../modules/state';
 import type { ModuleTemplate, ModuleTemplates } from './models';
+import type { MixinsModel } from '../mixins/models';
 
 export function getModuleTemplateFromModuleTemplates(
   linkedModuleKey: string,
@@ -22,9 +23,20 @@ export function getModuleTemplateModuleKey(moduleTemplate: ModuleTemplate): stri
 export function getMappedDataLinkedModule(
   linkedModuleKey: string,
   modules: DataModules,
-  moduleTemplates: ModuleTemplates
+  moduleTemplates: ModuleTemplates,
+  mixins: MixinsModel
 ): MappedDataModule {
   const moduleTemplate = getModuleTemplateFromModuleTemplates(linkedModuleKey, moduleTemplates);
   const moduleKey = getModuleTemplateModuleKey(moduleTemplate);
-  return getMappedDataModule(moduleKey, modules, moduleTemplates);
+  return getMappedDataModule(moduleKey, modules, moduleTemplates, mixins);
+}
+
+export function getMappedLinkedModuleKey(
+  linkedModuleKey: string,
+  modules: DataModules,
+  moduleTemplates: ModuleTemplates
+): string {
+  const moduleTemplate = getModuleTemplateFromModuleTemplates(linkedModuleKey, moduleTemplates);
+  const moduleKey = getModuleTemplateModuleKey(moduleTemplate);
+  return moduleKey;
 }

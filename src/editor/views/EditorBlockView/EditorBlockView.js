@@ -13,7 +13,10 @@ import {
 } from '../../../data/blocks/models';
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { ReduxState } from '../../../state/redux/store';
-import { getSelectedBlock, getSelectedBlockStyle } from '../../../state/redux/editor/state';
+import {
+  getSelectedBlockStyle,
+  getSelectedModuleSelectedBlock,
+} from '../../../state/redux/editor/state';
 import type { BlockStyles } from '../../../data/styles/models';
 
 type Props = {
@@ -41,7 +44,7 @@ const EditorBlockView = ({ selectedBlock, selectedBlockStyle }: Props) => (
 );
 
 const mapStateToProps = (state: ReduxState) => ({
-  selectedBlock: getSelectedBlock(state.editor),
+  selectedBlock: getSelectedModuleSelectedBlock(state.editor),
   selectedBlockStyle: getSelectedBlockStyle(state.editor),
 });
 
