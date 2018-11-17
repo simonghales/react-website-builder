@@ -12,6 +12,7 @@ const blackInactiveBlue = '#111b30';
 const darkBlue = '#141E34';
 const mediumBlue = '#152036';
 const siteBackground = darkBlue;
+const faintInput = transparentize(0.75, '#000626');
 const darkInput = transparentize(0.65, '#000626');
 const darkInputFocused = transparentize(0.45, '#000626');
 
@@ -27,6 +28,7 @@ export default {
   darkBlue,
   mediumBlue,
   siteBackground,
+  faintInput,
   darkInput,
   darkInputFocused,
 };

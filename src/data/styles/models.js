@@ -11,13 +11,13 @@ export type StylePropModel = {
   defaultValue: string,
 };
 
+export type BlockRawStyles = {
+  [string]: string,
+};
+
 export type BlockModifierStyles = {
-  editor?: {
-    [string]: string,
-  },
-  custom?: {
-    [string]: string,
-  },
+  editor?: BlockRawStyles,
+  custom?: BlockRawStyles,
 };
 
 export type StylesModel = {
@@ -30,4 +30,29 @@ export type BlockStyles = {
 
 export type MappedStyleModel = {
   [string]: string,
+};
+
+export type InheritedMixinDetails = {
+  key: string,
+  name: string,
+};
+
+export type EditorMappedStyle = {
+  value: string,
+  inheritedValue: string,
+  inheritedMixins: Array<InheritedMixinDetails>,
+  setInBlock?: boolean,
+};
+
+export type EditorMappedStyles = {
+  [string]: EditorMappedStyle,
+};
+
+export type EditorMappedModifierStyles = {
+  editor?: {},
+  custom?: {},
+};
+
+export type EditorMappedStylesContainer = {
+  [string]: EditorMappedModifierStyles,
 };

@@ -111,6 +111,7 @@ type Props = {
   noOptionsMessage?: string,
   options: Array<SelectOption>,
   styleValue: string,
+  inheritedValue: string,
   updateStyle: (value: string) => void,
 };
 
@@ -133,9 +134,11 @@ class SelectInput extends Component<Props, State> {
   }
 
   handleChange = (newValue: Selected) => {
-    const { updateStyle } = this.props;
+    const { updateStyle, inheritedValue } = this.props;
+    const updateValue =
+      !newValue || newValue.length === 0 ? parseSelectInputStyleValue(inheritedValue) : newValue;
     this.setState({
-      selected: newValue,
+      selected: updateValue,
     });
     if (!newValue) {
       updateStyle(''); // todo - handle better

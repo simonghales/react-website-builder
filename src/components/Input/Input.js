@@ -12,6 +12,7 @@ type InputStyleTypes = $Keys<typeof inputStyleTypes>;
 type Props = {
   styleType: InputStyleTypes,
   value: string,
+  inheritedValue: string,
   onChange: (value: string) => void,
 };
 
@@ -28,12 +29,13 @@ class Input extends Component<Props, State> {
   }
 
   handleInputChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    const { onChange } = this.props;
-    const value = event.target.value.toString();
+    const { onChange, inheritedValue } = this.props;
+    const inputValue = event.target.value.toString();
+    const newValue = inputValue === '' ? inheritedValue : inputValue;
     this.setState({
-      text: value,
+      text: newValue,
     });
-    onChange(value); // todo - debounce
+    onChange(inputValue); // todo - debounce
   };
 
   render() {

@@ -12,7 +12,7 @@ import {
 } from '../moduleTemplates/state';
 import type { DataModules } from '../modules/models';
 import { getModuleFromModules } from '../modules/state';
-import type { MixinsModel } from '../mixins/models';
+import type { MixinModel, MixinsModel } from '../mixins/models';
 import { getMixinFromMixins } from '../mixins/state';
 
 export function doesBlockAllowStyles(dataBlock: DataBlockModel): boolean {
@@ -60,5 +60,17 @@ export function getDataBlockMappedMixins(
       name: mixin.name,
       groupKey: mixin.groupKey,
     };
+  });
+}
+
+export function getDataBlockMixins(
+  dataBlock: DataBlockModel,
+  mixins: MixinsModel
+): Array<MixinModel> {
+  const { mixinStyles } = dataBlock;
+  if (!mixinStyles) return [];
+  return mixinStyles.map(blockMixin => {
+    const mixin = getMixinFromMixins(blockMixin.key, mixins);
+    return mixin;
   });
 }

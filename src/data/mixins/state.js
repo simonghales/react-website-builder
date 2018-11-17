@@ -1,6 +1,7 @@
 // @flow
 
 import type { MixinModel, MixinsModel } from './models';
+import type {DataBlockMixinStylesModel, DataBlockModel} from '../blocks/models';
 
 export function getMixinFromMixins(mixinKey: string, mixins: MixinsModel): MixinModel {
   const mixin = mixins[mixinKey];
@@ -8,4 +9,11 @@ export function getMixinFromMixins(mixinKey: string, mixins: MixinsModel): Mixin
     throw new Error(`Mixin ${mixinKey} could not be matched.`);
   }
   return mixin;
+}
+
+export function getBlockMixinsStyles(
+  mixinStyles: DataBlockMixinStylesModel,
+  mixins: MixinsModel
+): Array<MixinModel> {
+  return mixinStyles.map(mixin => getMixinFromMixins(mixin.key, mixins));
 }

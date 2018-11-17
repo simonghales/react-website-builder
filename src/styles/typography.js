@@ -55,5 +55,5 @@ export const tinyFont = css`
 
 export const tinyLabel = css`
   ${tinyFont};
-  color: ${transparentize(0.3, colors.light)};
+  color: ${colors.light};
 `;

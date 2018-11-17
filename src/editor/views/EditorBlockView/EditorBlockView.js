@@ -13,18 +13,13 @@ import {
 } from '../../../data/blocks/models';
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { ReduxState } from '../../../state/redux/store';
-import {
-  getSelectedBlockStyle,
-  getSelectedModuleSelectedBlock,
-} from '../../../state/redux/editor/state';
-import type { BlockStyles } from '../../../data/styles/models';
+import { getSelectedModuleSelectedBlock } from '../../../state/redux/editor/state';
 
 type Props = {
   selectedBlock: DataBlockModel,
-  selectedBlockStyle: BlockStyles,
 };
 
-const EditorBlockView = ({ selectedBlock, selectedBlockStyle }: Props) => (
+const EditorBlockView = ({ selectedBlock }: Props) => (
   <div className={styles.containerClass}>
     <header className={styles.headerClass}>
       <SmallHeading>{`${getDataBlockGroupKey(selectedBlock)}.${getDataBlockBlockKey(
@@ -34,7 +29,7 @@ const EditorBlockView = ({ selectedBlock, selectedBlockStyle }: Props) => (
     </header>
     <div className={styles.mainClass}>
       <div className={styles.editorClass}>
-        <EditorContent selectedBlock={selectedBlock} selectedBlockStyle={selectedBlockStyle} />
+        <EditorContent selectedBlock={selectedBlock} />
       </div>
       <div className={styles.previewClass}>
         <EditorPreviewIframe />
@@ -45,7 +40,6 @@ const EditorBlockView = ({ selectedBlock, selectedBlockStyle }: Props) => (
 
 const mapStateToProps = (state: ReduxState) => ({
   selectedBlock: getSelectedModuleSelectedBlock(state.editor),
-  selectedBlockStyle: getSelectedBlockStyle(state.editor),
 });
 
 export default connect(mapStateToProps)(EditorBlockView);

@@ -1,6 +1,10 @@
 // @flow
 import arrayMove from 'array-move';
-import type { DataBlockModel, SitePageDataBlocks } from '../../../data/blocks/models';
+import type {
+  DataBlockMixinStylesModel,
+  DataBlockModel,
+  SitePageDataBlocks,
+} from '../../../data/blocks/models';
 import type { BlockStyles } from '../../../data/styles/models';
 import { getBlockStyles } from '../../../data/styles/state';
 
@@ -17,6 +21,17 @@ export function updateBlockProp(
     },
   };
   return updatedBlock;
+}
+
+export function removeBlockStylesMixinViaKey(
+  dataBlock: DataBlockModel,
+  mixinKey: string
+): DataBlockMixinStylesModel {
+  const { mixinStyles = [] } = dataBlock;
+  const mixinIndex = mixinStyles.map(mixin => mixin.key).indexOf(mixinKey);
+  const updatedMixinStyles = mixinStyles;
+  updatedMixinStyles.splice(mixinIndex, 1);
+  return updatedMixinStyles;
 }
 
 export function updateBlockStyle(

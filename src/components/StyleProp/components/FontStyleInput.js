@@ -14,12 +14,13 @@ const options = [
   },
 ];
 
-const FontStyleInput = ({ styleValue, updateStyle }: StylePropInputProps) => (
+const FontStyleInput = ({ styleValue, inheritedValue, updateStyle }: StylePropInputProps) => (
   <SelectInput
     isMulti={false}
     isCreatable
     options={options}
     styleValue={styleValue}
+    inheritedValue={inheritedValue}
     updateStyle={updateStyle}
   />
 );

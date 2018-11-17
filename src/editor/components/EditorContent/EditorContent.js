@@ -13,7 +13,6 @@ import { doesBlockAllowStyles } from '../../../data/blocks/state';
 
 type Props = {
   selectedBlock: DataBlockModel,
-  selectedBlockStyle: BlockStyles,
 };
 
 type State = {
@@ -35,7 +34,7 @@ class EditorContent extends Component<Props, State> {
   };
 
   render() {
-    const { selectedBlock, selectedBlockStyle } = this.props;
+    const { selectedBlock } = this.props;
     const { selectedTab } = this.state;
     return (
       <div className={styles.containerClass}>
@@ -46,7 +45,6 @@ class EditorContent extends Component<Props, State> {
           ) : (
             <EditorComponentStyles
               blockKey={selectedBlock.key}
-              blockStyles={selectedBlockStyle}
               key={selectedBlock.key}
               disabled={!doesBlockAllowStyles(selectedBlock)}
             />

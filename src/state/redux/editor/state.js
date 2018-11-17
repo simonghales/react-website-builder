@@ -15,7 +15,9 @@ import {
   getSelectedBlockFromModule,
   getSelectedBlockKeyFromModule,
 } from '../../../data/modules/state';
-import { getDataBlockMappedMixins } from '../../../data/blocks/state';
+import { getDataBlockMappedMixins, getDataBlockMixins } from '../../../data/blocks/state';
+import type { MixinModel, MixinsModel } from '../../../data/mixins/models';
+import { getBlockMixinsStyles } from '../../../data/mixins/state';
 
 export function getModuleFromState(state: EditorReduxState, moduleKey: string): DataModule {
   const { modules } = state;
@@ -53,6 +55,17 @@ export function getSelectedBlockStyle(state: EditorReduxState): BlockStyles {
   return getBlockStyles(selectedBlock);
 }
 
+function getMixinsFromState(state: EditorReduxState): MixinsModel {
+  return state.mixinStyles;
+}
+
+export function getSelectedBlockMixinsStyles(state: EditorReduxState): Array<MixinModel> {
+  const mixins = getMixinsFromState(state);
+  const selectedBlock = getSelectedModuleSelectedBlock(state);
+  const { mixinStyles = [] } = selectedBlock;
+  return getBlockMixinsStyles(mixinStyles, mixins);
+}
+
 export function getEditorMappedBlocks(state: EditorReduxState): MappedDataBlocks {
   const { modules, moduleTemplates, mixinStyles } = state;
   const selectedModule = getSelectedModule(state);
@@ -83,9 +96,16 @@ export function getPreviewMappedBlocks(state: EditorReduxState): MappedDataBlock
   return mappedBlocks;
 }
 
-export function getSelectedModuleSelectedBlockMixins(state: EditorReduxState) {
+export function getSelectedModuleSelectedBlockMappedMixins(state: EditorReduxState) {
   const { mixinStyles } = state;
   const selectedModule = getSelectedModule(state);
   const selectedBlock = getSelectedBlockFromModule(selectedModule);
   return getDataBlockMappedMixins(selectedBlock, mixinStyles);
+}
+
+export function getSelectedModuleSelectedBlockMixins(state: EditorReduxState): Array<MixinModel> {
+  const { mixinStyles } = state;
+  const selectedModule = getSelectedModule(state);
+  const selectedBlock = getSelectedBlockFromModule(selectedModule);
+  return getDataBlockMixins(selectedBlock, mixinStyles);
 }

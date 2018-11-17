@@ -142,6 +142,10 @@ export const DUMMY_BLOCK_PAGE_PARAGRAPH: DataBlockModel = {
       key: 'DUMMY_MIXIN_CENTERED',
       disabledModifiers: {},
     },
+    {
+      key: 'DUMMY_MIXIN_HEADING',
+      disabledModifiers: {},
+    },
   ],
 };
 

@@ -3,20 +3,34 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styles from './styles';
 import StyleProp from '../../../../../components/StyleProp/StyleProp';
-import type { BlockStyles } from '../../../../../data/styles/models';
+import type { BlockStyles, EditorMappedStylesContainer } from '../../../../../data/styles/models';
 import { appearanceStyleSection, dimensionsStyleSection, textStyleSection } from './data';
 import type { StyleSectionModel } from './data';
 import { setBlockStyleValue } from '../../../../../state/redux/editor/reducer';
 import EditorStylesMixins from './components/EditorStylesMixins/EditorStylesMixins';
 import StyleSection from './components/StyleSection/StyleSection';
+import type { ReduxState } from '../../../../../state/redux/store';
+import {
+  getSelectedBlockStyle,
+  getSelectedModuleSelectedBlockMappedMixins,
+  getSelectedModuleSelectedBlockMixins,
+} from '../../../../../state/redux/editor/state';
+import { getEditorMappedBlockStyles } from '../../../../../data/styles/state';
+import type { DataBlockMappedMixinsModel } from '../../../../../data/blocks/models';
 
 type StyleSectionWrapperProps = {
   blockStyles: BlockStyles,
+  editorMappedStyles: EditorMappedStylesContainer,
   data: StyleSectionModel,
   updateStyle: (cssKey: string, value: string) => void,
 };
 
-const StyleSectionWrapper = ({ data, blockStyles, updateStyle }: StyleSectionWrapperProps) => (
+const StyleSectionWrapper = ({
+  data,
+  blockStyles,
+  editorMappedStyles,
+  updateStyle,
+}: StyleSectionWrapperProps) => (
   <StyleSection title={data.title} gridBody>
     {data.styles.map(style => (
       <StyleProp
@@ -24,6 +38,7 @@ const StyleSectionWrapper = ({ data, blockStyles, updateStyle }: StyleSectionWra
         columns={style.columns}
         key={style.styleProp.cssKey}
         blockStyles={blockStyles}
+        editorMappedStyles={editorMappedStyles}
         updateStyle={updateStyle}
       />
     ))}
@@ -32,6 +47,7 @@ const StyleSectionWrapper = ({ data, blockStyles, updateStyle }: StyleSectionWra
 
 type Props = {
   blockStyles: BlockStyles,
+  editorMappedStyles: EditorMappedStylesContainer,
   blockKey: string,
   disabled: boolean,
   updateStyle: (
@@ -43,7 +59,7 @@ type Props = {
   ) => void,
 };
 
-const Main = ({ blockKey, blockStyles, updateStyle }: Props) => {
+const Main = ({ blockKey, blockStyles, editorMappedStyles, updateStyle }: Props) => {
   const modifier = 'default'; // todo - variable
   const section = 'editor'; // todo - variable
   const update = (cssKey: string, value: string) => {
@@ -51,15 +67,22 @@ const Main = ({ blockKey, blockStyles, updateStyle }: Props) => {
   };
   return (
     <div className={styles.mainClass}>
-      <StyleSectionWrapper data={textStyleSection} blockStyles={blockStyles} updateStyle={update} />
+      <StyleSectionWrapper
+        data={textStyleSection}
+        blockStyles={blockStyles}
+        editorMappedStyles={editorMappedStyles}
+        updateStyle={update}
+      />
       <StyleSectionWrapper
         data={appearanceStyleSection}
         blockStyles={blockStyles}
+        editorMappedStyles={editorMappedStyles}
         updateStyle={update}
       />
       <StyleSectionWrapper
         data={dimensionsStyleSection}
         blockStyles={blockStyles}
+        editorMappedStyles={editorMappedStyles}
         updateStyle={update}
       />
       <StyleSection title="Custom" gridBody={false}>
@@ -69,9 +92,9 @@ const Main = ({ blockKey, blockStyles, updateStyle }: Props) => {
   );
 };
 
-const Side = () => (
+const Side = ({ blockKey }: Props) => (
   <div className={styles.sideClass}>
-    <EditorStylesMixins />
+    <EditorStylesMixins blockKey={blockKey} />
     <StyleSection title="Modifiers" gridBody={false}>
       <div>Modifiers</div>
     </StyleSection>
@@ -91,6 +114,16 @@ const EditorComponentStyles = (props: Props) => {
   );
 };
 
+const mapStateToProps = (state: ReduxState) => {
+  const blockStyles = getSelectedBlockStyle(state.editor);
+  const mixins = getSelectedModuleSelectedBlockMixins(state.editor);
+  const editorMappedStyles = getEditorMappedBlockStyles(blockStyles.styles, mixins);
+  return {
+    blockStyles,
+    editorMappedStyles,
+  };
+};
+
 const mapDispatchToProps = {
   updateStyle: (
     blockKey: string,
@@ -102,6 +135,6 @@ const mapDispatchToProps = {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(EditorComponentStyles);

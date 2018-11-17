@@ -2,7 +2,12 @@
 
 import { DUMMY_PAGE_DATA } from '../../../data/redux';
 import { getModuleFromState, getSelectedModuleKey } from './state';
-import { updateAllBlocksOrder, updateBlockProp, updateBlockStyle } from './modifiers';
+import {
+  removeBlockStylesMixinViaKey,
+  updateAllBlocksOrder,
+  updateBlockProp,
+  updateBlockStyle,
+} from './modifiers';
 import type { BlocksOrder } from './modifiers';
 import type { ModuleTemplates } from '../../../data/moduleTemplates/models';
 import type { DataModules } from '../../../data/modules/models';
@@ -17,6 +22,56 @@ export type EditorReduxState = {
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
+
+const REMOVE_BLOCK_STYLES_MIXIN = 'REMOVE_BLOCK_STYLES_MIXIN';
+
+type RemoveBlockStylesMixinPayload = {
+  blockKey: string,
+  mixinKey: string,
+};
+
+type RemoveBlockStylesMixinAction = {
+  type: string,
+  payload: RemoveBlockStylesMixinPayload,
+};
+
+export function removeBlockStylesMixin(
+  blockKey: string,
+  mixinKey: string
+): RemoveBlockStylesMixinAction {
+  return {
+    type: REMOVE_BLOCK_STYLES_MIXIN,
+    payload: {
+      blockKey,
+      mixinKey,
+    },
+  };
+}
+
+function handleRemoveBlockStylesMixin(
+  state: EditorReduxState,
+  { blockKey, mixinKey }: RemoveBlockStylesMixinPayload
+): EditorReduxState {
+  const selectedModuleKey = getSelectedModuleKey(state);
+  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const block = getBlockFromModuleBlocks(blockKey, selectedModule);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [selectedModuleKey]: {
+        ...selectedModule,
+        blocks: {
+          ...selectedModule.blocks,
+          [blockKey]: {
+            ...block,
+            mixinStyles: removeBlockStylesMixinViaKey(block, mixinKey),
+          },
+        },
+      },
+    },
+  };
+}
 
 const SET_SELECTED_MODULE = 'SET_SELECTED_MODULE';
 
@@ -245,6 +300,7 @@ type Actions =
   | SetBlockStyleValueAction;
 
 const ACTION_HANDLERS = {
+  [REMOVE_BLOCK_STYLES_MIXIN]: handleRemoveBlockStylesMixin,
   [SET_SELECTED_MODULE]: handleSetSelectedModule,
   [SET_SELECTED_BLOCK]: handleSetSelectedBlock,
   [SET_BLOCK_STYLE_VALUE]: handleSetBlockStyleValue,
