@@ -23,6 +23,17 @@ export function updateBlockProp(
   return updatedBlock;
 }
 
+export function updateBlockStylesMixinsOrderByKeys(
+  dataBlock: DataBlockModel,
+  mixinKeys: Array<string>
+): DataBlockMixinStylesModel {
+  const { mixinStyles = [] } = dataBlock;
+  return mixinKeys.map(mixinKey => {
+    const mixinIndex = mixinStyles.map(mixin => mixin.key).indexOf(mixinKey);
+    return mixinStyles[mixinIndex];
+  });
+}
+
 export function removeBlockStylesMixinViaKey(
   dataBlock: DataBlockModel,
   mixinKey: string

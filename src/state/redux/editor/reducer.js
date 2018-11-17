@@ -7,6 +7,7 @@ import {
   updateAllBlocksOrder,
   updateBlockProp,
   updateBlockStyle,
+  updateBlockStylesMixinsOrderByKeys,
 } from './modifiers';
 import type { BlocksOrder } from './modifiers';
 import type { ModuleTemplates } from '../../../data/moduleTemplates/models';
@@ -22,6 +23,56 @@ export type EditorReduxState = {
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
+
+const UPDATE_BLOCK_STYLES_MIXINS_ORDER = 'UPDATE_BLOCK_STYLES_MIXINS_ORDER';
+
+type UpdateBlockStylesMixinsOrderPayload = {
+  blockKey: string,
+  mixinKeys: Array<string>,
+};
+
+type UpdateBlockStylesMixinsOrderAction = {
+  type: string,
+  payload: UpdateBlockStylesMixinsOrderPayload,
+};
+
+export function updateBlockStylesMixinsOrder(
+  blockKey: string,
+  mixinKeys: Array<string>
+): UpdateBlockStylesMixinsOrderAction {
+  return {
+    type: UPDATE_BLOCK_STYLES_MIXINS_ORDER,
+    payload: {
+      blockKey,
+      mixinKeys,
+    },
+  };
+}
+
+function handleUpdateBlockStylesMixinsOrder(
+  state: EditorReduxState,
+  { blockKey, mixinKeys }: UpdateBlockStylesMixinsOrderPayload
+): EditorReduxState {
+  const selectedModuleKey = getSelectedModuleKey(state);
+  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const block = getBlockFromModuleBlocks(blockKey, selectedModule);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [selectedModuleKey]: {
+        ...selectedModule,
+        blocks: {
+          ...selectedModule.blocks,
+          [blockKey]: {
+            ...block,
+            mixinStyles: updateBlockStylesMixinsOrderByKeys(block, mixinKeys),
+          },
+        },
+      },
+    },
+  };
+}
 
 const REMOVE_BLOCK_STYLES_MIXIN = 'REMOVE_BLOCK_STYLES_MIXIN';
 
@@ -300,6 +351,7 @@ type Actions =
   | SetBlockStyleValueAction;
 
 const ACTION_HANDLERS = {
+  [UPDATE_BLOCK_STYLES_MIXINS_ORDER]: handleUpdateBlockStylesMixinsOrder,
   [REMOVE_BLOCK_STYLES_MIXIN]: handleRemoveBlockStylesMixin,
   [SET_SELECTED_MODULE]: handleSetSelectedModule,
   [SET_SELECTED_BLOCK]: handleSetSelectedBlock,

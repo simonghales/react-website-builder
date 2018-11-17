@@ -4,7 +4,7 @@ import React from 'react';
 import Nestable from 'react-nestable';
 import { cx } from 'emotion';
 import type { MappedDataBlockModel, MappedDataBlocks } from '../../../../../data/blocks/models';
-import { getDataBlockLabel, getDataBlockType } from '../../../../../data/blocks/models';
+import { getDataBlockLabel } from '../../../../../data/blocks/models';
 import BlockPreview from '../BlockPreview/BlockPreview';
 import styles from './styles';
 import { isBlockModuleBlock } from '../../../../../data/blocks/state';
