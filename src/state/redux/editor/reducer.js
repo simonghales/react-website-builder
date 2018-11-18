@@ -18,7 +18,6 @@ import {
   getBlockFromModuleBlocks,
   getModuleRootBlockKey,
   getSelectedBlockFromModule,
-  getSelectedBlockKeyFromModule,
 } from '../../../data/modules/state';
 import { getBlockDefaultDataBlock, getBlockFromModule } from '../../../blocks/state';
 import { getModuleTemplateFromModuleTemplates } from '../../../data/moduleTemplates/state';
