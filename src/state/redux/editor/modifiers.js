@@ -184,7 +184,14 @@ export function addNewBlockToBlocks(
   }
   const selectedBlockBlock = getBlockFromDataBlock(selectedBlock);
 
-  const parentBlock = selectedBlockBlock.childrenAllowed ? selectedBlock : blocks[rootBlockKey];
+  const parentBlockKey = getBlockParentKey(selectedBlock.key, blocks);
+
+  let parentBlock = blocks[rootBlockKey];
+  if (selectedBlockBlock.childrenAllowed) {
+    parentBlock = selectedBlock;
+  } else if (parentBlockKey !== '') {
+    parentBlock = getBlockFromBlocks(blocks, parentBlockKey);
+  }
 
   const updatedBlocks = {
     ...blocks,
