@@ -2,7 +2,7 @@
 import React from 'react';
 import { MdArrowForward } from 'react-icons/md';
 import { cx } from 'emotion';
-import styles from '../../styles';
+import styles from '../BlocksManager/styles';
 
 type Props = {
   type: string,

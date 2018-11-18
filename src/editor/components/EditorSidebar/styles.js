@@ -1,114 +1,39 @@
 // @flow
-
 import { css } from 'emotion';
-import { transparentize } from 'polished';
-import colors from '../../../styles/config/colors';
-import spacing from '../../../styles/config/spacing';
-import fontWeights from '../../../styles/config/fontWeights';
+import colors from 'styles/config/colors';
+import zindexes from '../../../styles/config/zindexes';
+
+const wrapperClass = css`
+  height: 100%;
+  position: relative;
+`;
 
 const containerClass = css`
   width: 100%;
   height: 100%;
   background-color: ${colors.mediumBlue};
-  padding-top: ${spacing.medium}px;
-`;
-
-const classNames = {
-  block: 'block',
-  selectedBlock: 'selectedBlock',
-};
-
-const activeBgColor = colors.blackBlue;
-
-const blockPreviewClass = css`
-  //background: ${transparentize(0.7, colors.blackBlue)};
-  background: ${colors.blackInactiveBlue};
   position: relative;
-  //transition: background 150ms ease;
+  z-index: ${zindexes.sidebar};
+  transition: box-shadow 250ms ease;
 `;
 
-const rootBlockPreviewClass = css``;
-
-const selectedBlockClass = css`
-  background: ${activeBgColor};
-
-  &::after {
-    content: '';
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 3px;
-    background-color: ${colors.light};
-  }
-
-  .${classNames.block} {
-    background: ${activeBgColor};
-  }
+const containerRaisedClass = css`
+  box-shadow: 0px 4px 2px rgba(11, 17, 31, 0.29);
 `;
 
-const blockPreviewInfoClass = css`
-  padding: 5px 5px 5px 10px;
-  opacity: 0.5;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-
-  .nestable-drag-layer .nestable-item-copy &,
-  &:hover,
-  .${classNames.selectedBlock} > & {
-    opacity: 1;
-  }
-`;
-
-const blockPreviewTextClass = css`
-  flex: 1;
-`;
-
-const blockPreviewTypeClass = css`
-  font-size: 12px;
-  font-weight: ${fontWeights.bold};
-  color: ${transparentize(0.5, colors.light)};
-`;
-
-const blockPreviewLabelClass = css`
-  font-size: 14px;
-  font-weight: ${fontWeights.medium};
-  color: ${colors.light};
-`;
-
-const blockPreviewEnterClass = css`
-  margin-left: 5px;
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  border-radius: 3px;
-  color: ${colors.light};
-
-  &:hover {
-    background-color: ${colors.light};
-    color: ${colors.blackBlue};
-  }
-
-  svg {
-  }
-`;
-
-const blockPreviewChildrenClass = css`
-  padding: 5px 0;
+const slideoutClass = css`
+  position: absolute;
+  top: 0;
+  left: 100%;
+  bottom: 0;
+  width: 200px;
+  background-color: ${colors.blackInactiveBlue};
+  z-index: ${zindexes.sidebarSlideout};
 `;
 
 export default {
+  wrapperClass,
   containerClass,
-  blockPreviewClass,
-  rootBlockPreviewClass,
-  selectedBlockClass,
-  blockPreviewInfoClass,
-  blockPreviewTextClass,
-  blockPreviewTypeClass,
-  blockPreviewLabelClass,
-  blockPreviewEnterClass,
-  blockPreviewChildrenClass,
-  classNames,
+  containerRaisedClass,
+  slideoutClass,
 };

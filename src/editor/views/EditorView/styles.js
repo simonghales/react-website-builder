@@ -30,6 +30,7 @@ const previewClass = css`
   flex: 1;
   height: 100%;
   background: linear-gradient(to bottom right, #1d253f, #172538);
+  overflow: hidden;
 `;
 
 export default {
