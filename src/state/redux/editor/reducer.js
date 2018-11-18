@@ -4,6 +4,7 @@ import { DUMMY_PAGE_DATA } from '../../../data/redux';
 import { getModuleFromState, getModuleTemplatesFromState, getSelectedModuleKey } from './state';
 import {
   addNewBlockToBlocks,
+  removeBlockFromBlocks,
   removeBlockStylesMixinViaKey,
   updateAllBlocksOrder,
   updateBlockProp,
@@ -21,6 +22,7 @@ import {
 } from '../../../data/modules/state';
 import { getBlockDefaultDataBlock, getBlockFromModule } from '../../../blocks/state';
 import { getModuleTemplateFromModuleTemplates } from '../../../data/moduleTemplates/state';
+import { getBlockParentKey } from '../../../data/blocks/state';
 
 export type EditorReduxState = {
   modules: DataModules,
@@ -351,6 +353,53 @@ function handleSetBlockPropValue(
   };
 }
 
+const REMOVE_BLOCK_FROM_MODULE = 'REMOVE_BLOCK_FROM_MODULE';
+
+type RemoveBlockFromModulePayload = {
+  blockKey: string,
+};
+
+type RemoveBlockFromModuleAction = {
+  type: string,
+  payload: RemoveBlockFromModulePayload,
+};
+
+export function removeBlockFromModule(blockKey: string): RemoveBlockFromModuleAction {
+  return {
+    type: REMOVE_BLOCK_FROM_MODULE,
+    payload: {
+      blockKey,
+    },
+  };
+}
+
+function handleRemoveBlockFromModule(
+  state: EditorReduxState,
+  { blockKey }: RemoveBlockFromModulePayload
+): EditorReduxState {
+  const selectedModuleKey = getSelectedModuleKey(state);
+  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const rootBlockKey = getModuleRootBlockKey(selectedModule);
+  if (blockKey === rootBlockKey) {
+    console.warn(`Block to be removed is the root block, which cannot be removed.`);
+    return {
+      ...state,
+    };
+  }
+  const blockToRemoveParentKey = getBlockParentKey(blockKey, selectedModule.blocks);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [selectedModuleKey]: {
+        ...selectedModule,
+        blocks: removeBlockFromBlocks(selectedModule.blocks, blockKey),
+        selectedBlock: blockToRemoveParentKey,
+      },
+    },
+  };
+}
+
 const ADD_NEW_MODULE = 'ADD_NEW_MODULE';
 
 type AddNewModulePayload = {
@@ -466,6 +515,7 @@ const ACTION_HANDLERS = {
   [SET_BLOCK_STYLE_VALUE]: handleSetBlockStyleValue,
   [SET_BLOCK_PROP_VALUE]: handleSetBlockPropValue,
   [SET_BLOCKS_ORDER]: handleSetBlocksOrder,
+  [REMOVE_BLOCK_FROM_MODULE]: handleRemoveBlockFromModule,
   [ADD_NEW_MODULE]: handleAddNewModule,
   [ADD_NEW_BLOCK]: handleAddNewBlock,
 };

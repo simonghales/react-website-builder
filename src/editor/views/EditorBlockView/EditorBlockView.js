@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import connect from 'react-redux/es/connect/connect';
+import { MdDelete } from 'react-icons/md';
+import { connect } from 'react-redux';
 import EditorPreviewIframe from '../../components/EditorPreviewIframe/EditorPreviewIframe';
 import styles from './styles';
 import EditorContent from '../../components/EditorContent/EditorContent';
@@ -14,18 +15,32 @@ import {
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { ReduxState } from '../../../state/redux/store';
 import { getSelectedModuleSelectedBlock } from '../../../state/redux/editor/state';
+import { removeBlockFromModule } from '../../../state/redux/editor/reducer';
 
 type Props = {
   selectedBlock: DataBlockModel,
+  removeBlock: (blockKey: string) => void,
 };
 
-const EditorBlockView = ({ selectedBlock }: Props) => (
+const EditorBlockView = ({ selectedBlock, removeBlock }: Props) => (
   <div className={styles.containerClass}>
     <header className={styles.headerClass}>
       <SmallHeading>{`${getDataBlockGroupKey(selectedBlock)}.${getDataBlockBlockKey(
         selectedBlock
       )}`}</SmallHeading>
-      <MediumLargeHeading>{`${getDataBlockLabel(selectedBlock)}`}</MediumLargeHeading>
+      <div className={styles.titleWrapperClass}>
+        {!selectedBlock.isParentModule && (
+          <div
+            className={styles.removeButtonClass}
+            onClick={() => {
+              removeBlock(selectedBlock.key);
+            }}
+          >
+            <MdDelete />
+          </div>
+        )}
+        <MediumLargeHeading>{`${getDataBlockLabel(selectedBlock)}`}</MediumLargeHeading>
+      </div>
     </header>
     <div className={styles.mainClass}>
       <div className={styles.editorClass}>
@@ -42,4 +57,11 @@ const mapStateToProps = (state: ReduxState) => ({
   selectedBlock: getSelectedModuleSelectedBlock(state.editor),
 });
 
-export default connect(mapStateToProps)(EditorBlockView);
+const mapDispatchToProps = {
+  removeBlock: (blockKey: string) => removeBlockFromModule(blockKey),
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditorBlockView);

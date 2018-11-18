@@ -1,6 +1,6 @@
 // @flow
 
-import type { DataBlockMappedMixinsModel, DataBlockModel } from './models';
+import type { DataBlockMappedMixinsModel, DataBlockModel, SitePageDataBlocks } from './models';
 import { getBlockFromDataBlock } from '../../blocks/blocks';
 import { getDataBlockType } from './models';
 import ModuleImport from '../../blocks/module/ModuleImport/ModuleImport';
@@ -73,4 +73,33 @@ export function getDataBlockMixins(
     const mixin = getMixinFromMixins(blockMixin.key, mixins);
     return mixin;
   });
+}
+
+export function doesBlockChildrenContainBlockKey(
+  dataBlock: DataBlockModel,
+  blockKey: string
+): boolean {
+  const { blockChildrenKeys = [] } = dataBlock;
+  return blockChildrenKeys.includes(blockKey);
+}
+
+export function getBlockParentKey(blockToMatchKey: string, blocks: SitePageDataBlocks): string {
+  let parentKey = '';
+  Object.keys(blocks).forEach(blockKey => {
+    const block = blocks[blockKey];
+    if (doesBlockChildrenContainBlockKey(block, blockToMatchKey)) {
+      parentKey = block.key;
+    }
+  });
+  return parentKey;
+}
+
+export function removeBlockKeyFromBlockChildrenKeys(
+  blockKey: string,
+  blockChildrenKeys: Array<string>
+): Array<string> {
+  const blockIndex = blockChildrenKeys.indexOf(blockKey);
+  const updatedBlockChildrenKeys = blockChildrenKeys.slice();
+  updatedBlockChildrenKeys.splice(blockIndex, 1);
+  return updatedBlockChildrenKeys;
 }

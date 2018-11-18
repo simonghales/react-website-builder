@@ -8,6 +8,8 @@ import type {
 import type { BlockStyles } from '../../../data/styles/models';
 import { getBlockStyles } from '../../../data/styles/state';
 import { getBlockFromDataBlock } from '../../../blocks/blocks';
+import { getBlockFromBlocks } from '../../../data/blocks/models';
+import { getBlockParentKey, removeBlockKeyFromBlockChildrenKeys } from '../../../data/blocks/state';
 
 export function updateBlockProp(
   block: DataBlockModel,
@@ -189,5 +191,32 @@ export function addNewBlockToBlocks(
     [newBlock.key]: newBlock,
     [parentBlock.key]: addBlockToBlockChildren(parentBlock, newBlock.key, 0),
   };
+  return updatedBlocks;
+}
+
+export function removeBlockFromBlocks(
+  blocks: SitePageDataBlocks,
+  blockToRemoveKey: string
+): SitePageDataBlocks {
+  const blockToRemove = getBlockFromBlocks(blocks, blockToRemoveKey);
+  const blockToRemoveChildren = blockToRemove.blockChildrenKeys
+    ? blockToRemove.blockChildrenKeys
+    : [];
+  const blockToRemoveParentKey = getBlockParentKey(blockToRemoveKey, blocks);
+  const updatedBlocks = {};
+  Object.keys(blocks).forEach(blockKey => {
+    const block = blocks[blockKey];
+    if (blockKey === blockToRemoveKey || blockToRemoveChildren.includes(blockKey)) {
+      // do nothing
+    } else if (blockKey === blockToRemoveParentKey) {
+      const { blockChildrenKeys = [] } = block;
+      updatedBlocks[blockKey] = {
+        ...block,
+        blockChildrenKeys: removeBlockKeyFromBlockChildrenKeys(blockToRemoveKey, blockChildrenKeys),
+      };
+    } else {
+      updatedBlocks[blockKey] = block;
+    }
+  });
   return updatedBlocks;
 }
