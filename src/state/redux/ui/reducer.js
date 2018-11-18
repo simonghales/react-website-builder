@@ -5,7 +5,7 @@ export type UiReduxState = {
 };
 
 export const initialUiReduxState: UiReduxState = {
-  addingBlock: false,
+  addingBlock: true,
 };
 
 const SET_ADDING_BLOCK = 'SET_ADDING_BLOCK';

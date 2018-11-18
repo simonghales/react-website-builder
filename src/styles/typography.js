@@ -28,6 +28,12 @@ export const smallPlusText = css`
   font-weight: ${fontWeights.medium};
 `;
 
+export const sectionHeading = css`
+  ${smallPlusText};
+  color: ${colors.lightFaint};
+  text-transform: uppercase;
+`;
+
 export const mediumFont = css`
   font-size: ${getFontSize(fontSizes.medium)};
 `;

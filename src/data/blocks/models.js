@@ -1,7 +1,7 @@
 // @flow
 
 import type { BlockModelPropsConfig } from '../../blocks/models';
-import { blockTypes, getBlockFromDataBlock } from '../../blocks/blocks';
+import { getBlockFromDataBlock } from '../../blocks/blocks';
 import type { BlockStyles, MappedStyleModel } from '../styles/models';
 import { getMappedBlockStyles } from '../styles/state';
 import { getMappedDataModule } from '../modules/state';
@@ -10,6 +10,7 @@ import { getMappedDataLinkedModule, getMappedLinkedModuleKey } from '../moduleTe
 import type { ModuleTemplates } from '../moduleTemplates/models';
 import { getBlockLabel } from './state';
 import type { MixinsModel } from '../mixins/models';
+import {blockTypes} from '../../blocks/config';
 
 export const blockPropsConfigTypes = {
   module: 'module',

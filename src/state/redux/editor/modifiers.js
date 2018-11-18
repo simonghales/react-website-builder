@@ -7,6 +7,7 @@ import type {
 } from '../../../data/blocks/models';
 import type { BlockStyles } from '../../../data/styles/models';
 import { getBlockStyles } from '../../../data/styles/state';
+import { getBlockFromDataBlock } from '../../../blocks/blocks';
 
 export function updateBlockProp(
   block: DataBlockModel,
@@ -160,8 +161,6 @@ export function updateAllBlocksOrder(
   rootBlocksOrder: Array<string>
 ): SitePageDataBlocks {
   const updatedBlocks = {};
-  console.log('update blocks', blocks);
-  console.log('update blocksOrder', blocksOrder);
   Object.keys(blocks).forEach(blockKey => {
     const block = blocks[blockKey];
     updatedBlocks[block.key] = updateBlockOrder(block, blocksOrder[block.key], rootBlocksOrder);
@@ -170,4 +169,25 @@ export function updateAllBlocksOrder(
     ...blocks,
     ...updatedBlocks,
   };
+}
+
+export function addNewBlockToBlocks(
+  blocks: SitePageDataBlocks,
+  rootBlockKey: string,
+  newBlock: DataBlockModel,
+  selectedBlock: DataBlockModel
+): SitePageDataBlocks {
+  if (blocks[newBlock.key]) {
+    throw new Error(`The key for this new block is already in use.`);
+  }
+  const selectedBlockBlock = getBlockFromDataBlock(selectedBlock);
+
+  const parentBlock = selectedBlockBlock.childrenAllowed ? selectedBlock : blocks[rootBlockKey];
+
+  const updatedBlocks = {
+    ...blocks,
+    [newBlock.key]: newBlock,
+    [parentBlock.key]: addBlockToBlockChildren(parentBlock, newBlock.key, 0),
+  };
+  return updatedBlocks;
 }

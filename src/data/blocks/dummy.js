@@ -1,13 +1,14 @@
 // @flow
 import { getBlockUniqueId } from '../../blocks/utils';
 import Element from '../../blocks/html/Element/Element';
-import { blockGroups, blockTypes } from '../../blocks/blocks';
+import { blockGroups} from '../../blocks/config';
 import Module from '../../blocks/module/Module/Module';
 import ModuleImport from '../../blocks/module/ModuleImport/ModuleImport';
 import Heading from '../../blocks/basic/Heading/Heading';
 import Container from '../../blocks/basic/Container/Container';
 import { DUMMY_STYLE_EMPTY, DUMMY_STYLE_TEST } from '../styles/dummy';
 import type { DataBlockModel } from './models';
+import {blockTypes} from '../../blocks/config';
 
 const DUMMY_BLOCK_HEADING: DataBlockModel = {
   key: getBlockUniqueId(),

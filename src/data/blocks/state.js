@@ -1,7 +1,7 @@
 // @flow
 
 import type { DataBlockMappedMixinsModel, DataBlockModel } from './models';
-import { blockGroups, getBlockFromDataBlock } from '../../blocks/blocks';
+import { getBlockFromDataBlock } from '../../blocks/blocks';
 import type { BlockModel } from '../../blocks/models';
 import { getDataBlockType } from './models';
 import ModuleImport from '../../blocks/module/ModuleImport/ModuleImport';
@@ -14,6 +14,7 @@ import type { DataModules } from '../modules/models';
 import { getModuleFromModules } from '../modules/state';
 import type { MixinModel, MixinsModel } from '../mixins/models';
 import { getMixinFromMixins } from '../mixins/state';
+import {blockGroups} from '../../blocks/config';
 
 export function doesBlockAllowStyles(dataBlock: DataBlockModel): boolean {
   const block = getBlockFromDataBlock(dataBlock);

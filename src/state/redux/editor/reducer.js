@@ -3,6 +3,7 @@
 import { DUMMY_PAGE_DATA } from '../../../data/redux';
 import { getModuleFromState, getSelectedModuleKey } from './state';
 import {
+  addNewBlockToBlocks,
   removeBlockStylesMixinViaKey,
   updateAllBlocksOrder,
   updateBlockProp,
@@ -13,7 +14,13 @@ import type { BlocksOrder } from './modifiers';
 import type { ModuleTemplates } from '../../../data/moduleTemplates/models';
 import type { DataModules } from '../../../data/modules/models';
 import type { MixinsModel } from '../../../data/mixins/models';
-import { getBlockFromModuleBlocks } from '../../../data/modules/state';
+import {
+  getBlockFromModuleBlocks,
+  getModuleRootBlockKey,
+  getSelectedBlockFromModule,
+  getSelectedBlockKeyFromModule,
+} from '../../../data/modules/state';
+import { getBlockDefaultDataBlock } from '../../../blocks/state';
 
 export type EditorReduxState = {
   modules: DataModules,
@@ -344,11 +351,89 @@ function handleSetBlockPropValue(
   };
 }
 
+const ADD_NEW_MODULE = 'ADD_NEW_MODULE';
+
+type AddNewModulePayload = {
+  newModuleKey: string,
+  groupKey: string,
+  moduleKey: string,
+};
+
+type AddNewModuleAction = {
+  type: string,
+  payload: AddNewModulePayload,
+};
+
+export function addNewModule(
+  newModuleKey: string,
+  groupKey: string,
+  moduleKey: string
+): AddNewModuleAction {
+  return {
+    type: ADD_NEW_MODULE,
+    payload: {
+      newModuleKey,
+      groupKey,
+      moduleKey,
+    },
+  };
+}
+
+const ADD_NEW_BLOCK = 'ADD_NEW_BLOCK';
+
+type AddNewBlockPayload = {
+  blockKey: string,
+  groupKey: string,
+  moduleKey: string,
+};
+
+type AddNewBlockAction = {
+  type: string,
+  payload: AddNewBlockPayload,
+};
+
+export function addNewBlock(
+  blockKey: string,
+  groupKey: string,
+  moduleKey: string
+): AddNewBlockAction {
+  return {
+    type: ADD_NEW_BLOCK,
+    payload: {
+      blockKey,
+      groupKey,
+      moduleKey,
+    },
+  };
+}
+
+function handleAddNewBlock(
+  state: EditorReduxState,
+  { blockKey, groupKey, moduleKey }
+): EditorReduxState {
+  const module = getModuleFromState(state, moduleKey);
+  const dataBlock = getBlockDefaultDataBlock(groupKey, blockKey);
+  const rootBlockKey = getModuleRootBlockKey(module);
+  const selectedBlock = getSelectedBlockFromModule(module);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [moduleKey]: {
+        ...module,
+        blocks: addNewBlockToBlocks(module.blocks, rootBlockKey, dataBlock, selectedBlock),
+        selectedBlock: dataBlock.key,
+      },
+    },
+  };
+}
+
 type Actions =
   | SetSelectedModuleAction
   | SetSelectedBlockAction
   | SetBlockPropValueAction
-  | SetBlockStyleValueAction;
+  | SetBlockStyleValueAction
+  | AddNewBlockAction;
 
 const ACTION_HANDLERS = {
   [UPDATE_BLOCK_STYLES_MIXINS_ORDER]: handleUpdateBlockStylesMixinsOrder,
@@ -358,6 +443,7 @@ const ACTION_HANDLERS = {
   [SET_BLOCK_STYLE_VALUE]: handleSetBlockStyleValue,
   [SET_BLOCK_PROP_VALUE]: handleSetBlockPropValue,
   [SET_BLOCKS_ORDER]: handleSetBlocksOrder,
+  [ADD_NEW_BLOCK]: handleAddNewBlock,
 };
 
 export default function editorReducer(

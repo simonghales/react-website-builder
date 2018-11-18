@@ -4,6 +4,7 @@ import { transparentize } from 'polished';
 const white = '#FFFFFF';
 const light = '#d2deff';
 const lightClose = transparentize(0.1, light);
+const lightSlight = transparentize(0.25, light);
 const lightMid = transparentize(0.5, light);
 const lightFaint = transparentize(0.7, light);
 const lightFaintest = transparentize(0.9, light);
@@ -20,6 +21,7 @@ export default {
   white,
   light,
   lightClose,
+  lightSlight,
   lightMid,
   lightFaint,
   lightFaintest,

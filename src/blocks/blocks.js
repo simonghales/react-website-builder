@@ -1,23 +1,13 @@
 // @flow
 
-import type { BlockGroupModel, BlockModel } from './models';
+import type {BlockGroupModel, BlockModel} from './models';
 import Heading from './basic/Heading/Heading';
 import Container from './basic/Container/Container';
 import Module from './module/Module/Module';
 import ModuleImport from './module/ModuleImport/ModuleImport';
 import Element from './html/Element/Element';
-import type { DataBlockModel } from '../data/blocks/models';
-
-export const blockGroups = {
-  Basic: 'Basic',
-  Module: 'Module',
-  HTML: 'HTML',
-};
-
-export const blockTypes = {
-  html: 'html',
-  module: 'module',
-};
+import type {DataBlockModel} from '../data/blocks/models';
+import {blockGroups} from './config';
 
 export const basicBlocks: BlockGroupModel = {
   key: blockGroups.Basic,
@@ -50,6 +40,10 @@ export const allBlocks: AllBlocksModel = {
   [basicBlocks.key]: basicBlocks,
   [moduleBlocks.key]: moduleBlocks,
   [htmlBlocks.key]: htmlBlocks,
+};
+
+export const addableBlocks: AllBlocksModel = {
+  [basicBlocks.key]: basicBlocks,
 };
 
 export function getBlockGroup(groupKey: string): BlockGroupModel | null {

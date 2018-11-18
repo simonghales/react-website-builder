@@ -1,7 +1,7 @@
 // @flow
 
 import { css } from 'emotion';
-import { smallPlusText } from '../../../../../styles/typography';
+import { sectionHeading, smallPlusText } from '../../../../../styles/typography';
 import colors from '../../../../../styles/config/colors';
 
 const containerClass = css`
@@ -39,9 +39,7 @@ const sectionHeaderClass = css`
 `;
 
 const sectionHeaderTitleClass = css`
-  ${smallPlusText};
-  color: ${colors.lightFaint};
-  text-transform: uppercase;
+  ${sectionHeading};
 `;
 
 const sectionBodyClass = css``;

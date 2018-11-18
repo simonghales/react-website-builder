@@ -9,15 +9,18 @@ import type { EditorReduxState } from './reducer';
 import { getBlockFromBlocks, getMappedDataBlocks } from '../../../data/blocks/models';
 import type { BlockStyles } from '../../../data/styles/models';
 import { getBlockStyles } from '../../../data/styles/state';
-import type { DataModule } from '../../../data/modules/models';
+import type { DataModule, DataModules } from '../../../data/modules/models';
 import {
   getBlockFromModuleBlocks,
+  getModuleFromModules,
   getSelectedBlockFromModule,
   getSelectedBlockKeyFromModule,
 } from '../../../data/modules/state';
 import { getDataBlockMappedMixins, getDataBlockMixins } from '../../../data/blocks/state';
 import type { MixinModel, MixinsModel } from '../../../data/mixins/models';
 import { getBlockMixinsStyles } from '../../../data/mixins/state';
+import type { ModuleTemplates } from '../../../data/moduleTemplates/models';
+import { getModuleTemplateModuleKey } from '../../../data/moduleTemplates/state';
 
 export function getModuleFromState(state: EditorReduxState, moduleKey: string): DataModule {
   const { modules } = state;
@@ -108,4 +111,25 @@ export function getSelectedModuleSelectedBlockMixins(state: EditorReduxState): A
   const selectedModule = getSelectedModule(state);
   const selectedBlock = getSelectedBlockFromModule(selectedModule);
   return getDataBlockMixins(selectedBlock, mixinStyles);
+}
+
+export function getModuleTemplatesFromState(state: EditorReduxState): ModuleTemplates {
+  return state.moduleTemplates;
+}
+
+export function getModulesFromState(state: EditorReduxState): DataModules {
+  return state.modules;
+}
+
+export function getAddableModuleTemplates(state: EditorReduxState): Array<DataModule> {
+  const moduleTemplates = getModuleTemplatesFromState(state);
+  const modules = getModulesFromState(state);
+  const addableModules: Array<DataModule> = [];
+  Object.keys(moduleTemplates).forEach(moduleTemplateKey => {
+    const moduleTemplate = moduleTemplates[moduleTemplateKey];
+    const moduleKey = getModuleTemplateModuleKey(moduleTemplate);
+    const module = getModuleFromModules(moduleKey, modules);
+    addableModules.push(module);
+  });
+  return addableModules;
 }

@@ -1,6 +1,6 @@
 // @flow
 
-import type { BlockPropsConfigTypes } from '../data/blocks/models';
+import type { BlockPropsConfigTypes, DataBlockModel } from '../data/blocks/models';
 
 export type BlockModelPropsConfig = {
   label?: string,
@@ -17,6 +17,7 @@ export type BlockModel = {
   propsConfig: BlockModelPropsConfig,
   childrenAllowed: boolean,
   stylesEnabled: boolean,
+  dataBlock: () => DataBlockModel,
 };
 
 export type BlockGroupModel = {
@@ -24,4 +25,23 @@ export type BlockGroupModel = {
     [string]: BlockModel,
   },
   key: string,
+};
+
+export type AddBlockModel = {
+  key: string,
+  label: string,
+  icon: string,
+  isModule: boolean,
+};
+
+export type AddBlockGroupModel = {
+  key: string,
+  label: string,
+  blocks: {
+    [string]: AddBlockModel,
+  },
+};
+
+export type AddableBlockGroups = {
+  [string]: AddBlockGroupModel,
 };

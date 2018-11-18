@@ -2,6 +2,16 @@
 import { css } from 'emotion';
 import colors from 'styles/config/colors';
 import zindexes from '../../../styles/config/zindexes';
+import {
+  transitionEnter,
+  transitionEnterActive,
+  transitionExit,
+  transitionExitActive,
+} from '../../../styles/utils/transitions';
+
+const classNames = {
+  slideoutTransition: 'slideoutTransition',
+};
 
 const wrapperClass = css`
   height: 100%;
@@ -21,6 +31,13 @@ const containerRaisedClass = css`
   box-shadow: 0px 4px 2px rgba(11, 17, 31, 0.29);
 `;
 
+const slideOutTransitions = {
+  enter: transitionEnter(classNames.slideoutTransition),
+  enterActive: transitionEnterActive(classNames.slideoutTransition),
+  exit: transitionExit(classNames.slideoutTransition),
+  exitActive: transitionExitActive(classNames.slideoutTransition),
+};
+
 const slideoutClass = css`
   position: absolute;
   top: 0;
@@ -29,11 +46,55 @@ const slideoutClass = css`
   width: 200px;
   background-color: ${colors.blackInactiveBlue};
   z-index: ${zindexes.sidebarSlideout};
+
+  &.${slideOutTransitions.enter} {
+    transform: translateX(-100%);
+  }
+
+  &.${slideOutTransitions.enterActive} {
+    transform: translateX(0);
+    transition: all 300ms ease;
+  }
+
+  &.${slideOutTransitions.exit} {
+    transform: translateX(0);
+  }
+
+  &.${slideOutTransitions.exitActive} {
+    transform: translateX(-100%);
+    transition: all 300ms ease;
+  }
+`;
+
+const addBlockSectionClass = css`
+  display: flex;
+  justify-content: flex-end;
+  padding: 5px;
+`;
+
+const addBlockToggleClass = css`
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${colors.blackBlue};
+  border-radius: 3px;
+  color: ${colors.light};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${colors.light};
+    color: ${colors.blackBlue};
+  }
 `;
 
 export default {
+  classNames,
   wrapperClass,
   containerClass,
   containerRaisedClass,
   slideoutClass,
+  addBlockSectionClass,
+  addBlockToggleClass,
 };
