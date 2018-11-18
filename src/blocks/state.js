@@ -10,6 +10,12 @@ import type {
 import { addableBlocks, getBlock, getBlockGroup } from './blocks';
 import type { DataModule } from '../data/modules/models';
 import type { DataBlockModel } from '../data/blocks/models';
+import { getBlockUniqueId } from './utils';
+import { blockGroups, blockTypes } from './config';
+import ModuleImport from './module/ModuleImport/ModuleImport';
+import { DUMMY_STYLE_EMPTY } from '../data/styles/dummy';
+import type { ModuleTemplate } from '../data/moduleTemplates/models';
+import { EMPTY_BLOCK_STYLES } from '../data/styles/defaults';
 
 function mapBlockToAddableBlock(block: BlockModel): AddBlockModel {
   return {
@@ -102,4 +108,27 @@ export function getBlockDefaultDataBlock(groupKey: string, blockKey: string): Da
   }
   const { dataBlock } = block;
   return dataBlock();
+}
+
+export function getBlockFromModule(
+  moduleTemplate: ModuleTemplate,
+  module: DataModule
+): DataBlockModel {
+  return {
+    key: getBlockUniqueId(),
+    groupKey: blockGroups.Module,
+    blockKey: ModuleImport.key,
+    blockType: blockTypes.module,
+    label: module.name,
+    props: {
+      children: null,
+    },
+    propsConfig: {},
+    blockChildrenKeys: [],
+    linkedModuleKey: moduleTemplate.key,
+    isParentModule: false,
+    rawStyles: {
+      ...EMPTY_BLOCK_STYLES,
+    },
+  };
 }

@@ -13,6 +13,7 @@ export const DUMMY_INTRO_MODULE: DataModule = {
   key: 'DUMMY_INTRO_MODULE',
   groupKey: 'Site',
   name: 'Intro',
+  moduleTemplateKey: 'DUMMY_MODULE_TEMPLATE_INTRO',
   blocks: DUMMY_BLOCKS,
   rootBlock: DUMMY_BLOCK_MODULE.key,
   selectedBlock: DUMMY_BLOCK_MODULE.key,

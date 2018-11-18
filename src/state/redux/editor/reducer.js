@@ -1,7 +1,7 @@
 // @flow
 
 import { DUMMY_PAGE_DATA } from '../../../data/redux';
-import { getModuleFromState, getSelectedModuleKey } from './state';
+import { getModuleFromState, getModuleTemplatesFromState, getSelectedModuleKey } from './state';
 import {
   addNewBlockToBlocks,
   removeBlockStylesMixinViaKey,
@@ -20,7 +20,8 @@ import {
   getSelectedBlockFromModule,
   getSelectedBlockKeyFromModule,
 } from '../../../data/modules/state';
-import { getBlockDefaultDataBlock } from '../../../blocks/state';
+import { getBlockDefaultDataBlock, getBlockFromModule } from '../../../blocks/state';
+import { getModuleTemplateFromModuleTemplates } from '../../../data/moduleTemplates/state';
 
 export type EditorReduxState = {
   modules: DataModules,
@@ -355,7 +356,6 @@ const ADD_NEW_MODULE = 'ADD_NEW_MODULE';
 
 type AddNewModulePayload = {
   newModuleKey: string,
-  groupKey: string,
   moduleKey: string,
 };
 
@@ -364,17 +364,40 @@ type AddNewModuleAction = {
   payload: AddNewModulePayload,
 };
 
-export function addNewModule(
-  newModuleKey: string,
-  groupKey: string,
-  moduleKey: string
-): AddNewModuleAction {
+export function addNewModule(newModuleKey: string, moduleKey: string): AddNewModuleAction {
   return {
     type: ADD_NEW_MODULE,
     payload: {
       newModuleKey,
-      groupKey,
       moduleKey,
+    },
+  };
+}
+
+function handleAddNewModule(
+  state: EditorReduxState,
+  { newModuleKey, moduleKey }: AddNewModulePayload
+): EditorReduxState {
+  const module = getModuleFromState(state, moduleKey);
+  const moduleTemplates = getModuleTemplatesFromState(state);
+  const newModule = getModuleFromState(state, newModuleKey);
+  const { moduleTemplateKey } = newModule;
+  if (!moduleTemplateKey) {
+    throw new Error(`This module ${newModuleKey} does not have an associated template.`);
+  }
+  const moduleTemplate = getModuleTemplateFromModuleTemplates(moduleTemplateKey, moduleTemplates);
+  const dataBlock = getBlockFromModule(moduleTemplate, newModule);
+  const rootBlockKey = getModuleRootBlockKey(module);
+  const selectedBlock = getSelectedBlockFromModule(module);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [moduleKey]: {
+        ...module,
+        blocks: addNewBlockToBlocks(module.blocks, rootBlockKey, dataBlock, selectedBlock),
+        selectedBlock: dataBlock.key,
+      },
     },
   };
 }
@@ -433,6 +456,7 @@ type Actions =
   | SetSelectedBlockAction
   | SetBlockPropValueAction
   | SetBlockStyleValueAction
+  | AddNewModuleAction
   | AddNewBlockAction;
 
 const ACTION_HANDLERS = {
@@ -443,6 +467,7 @@ const ACTION_HANDLERS = {
   [SET_BLOCK_STYLE_VALUE]: handleSetBlockStyleValue,
   [SET_BLOCK_PROP_VALUE]: handleSetBlockPropValue,
   [SET_BLOCKS_ORDER]: handleSetBlocksOrder,
+  [ADD_NEW_MODULE]: handleAddNewModule,
   [ADD_NEW_BLOCK]: handleAddNewBlock,
 };
 
