@@ -8,6 +8,7 @@ import EditorBlockView from '../EditorBlockView/EditorBlockView';
 import type { ReduxState } from '../../../state/redux/store';
 import { getAddingBlock } from '../../../state/redux/ui/state';
 import { setAddingBlock } from '../../../state/redux/ui/reducer';
+import Tooltip from '../../../components/Tooltip/Tooltip';
 
 type Props = {
   addingBlock: boolean,
@@ -16,6 +17,7 @@ type Props = {
 
 const EditorView = ({ addingBlock, completeAddingBlock }: Props) => (
   <div className={styles.containerClass}>
+    <Tooltip />
     <header className={styles.headerClass}>header..</header>
     <main className={styles.mainClass}>
       <div className={styles.editorClass}>

@@ -17,28 +17,24 @@ const headerClass = css`
   padding: 0 ${spacing.medium}px;
 `;
 
+const detailsClass = css`
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+`;
+
 const titleWrapperClass = css`
   display: flex;
   align-items: center;
-  margin-top: 5px;
+  margin-bottom: 5px;
   min-height: 30px;
 `;
 
-const removeButtonClass = css`
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
-  background-color: ${colors.darkInput};
-  color: ${colors.lightMid};
-  border-radius: 3px;
-  cursor: pointer;
+const buttonClass = css`
+  margin-right: 5px;
 
-  &:hover {
-    background-color: ${colors.light};
-    color: ${colors.blackBlue};
+  &:last-of-type {
+    margin-right: 10px;
   }
 `;
 
@@ -62,8 +58,9 @@ const previewClass = css`
 export default {
   containerClass,
   headerClass,
+  detailsClass,
   titleWrapperClass,
-  removeButtonClass,
+  buttonClass,
   mainClass,
   editorClass,
   previewClass,

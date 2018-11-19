@@ -6,6 +6,7 @@ import {
   addNewBlockToBlocks,
   removeBlockFromBlocks,
   removeBlockStylesMixinViaKey,
+  replaceBlocksWithBlock,
   updateAllBlocksOrder,
   updateBlockProp,
   updateBlockStyle,
@@ -17,12 +18,16 @@ import type { DataModules } from '../../../data/modules/models';
 import type { MixinsModel } from '../../../data/mixins/models';
 import {
   getBlockFromModuleBlocks,
+  getModuleBlocks,
   getModuleRootBlockKey,
   getSelectedBlockFromModule,
 } from '../../../data/modules/state';
 import { getBlockDefaultDataBlock, getBlockFromModule } from '../../../blocks/state';
 import { getModuleTemplateFromModuleTemplates } from '../../../data/moduleTemplates/state';
-import { getBlockParentKey } from '../../../data/blocks/state';
+import { getBlockBlocks, getBlockParentKey } from '../../../data/blocks/state';
+import { generateNewModule } from '../../../data/modules/generator';
+import { generateNewModuleTemplate } from '../../../data/moduleTemplates/generator';
+import { generateNewModuleTemplateBlock } from '../../../data/blocks/generator';
 
 export type EditorReduxState = {
   modules: DataModules,
@@ -393,7 +398,7 @@ function handleRemoveBlockFromModule(
       ...state.modules,
       [selectedModuleKey]: {
         ...selectedModule,
-        blocks: removeBlockFromBlocks(selectedModule.blocks, blockKey),
+        blocks: removeBlockFromBlocks(selectedModule.blocks, blockKey, true),
         selectedBlock: blockToRemoveParentKey,
       },
     },
@@ -499,13 +504,56 @@ function handleAddNewBlock(
   };
 }
 
+const CREATE_NEW_MODULE_FROM_SELECTED_BLOCK = 'CREATE_NEW_MODULE_FROM_SELECTED_BLOCK';
+
+type CreateNewModuleFromSelectedBlockAction = {
+  type: string,
+  payload: {},
+};
+
+export function createNewModuleFromSelectedBlock(): CreateNewModuleFromSelectedBlockAction {
+  return {
+    type: CREATE_NEW_MODULE_FROM_SELECTED_BLOCK,
+    payload: {},
+  };
+}
+
+function handleCreateNewModuleFromSelectedBlock(state: EditorReduxState): EditorReduxState {
+  const selectedModuleKey = getSelectedModuleKey(state);
+  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedBlock = getSelectedBlockFromModule(selectedModule);
+  const blocks = getModuleBlocks(selectedModule);
+  const newModuleBlocks = getBlockBlocks(selectedBlock.key, blocks);
+  const newModule = generateNewModule(newModuleBlocks, selectedBlock.key, selectedBlock.label);
+  const newModuleTemplate = generateNewModuleTemplate(newModule.key);
+  const newBlock = generateNewModuleTemplateBlock(newModuleTemplate.key, selectedBlock.label);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [selectedModuleKey]: {
+        ...selectedModule,
+        blocks: replaceBlocksWithBlock(selectedModule.blocks, selectedBlock.key, newBlock),
+        selectedBlock: newBlock.key,
+      },
+      [newModule.key]: newModule,
+    },
+    moduleTemplates: {
+      ...state.moduleTemplates,
+      [newModuleTemplate.key]: newModuleTemplate,
+    },
+    selectedModule: newModule.key,
+  };
+}
+
 type Actions =
   | SetSelectedModuleAction
   | SetSelectedBlockAction
   | SetBlockPropValueAction
   | SetBlockStyleValueAction
   | AddNewModuleAction
-  | AddNewBlockAction;
+  | AddNewBlockAction
+  | CreateNewModuleFromSelectedBlockAction;
 
 const ACTION_HANDLERS = {
   [UPDATE_BLOCK_STYLES_MIXINS_ORDER]: handleUpdateBlockStylesMixinsOrder,
@@ -518,6 +566,7 @@ const ACTION_HANDLERS = {
   [REMOVE_BLOCK_FROM_MODULE]: handleRemoveBlockFromModule,
   [ADD_NEW_MODULE]: handleAddNewModule,
   [ADD_NEW_BLOCK]: handleAddNewBlock,
+  [CREATE_NEW_MODULE_FROM_SELECTED_BLOCK]: handleCreateNewModuleFromSelectedBlock,
 };
 
 export default function editorReducer(

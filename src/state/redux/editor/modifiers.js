@@ -9,7 +9,11 @@ import type { BlockStyles } from '../../../data/styles/models';
 import { getBlockStyles } from '../../../data/styles/state';
 import { getBlockFromDataBlock } from '../../../blocks/blocks';
 import { getBlockFromBlocks } from '../../../data/blocks/models';
-import { getBlockParentKey, removeBlockKeyFromBlockChildrenKeys } from '../../../data/blocks/state';
+import {
+  getBlockIndexWithinBlock,
+  getBlockParentKey,
+  removeBlockKeyFromBlockChildrenKeys,
+} from '../../../data/blocks/state';
 
 export function updateBlockProp(
   block: DataBlockModel,
@@ -203,7 +207,8 @@ export function addNewBlockToBlocks(
 
 export function removeBlockFromBlocks(
   blocks: SitePageDataBlocks,
-  blockToRemoveKey: string
+  blockToRemoveKey: string,
+  pushChildrenToParent: boolean
 ): SitePageDataBlocks {
   const blockToRemove = getBlockFromBlocks(blocks, blockToRemoveKey);
   const blockToRemoveChildren = blockToRemove.blockChildrenKeys
@@ -226,4 +231,31 @@ export function removeBlockFromBlocks(
     }
   });
   return updatedBlocks;
+}
+
+export function replaceBlocksWithBlock(
+  blocks: SitePageDataBlocks,
+  blockToReplaceKey: string,
+  newBlock: DataBlockModel
+): SitePageDataBlocks {
+  const blockToReplaceParentKey = getBlockParentKey(blockToReplaceKey, blocks);
+  const blockToReplaceParent = getBlockFromBlocks(blocks, blockToReplaceParentKey);
+  const blockToReplaceWithinParentIndex = getBlockIndexWithinBlock(
+    blockToReplaceParent,
+    blockToReplaceKey
+  );
+  const updatedBlocks = removeBlockFromBlocks(blocks, blockToReplaceKey, false);
+  const finalBlocks = {
+    [newBlock.key]: newBlock,
+  };
+  Object.keys(updatedBlocks).forEach(blockKey => {
+    const block = updatedBlocks[blockKey];
+    if (blockKey === blockToReplaceParentKey) {
+      const updatedChildrenKeys = block.blockChildrenKeys;
+      updatedChildrenKeys.splice(blockToReplaceWithinParentIndex, 0, newBlock.key);
+      block.blockChildrenKeys = updatedChildrenKeys;
+    }
+    finalBlocks[blockKey] = block;
+  });
+  return finalBlocks;
 }

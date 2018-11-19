@@ -1,6 +1,7 @@
 // @flow
-import React from 'react';
-import { MdDelete } from 'react-icons/md';
+import React, { Component } from 'react';
+import ReactTooltip from 'react-tooltip';
+import { MdDelete, MdCreateNewFolder } from 'react-icons/md';
 import { connect } from 'react-redux';
 import EditorPreviewIframe from '../../components/EditorPreviewIframe/EditorPreviewIframe';
 import styles from './styles';
@@ -15,49 +16,72 @@ import {
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { ReduxState } from '../../../state/redux/store';
 import { getSelectedModuleSelectedBlock } from '../../../state/redux/editor/state';
-import { removeBlockFromModule } from '../../../state/redux/editor/reducer';
+import {
+  createNewModuleFromSelectedBlock,
+  removeBlockFromModule,
+} from '../../../state/redux/editor/reducer';
+import IconButton from '../../../components/IconButton/IconButton';
 
 type Props = {
   selectedBlock: DataBlockModel,
+  createModule: () => void,
   removeBlock: (blockKey: string) => void,
 };
 
-const EditorBlockView = ({ selectedBlock, removeBlock }: Props) => (
-  <div className={styles.containerClass}>
-    <header className={styles.headerClass}>
-      <SmallHeading>{`${getDataBlockGroupKey(selectedBlock)}.${getDataBlockBlockKey(
-        selectedBlock
-      )}`}</SmallHeading>
-      <div className={styles.titleWrapperClass}>
-        {!selectedBlock.isParentModule && (
-          <div
-            className={styles.removeButtonClass}
-            onClick={() => {
-              removeBlock(selectedBlock.key);
-            }}
-          >
-            <MdDelete />
+class EditorBlockView extends Component<Props> {
+  componentDidUpdate() {
+    ReactTooltip.rebuild();
+  }
+
+  render() {
+    const { createModule, selectedBlock, removeBlock } = this.props;
+    return (
+      <div className={styles.containerClass}>
+        <header className={styles.headerClass}>
+          <div className={styles.titleWrapperClass}>
+            <MediumLargeHeading>{`${getDataBlockLabel(selectedBlock)}`}</MediumLargeHeading>
           </div>
-        )}
-        <MediumLargeHeading>{`${getDataBlockLabel(selectedBlock)}`}</MediumLargeHeading>
+          <div className={styles.detailsClass}>
+            {!selectedBlock.isParentModule && (
+              <IconButton
+                className={styles.buttonClass}
+                tooltip="Delete block"
+                icon={<MdDelete size={17} />}
+                onClick={() => removeBlock(selectedBlock.key)}
+              />
+            )}
+            {!selectedBlock.isParentModule && (
+              <IconButton
+                className={styles.buttonClass}
+                tooltip="Save as module"
+                icon={<MdCreateNewFolder size={17} />}
+                onClick={createModule}
+              />
+            )}
+            <SmallHeading>{`${getDataBlockGroupKey(selectedBlock)}.${getDataBlockBlockKey(
+              selectedBlock
+            )}`}</SmallHeading>
+          </div>
+        </header>
+        <div className={styles.mainClass}>
+          <div className={styles.editorClass}>
+            <EditorContent selectedBlock={selectedBlock} />
+          </div>
+          <div className={styles.previewClass}>
+            <EditorPreviewIframe />
+          </div>
+        </div>
       </div>
-    </header>
-    <div className={styles.mainClass}>
-      <div className={styles.editorClass}>
-        <EditorContent selectedBlock={selectedBlock} />
-      </div>
-      <div className={styles.previewClass}>
-        <EditorPreviewIframe />
-      </div>
-    </div>
-  </div>
-);
+    );
+  }
+}
 
 const mapStateToProps = (state: ReduxState) => ({
   selectedBlock: getSelectedModuleSelectedBlock(state.editor),
 });
 
 const mapDispatchToProps = {
+  createModule: () => createNewModuleFromSelectedBlock(),
   removeBlock: (blockKey: string) => removeBlockFromModule(blockKey),
 };
 

@@ -3,6 +3,7 @@
 import type { BlockModel } from '../../models';
 import ModuleImportComponent from './component';
 import { moduleImportDefaultProps, moduleImportPropsConfig } from './props';
+import dataBlock from './dataBlock';
 
 const moduleImportBlock: BlockModel = {
   component: ModuleImportComponent,
@@ -11,6 +12,7 @@ const moduleImportBlock: BlockModel = {
   propsConfig: moduleImportPropsConfig,
   childrenAllowed: false, // todo - make this flexible
   stylesEnabled: false,
+  dataBlock,
 };
 
 export default moduleImportBlock;

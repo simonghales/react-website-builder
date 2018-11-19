@@ -2,7 +2,7 @@
 
 import type { DataBlockMappedMixinsModel, DataBlockModel, SitePageDataBlocks } from './models';
 import { getBlockFromDataBlock } from '../../blocks/blocks';
-import { getDataBlockType } from './models';
+import { getBlockFromBlocks, getDataBlockType } from './models';
 import ModuleImport from '../../blocks/module/ModuleImport/ModuleImport';
 import type { ModuleTemplates } from '../moduleTemplates/models';
 import {
@@ -102,4 +102,26 @@ export function removeBlockKeyFromBlockChildrenKeys(
   const updatedBlockChildrenKeys = blockChildrenKeys.slice();
   updatedBlockChildrenKeys.splice(blockIndex, 1);
   return updatedBlockChildrenKeys;
+}
+
+export function getBlockChildrenKeys(block: DataBlockModel): Array<string> {
+  const { blockChildrenKeys = [] } = block;
+  return blockChildrenKeys;
+}
+
+export function getBlockBlocks(blockKey: string, blocks: SitePageDataBlocks): SitePageDataBlocks {
+  const block = getBlockFromBlocks(blocks, blockKey);
+  const blockBlocks = {
+    [blockKey]: block,
+  };
+  const blockChildrenKeys = getBlockChildrenKeys(block);
+  blockChildrenKeys.forEach(childBlockKey => {
+    blockBlocks[childBlockKey] = getBlockFromBlocks(blocks, childBlockKey);
+  });
+  return blockBlocks;
+}
+
+export function getBlockIndexWithinBlock(block: DataBlockModel, blockKey: string): number {
+  const childrenKeys = getBlockChildrenKeys(block);
+  return childrenKeys.indexOf(blockKey);
 }

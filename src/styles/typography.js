@@ -12,14 +12,14 @@ export const smallFont = css`
   font-size: ${getFontSize(fontSizes.small)};
 `;
 
-export const smallHeading = css`
-  ${smallFont};
-  color: ${colors.lightFaint};
-  font-weight: ${fontWeights.bold};
-`;
-
 export const smallPlusFont = css`
   font-size: ${getFontSize(fontSizes.smallPlus)};
+`;
+
+export const smallHeading = css`
+  ${smallPlusFont};
+  color: ${colors.lightFaint};
+  font-weight: ${fontWeights.bold};
 `;
 
 export const smallPlusText = css`
