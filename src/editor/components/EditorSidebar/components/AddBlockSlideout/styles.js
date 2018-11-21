@@ -50,6 +50,11 @@ const blockClass = css`
   }
 `;
 
+const disabledBlockClass = css`
+  opacity: 0.5;
+  pointer-events: none;
+`;
+
 const blockIconClass = css`
   width: 24px;
   height: 24px;
@@ -87,6 +92,7 @@ export default {
   groupHeadingClass,
   groupBlocksClass,
   blockClass,
+  disabledBlockClass,
   blockIconClass,
   blockLabelClass,
 };

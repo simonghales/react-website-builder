@@ -442,6 +442,7 @@ function handleAddNewModule(
   const dataBlock = getBlockFromModule(moduleTemplate, newModule);
   const rootBlockKey = getModuleRootBlockKey(module);
   const selectedBlock = getSelectedBlockFromModule(module);
+  console.log('adding new module', module);
   return {
     ...state,
     modules: {

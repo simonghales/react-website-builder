@@ -17,7 +17,7 @@ export type BlockModel = {
   propsConfig: BlockModelPropsConfig,
   childrenAllowed: boolean,
   stylesEnabled: boolean,
-  dataBlock: (?{ [string]: any }) => DataBlockModel,
+  dataBlock: ({ [string]: any }) => DataBlockModel,
 };
 
 export type BlockGroupModel = {

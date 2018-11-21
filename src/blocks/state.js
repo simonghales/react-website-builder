@@ -107,7 +107,7 @@ export function getBlockDefaultDataBlock(groupKey: string, blockKey: string): Da
     throw new Error(`Block ${blockKey} could not be matched.`);
   }
   const { dataBlock } = block;
-  return dataBlock();
+  return dataBlock({});
 }
 
 export function getBlockFromModule(

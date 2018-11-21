@@ -13,7 +13,7 @@ import type { DataModules } from '../modules/models';
 import { getModuleFromModules } from '../modules/state';
 import type { MixinModel, MixinsModel } from '../mixins/models';
 import { getMixinFromMixins } from '../mixins/state';
-import { blockGroups } from '../../blocks/config';
+import { blockGroups, blockTypes } from '../../blocks/config';
 
 export function doesBlockAllowStyles(dataBlock: DataBlockModel): boolean {
   const block = getBlockFromDataBlock(dataBlock);
@@ -124,4 +124,13 @@ export function getBlockBlocks(blockKey: string, blocks: SitePageDataBlocks): Si
 export function getBlockIndexWithinBlock(block: DataBlockModel, blockKey: string): number {
   const childrenKeys = getBlockChildrenKeys(block);
   return childrenKeys.indexOf(blockKey);
+}
+
+export function isDataBlockAModuleTemplate(dataBlock: DataBlockModel): boolean {
+  return (
+    dataBlock.blockType === blockTypes.module &&
+    dataBlock.groupKey === blockGroups.Module &&
+    (Object.prototype.hasOwnProperty.call(dataBlock, 'linkedModuleKey') ||
+      Object.prototype.hasOwnProperty.call(dataBlock, 'moduleKey'))
+  );
 }

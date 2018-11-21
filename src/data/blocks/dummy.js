@@ -1,14 +1,13 @@
 // @flow
 import { getBlockUniqueId } from '../../blocks/utils';
 import Element from '../../blocks/html/Element/Element';
-import { blockGroups} from '../../blocks/config';
+import { blockGroups, blockTypes } from '../../blocks/config';
 import Module from '../../blocks/module/Module/Module';
 import ModuleImport from '../../blocks/module/ModuleImport/ModuleImport';
 import Heading from '../../blocks/basic/Heading/Heading';
 import Container from '../../blocks/basic/Container/Container';
 import { DUMMY_STYLE_EMPTY, DUMMY_STYLE_TEST } from '../styles/dummy';
 import type { DataBlockModel } from './models';
-import {blockTypes} from '../../blocks/config';
 
 const DUMMY_BLOCK_HEADING: DataBlockModel = {
   key: getBlockUniqueId(),
@@ -81,6 +80,22 @@ const DUMMY_BLOCK_CONTAINER: DataBlockModel = {
   rawStyles: DUMMY_STYLE_EMPTY,
 };
 
+export const DUMMY_BLOCK_MODULE_SUB: DataBlockModel = {
+  key: getBlockUniqueId(),
+  groupKey: blockGroups.Module,
+  blockKey: ModuleImport.key,
+  blockType: blockTypes.module,
+  label: 'Module Sub',
+  props: {
+    children: null,
+  },
+  propsConfig: {},
+  blockChildrenKeys: [],
+  linkedModuleKey: 'DUMMY_MODULE_TEMPLATE_SUB',
+  isParentModule: false,
+  rawStyles: DUMMY_STYLE_EMPTY,
+};
+
 export const DUMMY_BLOCK_MODULE: DataBlockModel = {
   key: getBlockUniqueId(),
   groupKey: blockGroups.Module,
@@ -95,6 +110,7 @@ export const DUMMY_BLOCK_MODULE: DataBlockModel = {
     DUMMY_BLOCK_HEADING.key,
     DUMMY_BLOCK_SUBHEADING.key,
     DUMMY_BLOCK_CONTAINER.key,
+    DUMMY_BLOCK_MODULE_SUB.key,
   ],
   isParentModule: true,
   rawStyles: DUMMY_STYLE_EMPTY,
@@ -105,6 +121,7 @@ export const DUMMY_BLOCKS = {
   [DUMMY_BLOCK_SUBHEADING.key]: DUMMY_BLOCK_SUBHEADING,
   [DUMMY_BLOCK_CONTAINER.key]: DUMMY_BLOCK_CONTAINER,
   [DUMMY_BLOCK_PARAGRAPH.key]: DUMMY_BLOCK_PARAGRAPH,
+  [DUMMY_BLOCK_MODULE_SUB.key]: DUMMY_BLOCK_MODULE_SUB,
   [DUMMY_BLOCK_MODULE.key]: DUMMY_BLOCK_MODULE,
 };
 
@@ -166,6 +183,26 @@ export const DUMMY_BLOCK_PAGE_MODULE: DataBlockModel = {
     },
   },
   blockChildrenKeys: [DUMMY_BLOCK_PAGE_INTRO_MODULE.key, DUMMY_BLOCK_PAGE_PARAGRAPH.key],
+  isParentModule: true,
+  rawStyles: DUMMY_STYLE_EMPTY,
+};
+
+export const DUMMY_BLOCK_SUB_MODULE: DataBlockModel = {
+  key: getBlockUniqueId(),
+  groupKey: blockGroups.Module,
+  blockKey: Module.key,
+  blockType: blockTypes.module,
+  label: 'Sub Module',
+  props: {
+    children: null,
+  },
+  propsConfig: {
+    children: {
+      label: 'Content',
+      type: 'blocks',
+    },
+  },
+  blockChildrenKeys: [],
   isParentModule: true,
   rawStyles: DUMMY_STYLE_EMPTY,
 };

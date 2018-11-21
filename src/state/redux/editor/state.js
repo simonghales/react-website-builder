@@ -21,6 +21,7 @@ import type { MixinModel, MixinsModel } from '../../../data/mixins/models';
 import { getBlockMixinsStyles } from '../../../data/mixins/state';
 import type { ModuleTemplates } from '../../../data/moduleTemplates/models';
 import { getModuleTemplateModuleKey } from '../../../data/moduleTemplates/state';
+import type {ReduxState} from '../store';
 
 export function getModuleFromState(state: EditorReduxState, moduleKey: string): DataModule {
   const { modules } = state;

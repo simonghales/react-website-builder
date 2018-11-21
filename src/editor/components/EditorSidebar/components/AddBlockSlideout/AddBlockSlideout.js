@@ -17,19 +17,26 @@ import {
 } from '../../../../../state/redux/editor/state';
 import { addNewBlock, addNewModule } from '../../../../../state/redux/editor/reducer';
 import { setAddingBlock } from '../../../../../state/redux/ui/reducer';
+import { getDisabledBlocks } from './state';
+import type { DisabledBlocks } from './state';
 
 const Block = ({
   block,
   addBlock,
   addModule,
+  disabled,
 }: {
   block: AddBlockModel,
+  disabled: boolean,
   addBlock: () => void,
   addModule: () => void,
 }) => (
   <div
-    className={cx(styles.blockClass, styles.classNames.addBlockBlock)}
+    className={cx(styles.blockClass, styles.classNames.addBlockBlock, {
+      [styles.disabledBlockClass]: disabled,
+    })}
     onClick={() => {
+      if (disabled) return;
       if (block.isModule) {
         addModule();
       } else {
@@ -46,10 +53,12 @@ const Block = ({
 
 const Group = ({
   group,
+  disabledBlocks,
   addBlock,
   addModule,
 }: {
   group: AddBlockGroupModel,
+  disabledBlocks: DisabledBlocks,
   addBlock: (blockKey: string) => void,
   addModule: (newModuleKey: string) => void,
 }) => (
@@ -58,12 +67,16 @@ const Group = ({
     <div className={styles.groupBlocksClass}>
       {Object.keys(group.blocks).map(blockKey => {
         const block = group.blocks[blockKey];
+        const disabled = disabledBlocks[blockKey];
         return (
           <Block
             block={block}
             key={blockKey}
             addBlock={() => addBlock(blockKey)}
             addModule={() => addModule(blockKey)}
+            disabled={!!disabled}
+            isCurrentModule={disabled && disabled.currentModule}
+            isRecursiveModule={disabled && disabled.recursiveModule}
           />
         );
       })}
@@ -73,6 +86,7 @@ const Group = ({
 
 type Props = {
   addableBlockGroups: AddableBlockGroups,
+  disabledBlocks: DisabledBlocks,
   selectedModuleKey: string,
   addBlock: (blockKey: string, groupKey: string, moduleKey: string) => void,
   addModule: (newModuleKey: string, moduleKey: string) => void,
@@ -83,6 +97,7 @@ const AddBlockSlideout = ({
   addBlock,
   addModule,
   addableBlockGroups,
+  disabledBlocks,
   completeAddingBlock,
   selectedModuleKey,
 }: Props) => (
@@ -103,6 +118,7 @@ const AddBlockSlideout = ({
               addModule(newModuleKey, selectedModuleKey);
               completeAddingBlock();
             }}
+            disabledBlocks={disabledBlocks}
           />
         );
       })}
@@ -112,8 +128,12 @@ const AddBlockSlideout = ({
 
 const mapStateToProps = (state: ReduxState) => {
   const moduleTemplateModules = getAddableModuleTemplates(state.editor);
+  const addableBlockGroups = getAddableBlockGroups(moduleTemplateModules);
+  const selectedModuleKey = getSelectedModuleKey(state.editor);
+  const disabledBlocks = getDisabledBlocks(addableBlockGroups, selectedModuleKey);
   return {
-    addableBlockGroups: getAddableBlockGroups(moduleTemplateModules),
+    addableBlockGroups,
+    disabledBlocks,
     selectedModuleKey: getSelectedModuleKey(state.editor),
   };
 };
