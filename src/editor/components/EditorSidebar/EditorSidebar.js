@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
-import { MdAdd, MdClose } from 'react-icons/md';
+import { MdAdd, MdClose, MdKeyboardBackspace } from 'react-icons/md';
 import { connect } from 'react-redux';
 import { cx } from 'emotion';
 import { CSSTransition } from 'react-transition-group';
@@ -11,11 +11,16 @@ import AddBlockSlideout from './components/AddBlockSlideout/AddBlockSlideout';
 import type { ReduxState } from '../../../state/redux/store';
 import { getAddingBlock } from '../../../state/redux/ui/state';
 import { setAddingBlock } from '../../../state/redux/ui/reducer';
+import { returnToPreviousSelectedModule } from '../../../state/redux/editor/reducer';
+import { getPreviousModule } from '../../../state/redux/editor/state';
+import type { DataModule } from '../../../data/modules/models';
 
 type Props = {
   addingBlock: boolean,
+  previousModule: DataModule | null,
   startAddingBlock: () => void,
   completeAddingBlock: () => void,
+  returnToPreviousModule: () => void,
 };
 
 type State = {};
@@ -42,7 +47,7 @@ class EditorSidebar extends Component<Props, State> {
   };
 
   render() {
-    const { addingBlock } = this.props;
+    const { addingBlock, previousModule, returnToPreviousModule } = this.props;
     return (
       <div className={styles.wrapperClass}>
         <div
@@ -51,7 +56,19 @@ class EditorSidebar extends Component<Props, State> {
           })}
         >
           <div className={styles.addBlockSectionClass}>
-            <div className={styles.addBlockToggleClass} onClick={this.handleStartAddingBlock}>
+            <div className={styles.returnToWrapperClass}>
+              {previousModule && (
+                <div className={styles.returnToClass} onClick={returnToPreviousModule}>
+                  <MdKeyboardBackspace size={18} />
+                  <div>{previousModule.name}</div>
+                </div>
+              )}
+            </div>
+            <div
+              className={styles.addBlockToggleClass}
+              onClick={this.handleStartAddingBlock}
+              data-tip={addingBlock ? 'Close' : 'Add a block'}
+            >
               {addingBlock ? <MdClose size={20} /> : <MdAdd size={20} />}
             </div>
           </div>
@@ -70,11 +87,13 @@ class EditorSidebar extends Component<Props, State> {
 
 const mapStateToProps = (state: ReduxState) => ({
   addingBlock: getAddingBlock(state.ui),
+  previousModule: getPreviousModule(state.editor),
 });
 
 const mapDispatchToProps = {
   startAddingBlock: () => setAddingBlock(true),
   completeAddingBlock: () => setAddingBlock(false),
+  returnToPreviousModule: () => returnToPreviousSelectedModule(),
 };
 
 export default connect(

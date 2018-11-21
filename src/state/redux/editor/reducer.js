@@ -33,6 +33,7 @@ export type EditorReduxState = {
   modules: DataModules,
   moduleTemplates: ModuleTemplates,
   selectedModule: string,
+  selectedModulesHistory: Array<string>,
   mixinStyles: MixinsModel,
 };
 
@@ -138,6 +139,33 @@ function handleRemoveBlockStylesMixin(
   };
 }
 
+const RETURN_TO_PREVIOUS_SELECTED_MODULE = 'RETURN_TO_PREVIOUS_SELECTED_MODULE';
+
+type ReturnToPreviousSelectedModuleAction = {
+  type: string,
+  payload: {},
+};
+
+export function returnToPreviousSelectedModule() {
+  return {
+    type: RETURN_TO_PREVIOUS_SELECTED_MODULE,
+    payload: {},
+  };
+}
+
+function handleReturnToPreviousSelectedModule(state: EditorReduxState): EditorReduxState {
+  const updatedModulesHistory = state.selectedModulesHistory.slice();
+  const moduleKey = updatedModulesHistory.pop();
+  if (!moduleKey) {
+    throw new Error(`No previous module found.`);
+  }
+  return {
+    ...state,
+    selectedModule: moduleKey,
+    selectedModulesHistory: updatedModulesHistory,
+  };
+}
+
 const SET_SELECTED_MODULE = 'SET_SELECTED_MODULE';
 
 type SetSelectedModulePayload = {
@@ -162,9 +190,11 @@ function handleSetSelectedModule(
   state: EditorReduxState,
   { moduleKey }: SetSelectedModulePayload
 ): EditorReduxState {
+  const currentSelectedModuleKey = getSelectedModuleKey(state);
   return {
     ...state,
     selectedModule: moduleKey,
+    selectedModulesHistory: state.selectedModulesHistory.concat([currentSelectedModuleKey]),
   };
 }
 
@@ -552,6 +582,8 @@ type Actions =
   | SetSelectedBlockAction
   | SetBlockPropValueAction
   | SetBlockStyleValueAction
+  | SetSelectedModuleAction
+  | ReturnToPreviousSelectedModuleAction
   | AddNewModuleAction
   | AddNewBlockAction
   | CreateNewModuleFromSelectedBlockAction;
@@ -559,6 +591,7 @@ type Actions =
 const ACTION_HANDLERS = {
   [UPDATE_BLOCK_STYLES_MIXINS_ORDER]: handleUpdateBlockStylesMixinsOrder,
   [REMOVE_BLOCK_STYLES_MIXIN]: handleRemoveBlockStylesMixin,
+  [RETURN_TO_PREVIOUS_SELECTED_MODULE]: handleReturnToPreviousSelectedModule,
   [SET_SELECTED_MODULE]: handleSetSelectedModule,
   [SET_SELECTED_BLOCK]: handleSetSelectedBlock,
   [SET_BLOCK_STYLE_VALUE]: handleSetBlockStyleValue,

@@ -8,6 +8,7 @@ import {
   transitionExit,
   transitionExitActive,
 } from '../../../styles/utils/transitions';
+import { mediumHeading, smallHeading } from '../../../styles/typography';
 
 const classNames = {
   slideoutTransition: 'slideoutTransition',
@@ -68,8 +69,27 @@ const slideoutClass = css`
 
 const addBlockSectionClass = css`
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
   padding: 5px;
+`;
+
+const returnToWrapperClass = css`
+  flex: 1;
+`;
+
+const returnToClass = css`
+  display: flex;
+  align-items: center;
+  ${smallHeading};
+  cursor: pointer;
+
+  &:hover {
+    color: ${colors.light};
+  }
+
+  svg {
+    margin-right: 3px;
+  }
 `;
 
 const addBlockToggleClass = css`
@@ -97,4 +117,6 @@ export default {
   slideoutClass,
   addBlockSectionClass,
   addBlockToggleClass,
+  returnToWrapperClass,
+  returnToClass,
 };

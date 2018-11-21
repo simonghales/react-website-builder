@@ -13,4 +13,5 @@ export const DUMMY_PAGE_DATA: EditorReduxState = {
   moduleTemplates: DUMMY_MODULE_TEMPLATES,
   selectedModule: DUMMY_PAGE_MODULE.key,
   mixinStyles: DUMMY_MIXINS,
+  selectedModulesHistory: [],
 };

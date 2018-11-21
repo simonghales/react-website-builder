@@ -21,7 +21,7 @@ import type { MixinModel, MixinsModel } from '../../../data/mixins/models';
 import { getBlockMixinsStyles } from '../../../data/mixins/state';
 import type { ModuleTemplates } from '../../../data/moduleTemplates/models';
 import { getModuleTemplateModuleKey } from '../../../data/moduleTemplates/state';
-import type {ReduxState} from '../store';
+import type { ReduxState } from '../store';
 
 export function getModuleFromState(state: EditorReduxState, moduleKey: string): DataModule {
   const { modules } = state;
@@ -133,4 +133,11 @@ export function getAddableModuleTemplates(state: EditorReduxState): Array<DataMo
     addableModules.push(module);
   });
   return addableModules;
+}
+
+export function getPreviousModule(state: EditorReduxState): DataModule | null {
+  const { selectedModulesHistory } = state;
+  if (selectedModulesHistory.length === 0) return null;
+  const moduleKey = selectedModulesHistory[selectedModulesHistory.length - 1];
+  return getModuleFromState(state, moduleKey);
 }
