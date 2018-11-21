@@ -574,6 +574,7 @@ function handleCreateNewModuleFromSelectedBlock(state: EditorReduxState): Editor
       [newModuleTemplate.key]: newModuleTemplate,
     },
     selectedModule: newModule.key,
+    selectedModulesHistory: state.selectedModulesHistory.concat([selectedModuleKey]),
   };
 }
 
