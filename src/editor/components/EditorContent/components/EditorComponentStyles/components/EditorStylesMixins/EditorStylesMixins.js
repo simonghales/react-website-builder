@@ -21,7 +21,7 @@ type Props = {
 };
 
 const EditorStylesMixins = ({ blockKey, mixins, removeMixin, updateMixinsOrder }: Props) => (
-  <StyleSection title="Mixins" gridBody={false}>
+  <StyleSection title="Mixins" gridBody={false} showAdd addTooltip="Add mixin">
     <MixinList
       mixins={mixins}
       removeMixin={(mixinKey: string) => removeMixin(blockKey, mixinKey)}

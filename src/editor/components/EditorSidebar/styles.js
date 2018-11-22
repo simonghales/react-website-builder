@@ -9,6 +9,7 @@ import {
   transitionExitActive,
 } from '../../../styles/utils/transitions';
 import { mediumHeading, smallHeading } from '../../../styles/typography';
+import { squareButton } from '../../../styles/buttons';
 
 const classNames = {
   slideoutTransition: 'slideoutTransition',
@@ -93,20 +94,7 @@ const returnToClass = css`
 `;
 
 const addBlockToggleClass = css`
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${colors.blackBlue};
-  border-radius: 3px;
-  color: ${colors.light};
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${colors.light};
-    color: ${colors.blackBlue};
-  }
+  ${squareButton};
 `;
 
 export default {

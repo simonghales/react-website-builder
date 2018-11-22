@@ -22,7 +22,7 @@ class EditorContent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selectedTab: editorComponentTabs.Props,
+      selectedTab: editorComponentTabs.Styles,
     };
   }
 

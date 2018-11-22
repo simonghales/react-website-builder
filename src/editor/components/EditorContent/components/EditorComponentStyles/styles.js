@@ -3,6 +3,7 @@
 import { css } from 'emotion';
 import { sectionHeading, smallPlusText } from '../../../../../styles/typography';
 import colors from '../../../../../styles/config/colors';
+import { squareButton } from '../../../../../styles/buttons';
 
 const containerClass = css`
   display: grid;
@@ -36,10 +37,18 @@ const sectionClass = css`
 const sectionHeaderClass = css`
   display: flex;
   margin-bottom: 5px;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const sectionHeaderTitleClass = css`
   ${sectionHeading};
+`;
+
+const sctionHeaderAddClass = css`
+  ${squareButton};
+  width: 24px;
+  height: 24px;
 `;
 
 const sectionBodyClass = css``;
@@ -58,6 +67,7 @@ export default {
   sectionClass,
   sectionHeaderClass,
   sectionHeaderTitleClass,
+  sctionHeaderAddClass,
   sectionBodyClass,
   sectionBodyGridClass,
 };
