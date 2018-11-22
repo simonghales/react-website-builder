@@ -167,7 +167,7 @@ function getEditorMappedStyles(
         mappedStyles[styleKey] = updatedValue;
       } else {
         mappedStyles[styleKey] = {
-          value: isMixin ? '' : '',
+          value: isMixin ? '' : styleValue,
           inheritedValue: !isMixin ? '' : styleValue,
           inheritedMixins: mixin ? [getMixinDetails(mixin)] : [],
           setInBlock: !mixin,
@@ -239,6 +239,7 @@ export function getEditorMappedModifierStyles(
   });
 
   const modifierStyles = getStylesViaModifier(modifier, blockStyles);
+
   const { editor = {}, custom = {} } = modifierStyles;
   editorStyles = getEditorMappedStyles(editorStyles, editor);
   customStyles = getEditorMappedStyles(customStyles, custom);
