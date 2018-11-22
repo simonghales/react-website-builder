@@ -18,19 +18,6 @@ export const DUMMY_MIXIN_CENTERED: MixinModel = {
   },
 };
 
-export const DUMMY_MIXIN_HEADING: MixinModel = {
-  key: 'DUMMY_MIXIN_HEADING',
-  groupKey: 'General',
-  name: 'Large Heading',
-  styles: {
-    [blockStylesModifiers.default]: {
-      editor: {
-        fontSize: '50px',
-      },
-    },
-  },
-};
-
 export const DUMMY_MIXIN_RANDOM: MixinModel = {
   key: 'DUMMY_MIXIN_RANDOM',
   groupKey: 'General',
@@ -42,6 +29,25 @@ export const DUMMY_MIXIN_RANDOM: MixinModel = {
       },
     },
   },
+};
+
+export const DUMMY_MIXIN_HEADING: MixinModel = {
+  key: 'DUMMY_MIXIN_HEADING',
+  groupKey: 'General',
+  name: 'Large Heading',
+  styles: {
+    [blockStylesModifiers.default]: {
+      editor: {
+        fontSize: '50px',
+      },
+    },
+  },
+  mixins: [
+    {
+      key: DUMMY_MIXIN_RANDOM.key,
+      disabledModifiers: {},
+    },
+  ],
 };
 
 export const DUMMY_MIXINS: MixinsModel = {

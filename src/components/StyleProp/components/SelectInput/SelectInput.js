@@ -141,36 +141,31 @@ class SelectInput extends Component<Props, State> {
     };
   }
 
-  componentWillReceiveProps(nextProps: Props): void {
-    const { inheritedValue } = this.props;
-    const { selected } = this.state;
-    const selectedValue = parseSelectedValue(selected);
-    if (nextProps.inheritedValue !== inheritedValue && selectedValue === inheritedValue) {
-      this.setState({
-        selected: parseSelectInputStyleValue(nextProps.inheritedValue),
-      });
-    }
-  }
-
   handleChange = (newValue: Selected) => {
-    const { updateStyle, inheritedValue } = this.props;
-    const updateValue =
-      !newValue || newValue.length === 0 ? parseSelectInputStyleValue(inheritedValue) : newValue;
+    const { updateStyle } = this.props;
     this.setState({
-      selected: updateValue,
+      selected: newValue,
     });
     const storedValue = parseSelectedValue(newValue);
     updateStyle(storedValue);
   };
 
-  render() {
+  getDisplayValue() {
     const { selected } = this.state;
+    if (!selected || selected.length === 0) {
+      const { inheritedValue } = this.props;
+      return parseSelectInputStyleValue(inheritedValue);
+    }
+    return selected;
+  }
+
+  render() {
     const { noOptionsMessage, options, isMulti, isCreatable } = this.props;
 
     const sharedProps = {
       onChange: this.handleChange,
       styles: customStyles,
-      value: selected,
+      value: this.getDisplayValue(),
       options,
       placeholder: '',
       isMulti,

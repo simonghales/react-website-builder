@@ -28,36 +28,30 @@ class Input extends Component<Props, State> {
     };
   }
 
-  componentWillReceiveProps(nextProps: Props): void {
-    const { inheritedValue } = this.props;
-    const { text } = this.state;
-    if (nextProps.inheritedValue !== inheritedValue && text === inheritedValue) {
-      this.setState({
-        text: nextProps.inheritedValue,
-      });
-    }
-  }
-
   handleInputChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    const { onChange, inheritedValue } = this.props;
+    const { onChange } = this.props;
     const inputValue = event.target.value.toString();
-    const newValue = inputValue === '' ? inheritedValue : inputValue;
     this.setState({
-      text: newValue,
+      text: inputValue,
     });
     onChange(inputValue); // todo - debounce
   };
 
+  getDisplayValue(): string {
+    const { text } = this.state;
+    const { inheritedValue } = this.props;
+    return text !== '' ? text : inheritedValue;
+  }
+
   render() {
     const { styleType } = this.props;
-    const { text } = this.state;
     return (
       <input
         className={cx(styles.inputClass, {
           [styles.darkInputClass]: styleType === inputStyleTypes.dark,
         })}
         type="text"
-        value={text}
+        value={this.getDisplayValue()}
         onChange={this.handleInputChange}
       />
     );

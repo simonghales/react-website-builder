@@ -11,12 +11,11 @@ import EditorStylesMixins from './components/EditorStylesMixins/EditorStylesMixi
 import StyleSection from './components/StyleSection/StyleSection';
 import type { ReduxState } from '../../../../../state/redux/store';
 import {
+  getMixinsFromState,
   getSelectedBlockStyle,
-  getSelectedModuleSelectedBlockMappedMixins,
   getSelectedModuleSelectedBlockMixins,
 } from '../../../../../state/redux/editor/state';
 import { getEditorMappedBlockStyles } from '../../../../../data/styles/state';
-import type { DataBlockMappedMixinsModel } from '../../../../../data/blocks/models';
 
 type StyleSectionWrapperProps = {
   blockStyles: BlockStyles,
@@ -115,9 +114,10 @@ const EditorComponentStyles = (props: Props) => {
 };
 
 const mapStateToProps = (state: ReduxState) => {
+  const mixins = getMixinsFromState(state.editor);
   const blockStyles = getSelectedBlockStyle(state.editor);
-  const mixins = getSelectedModuleSelectedBlockMixins(state.editor);
-  const editorMappedStyles = getEditorMappedBlockStyles(blockStyles.styles, mixins);
+  const blockMixins = getSelectedModuleSelectedBlockMixins(state.editor);
+  const editorMappedStyles = getEditorMappedBlockStyles(blockStyles.styles, blockMixins, mixins);
   return {
     blockStyles,
     editorMappedStyles,

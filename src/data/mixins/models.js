@@ -1,6 +1,7 @@
 // @flow
 
 import type { BlockModifierStyles } from '../styles/models';
+import type { DataBlockMixinStylesModel } from '../blocks/models';
 
 export type MixinModel = {
   key: string,
@@ -9,6 +10,7 @@ export type MixinModel = {
   styles: {
     [string]: BlockModifierStyles,
   },
+  mixins?: DataBlockMixinStylesModel,
 };
 
 export type MixinsModel = {

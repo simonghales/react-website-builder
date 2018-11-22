@@ -1,7 +1,7 @@
 // @flow
 
 import type { MixinModel, MixinsModel } from './models';
-import type {DataBlockMixinStylesModel, DataBlockModel} from '../blocks/models';
+import type { DataBlockMixinStylesModel } from '../blocks/models';
 
 export function getMixinFromMixins(mixinKey: string, mixins: MixinsModel): MixinModel {
   const mixin = mixins[mixinKey];

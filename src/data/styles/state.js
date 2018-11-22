@@ -85,7 +85,20 @@ export function getMappedMixinsStyles(
 ): Array<MappedStyleModel> {
   return mixinStyles.map((mixinData: DataBlockMixinModel) => {
     const mixin = getMixinFromMixins(mixinData.key, mixins);
-    return getMappedMixinStyles(mixin);
+    const { mixins: mixinMixins = [] } = mixin;
+    const mixinMixinsStyles = getMappedMixinsStyles(mixinMixins, mixins);
+    let mappedMixinMixinsStyles = {};
+    mixinMixinsStyles.forEach(mappedStyles => {
+      mappedMixinMixinsStyles = {
+        ...mappedMixinMixinsStyles,
+        ...mappedStyles,
+      };
+    });
+    const styles = getMappedMixinStyles(mixin);
+    return {
+      ...mappedMixinMixinsStyles,
+      ...styles,
+    };
   });
 }
 
@@ -144,7 +157,7 @@ function getEditorMappedStyles(
         const previousValue = mappedStyles[styleKey];
         const updatedValue = {
           ...previousValue,
-          value: styleValue,
+          value: isMixin ? previousValue.value : styleValue,
           inheritedValue: !isMixin ? previousValue.inheritedValue : styleValue,
           inheritedMixins: mixin
             ? previousValue.inheritedMixins.concat([getMixinDetails(mixin)])
@@ -154,7 +167,7 @@ function getEditorMappedStyles(
         mappedStyles[styleKey] = updatedValue;
       } else {
         mappedStyles[styleKey] = {
-          value: styleValue,
+          value: isMixin ? '' : '',
           inheritedValue: !isMixin ? '' : styleValue,
           inheritedMixins: mixin ? [getMixinDetails(mixin)] : [],
           setInBlock: !mixin,
@@ -166,20 +179,63 @@ function getEditorMappedStyles(
   return mappedStyles;
 }
 
+function getMixinStyles(
+  modifier: string,
+  editorStyles: EditorMappedStyles,
+  customStyles: EditorMappedStyles,
+  mixin: MixinModel,
+  mixins: MixinsModel
+): {
+  editorStyles: EditorMappedStyles,
+  customStyles: EditorMappedStyles,
+} {
+  const mixinStyles = mixin.styles;
+  const modifierStyles = getStylesViaModifier(modifier, mixinStyles);
+  const { editor = {}, custom = {} } = modifierStyles;
+
+  const { mixins: mixinMixins = [] } = mixin;
+
+  mixinMixins
+    .map(mixinMixin => mixinMixin.key)
+    .forEach(mixinKey => {
+      const mixinMixin = getMixinFromMixins(mixinKey, mixins);
+      const mixinMixinStyles = getMixinStyles(
+        modifier,
+        editorStyles,
+        customStyles,
+        mixinMixin,
+        mixins
+      );
+      // eslint-disable-next-line prefer-destructuring
+      editorStyles = mixinMixinStyles.editorStyles;
+      // eslint-disable-next-line prefer-destructuring
+      customStyles = mixinMixinStyles.customStyles;
+    });
+
+  editorStyles = getEditorMappedStyles(editorStyles, editor, mixin);
+  customStyles = getEditorMappedStyles(customStyles, custom, mixin);
+
+  return {
+    editorStyles,
+    customStyles,
+  };
+}
+
 export function getEditorMappedModifierStyles(
   modifier: string,
   blockStyles: StylesModel,
-  blockMixins: Array<MixinModel>
+  blockMixins: Array<MixinModel>,
+  mixins: MixinsModel
 ): EditorMappedModifierStyles {
   let editorStyles: EditorMappedStyles = {};
   let customStyles: EditorMappedStyles = {};
 
   blockMixins.forEach(mixin => {
-    const mixinStyles = mixin.styles;
-    const modifierStyles = getStylesViaModifier(modifier, mixinStyles);
-    const { editor = {}, custom = {} } = modifierStyles;
-    editorStyles = getEditorMappedStyles(editorStyles, editor, mixin);
-    customStyles = getEditorMappedStyles(customStyles, custom, mixin);
+    const mixinStyles = getMixinStyles(modifier, editorStyles, customStyles, mixin, mixins);
+    // eslint-disable-next-line prefer-destructuring
+    editorStyles = mixinStyles.editorStyles;
+    // eslint-disable-next-line prefer-destructuring
+    customStyles = mixinStyles.customStyles;
   });
 
   const modifierStyles = getStylesViaModifier(modifier, blockStyles);
@@ -195,13 +251,15 @@ export function getEditorMappedModifierStyles(
 
 export function getEditorMappedBlockStyles(
   blockStyles: StylesModel,
-  blockMixins: Array<MixinModel>
+  blockMixins: Array<MixinModel>,
+  mixins: MixinsModel
 ): EditorMappedStylesContainer {
   return {
     [blockStylesModifiers.default]: getEditorMappedModifierStyles(
       blockStylesModifiers.default,
       blockStyles,
-      blockMixins
+      blockMixins,
+      mixins
     ),
   };
 }
