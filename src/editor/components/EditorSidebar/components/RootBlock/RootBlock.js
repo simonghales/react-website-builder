@@ -8,10 +8,11 @@ type Props = {
   children: any,
   block: MappedDataBlockModel,
   selectBlock: (blockKey: string) => void,
+  setHoveredBlock: (blockKey: string) => void,
   selectedBlock: string,
 };
 
-const RootBlock = ({ children, block, selectBlock, selectedBlock }: Props) => (
+const RootBlock = ({ children, block, selectBlock, setHoveredBlock, selectedBlock }: Props) => (
   <BlockPreview
     type={block.blockLabel}
     label={getDataBlockLabel(block)}
@@ -23,6 +24,8 @@ const RootBlock = ({ children, block, selectBlock, selectedBlock }: Props) => (
     selectedBlock={selectedBlock}
     isRootBlock
     isModule={false}
+    selectModule={() => {}}
+    setHoveredBlock={setHoveredBlock}
   >
     {children}
   </BlockPreview>

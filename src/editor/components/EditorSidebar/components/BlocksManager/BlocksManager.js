@@ -10,6 +10,7 @@ import {
 } from '../../../../../state/redux/editor/state';
 import {
   setBlocksOrder,
+  setHoveredBlockKey,
   setSelectedBlock,
   setSelectedModule,
 } from '../../../../../state/redux/editor/reducer';
@@ -42,6 +43,7 @@ type Props = {
   selectBlock: (blockKey: string) => void,
   selectModule: (moduleKey: string) => void,
   selectedBlock: string,
+  setHoveredBlock: (blockKey: string) => void,
   updateBlocksOrder: (blocksOrder: BlocksOrder, rootBlocksOrder: Array<string>) => void,
 };
 
@@ -54,18 +56,24 @@ class BlocksManager extends Component<Props> {
   };
 
   render() {
-    const { blocks, selectBlock, selectModule, selectedBlock } = this.props;
+    const { blocks, selectBlock, selectModule, selectedBlock, setHoveredBlock } = this.props;
     const rootBlock = blocks[0];
     const nestBlocks = rootBlock.blockChildren ? rootBlock.blockChildren : [];
     return (
       <div className={styles.containerClass}>
-        <RootBlock block={rootBlock} selectBlock={selectBlock} selectedBlock={selectedBlock}>
+        <RootBlock
+          block={rootBlock}
+          selectBlock={selectBlock}
+          selectedBlock={selectedBlock}
+          setHoveredBlock={setHoveredBlock}
+        >
           <NestList
             blocks={nestBlocks}
             onChange={this.handleChange}
             selectBlock={selectBlock}
             selectModule={selectModule}
             selectedBlock={selectedBlock}
+            setHoveredBlock={setHoveredBlock}
           />
         </RootBlock>
         {/* <BlocksList blocks={blocks} selectBlock={selectBlock} selectedBlock={selectedBlock} /> */}
@@ -80,6 +88,7 @@ const mapStateToProps = (state: ReduxState) => ({
 });
 
 const mapDispatchToProps = {
+  setHoveredBlock: (blockKey: string) => setHoveredBlockKey(blockKey),
   selectBlock: (blockKey: string) => setSelectedBlock(blockKey),
   selectModule: (moduleKey: string) => setSelectedModule(moduleKey),
   updateBlocksOrder: (blocksOrder: BlocksOrder, rootBlocksOrder: Array<string>) =>

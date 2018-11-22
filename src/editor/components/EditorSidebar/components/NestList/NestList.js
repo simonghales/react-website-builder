@@ -16,6 +16,7 @@ export type NestItem = {
   selectedBlock: string,
   selectBlock: (blockKey: string) => void,
   selectModule: (moduleKey: string) => void,
+  setHoveredBlock: (blockKey: string) => void,
   childrenEnabled: boolean,
   classes: string,
 };
@@ -24,7 +25,8 @@ function mapBlocksToNestItems(
   blocks: Array<MappedDataBlockModel>,
   selectedBlock: string,
   selectBlock: (blockKey: string) => void,
-  selectModule: (moduleKey: string) => void
+  selectModule: (moduleKey: string) => void,
+  setHoveredBlock: (blockKey: string) => void
 ): Array<NestItem> {
   return blocks.map((block: MappedDataBlockModel) => {
     const item: NestItem = {
@@ -34,6 +36,7 @@ function mapBlocksToNestItems(
       selectedBlock,
       selectBlock,
       selectModule,
+      setHoveredBlock,
       childrenEnabled: block.childrenAllowed,
       classes: cx({
         [styles.classNames.nestItemSelected]: selectedBlock === block.key,
@@ -44,7 +47,8 @@ function mapBlocksToNestItems(
         block.blockChildren,
         selectedBlock,
         selectBlock,
-        selectModule
+        selectModule,
+        setHoveredBlock
       );
     }
     return item;
@@ -52,7 +56,7 @@ function mapBlocksToNestItems(
 }
 
 function renderNestItem({ item }: { item: NestItem }) {
-  const { block, selectedBlock, selectBlock, selectModule } = item;
+  const { block, selectedBlock, selectBlock, selectModule, setHoveredBlock } = item;
   return (
     <BlockPreview
       type={block.blockLabel}
@@ -71,6 +75,7 @@ function renderNestItem({ item }: { item: NestItem }) {
       }}
       isParentModule={block.isParentModule}
       isModule={isBlockModuleBlock(block)}
+      setHoveredBlock={setHoveredBlock}
     />
   );
 }
@@ -81,12 +86,26 @@ type Props = {
   selectedBlock: string,
   selectBlock: (blockKey: string) => void,
   selectModule: (moduleKey: string) => void,
+  setHoveredBlock: (blockKey: string) => void,
 };
 
-const NestList = ({ blocks, onChange, selectedBlock, selectBlock, selectModule }: Props) => (
+const NestList = ({
+  blocks,
+  onChange,
+  selectedBlock,
+  selectBlock,
+  selectModule,
+  setHoveredBlock,
+}: Props) => (
   <div className={styles.containerClass}>
     <Nestable
-      items={mapBlocksToNestItems(blocks, selectedBlock, selectBlock, selectModule)}
+      items={mapBlocksToNestItems(
+        blocks,
+        selectedBlock,
+        selectBlock,
+        selectModule,
+        setHoveredBlock
+      )}
       renderItem={renderNestItem}
       onChange={onChange}
       maxDepth={50}

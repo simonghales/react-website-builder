@@ -11,6 +11,7 @@ type Props = {
   blockKey: string,
   selectBlock: (blockKey: string) => void,
   selectModule: () => void,
+  setHoveredBlock: (blockKey: string) => void,
   isRootBlock?: boolean,
   isModule?: boolean,
   children?: any,
@@ -23,6 +24,7 @@ const BlockPreview = ({
   blockKey,
   selectBlock,
   selectModule,
+  setHoveredBlock,
   isRootBlock,
   isModule,
   children,
@@ -33,6 +35,12 @@ const BlockPreview = ({
       [styles.classNames.selectedBlock]: selected,
       [styles.rootBlockPreviewClass]: isRootBlock,
     })}
+    onMouseEnter={() => {
+      setHoveredBlock(blockKey);
+    }}
+    onMouseLeave={() => {
+      setHoveredBlock('');
+    }}
   >
     <div
       className={styles.blockPreviewInfoClass}
