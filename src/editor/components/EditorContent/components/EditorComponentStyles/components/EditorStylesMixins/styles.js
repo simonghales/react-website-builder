@@ -1,10 +1,17 @@
 // @flow
 import { css } from 'emotion';
 import colors from 'styles/config/colors';
+import { squareButton } from '../../../../../../../styles/buttons';
 
 const classNames = {
   mixin: 'mixin',
 };
+
+const addButtonClass = css`
+  ${squareButton};
+  width: 24px;
+  height: 24px;
+`;
 
 const mixinClass = css`
   display: flex;
@@ -63,6 +70,7 @@ const mixinRemoveClass = css`
 
 export default {
   classNames,
+  addButtonClass,
   mixinClass,
   mixinIconClass,
   mixinTextClass,

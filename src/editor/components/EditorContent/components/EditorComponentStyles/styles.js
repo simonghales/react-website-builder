@@ -51,7 +51,9 @@ const sctionHeaderAddClass = css`
   height: 24px;
 `;
 
-const sectionBodyClass = css``;
+const sectionBodyClass = css`
+  position: relative;
+`;
 
 const sectionBodyGridClass = css`
   display: grid;

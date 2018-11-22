@@ -31,7 +31,21 @@ export const DUMMY_MIXIN_HEADING: MixinModel = {
   },
 };
 
+export const DUMMY_MIXIN_RANDOM: MixinModel = {
+  key: 'DUMMY_MIXIN_RANDOM',
+  groupKey: 'General',
+  name: 'Random',
+  styles: {
+    [blockStylesModifiers.default]: {
+      editor: {
+        color: 'red',
+      },
+    },
+  },
+};
+
 export const DUMMY_MIXINS: MixinsModel = {
   [DUMMY_MIXIN_CENTERED.key]: DUMMY_MIXIN_CENTERED,
   [DUMMY_MIXIN_HEADING.key]: DUMMY_MIXIN_HEADING,
+  [DUMMY_MIXIN_RANDOM.key]: DUMMY_MIXIN_RANDOM,
 };

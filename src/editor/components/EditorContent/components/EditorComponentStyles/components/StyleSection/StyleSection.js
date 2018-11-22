@@ -1,25 +1,12 @@
 // @flow
 import React from 'react';
 import { cx } from 'emotion';
-import { MdAdd, MdClose } from 'react-icons/md';
 import styles from '../../styles';
 
-const SectionHeader = ({
-  text,
-  showAdd,
-  addTooltip,
-}: {
-  text: string,
-  showAdd: boolean,
-  addTooltip: string,
-}) => (
+const SectionHeader = ({ text, headerIcon }: { text: string, headerIcon: any }) => (
   <header className={styles.sectionHeaderClass}>
     <div className={styles.sectionHeaderTitleClass}>{text}</div>
-    {showAdd && (
-      <div className={styles.sctionHeaderAddClass} data-tip={addTooltip}>
-        <MdAdd size={18} />
-      </div>
-    )}
+    {headerIcon && headerIcon}
   </header>
 );
 
@@ -27,17 +14,15 @@ const StyleSection = ({
   children,
   title,
   gridBody,
-  showAdd = false,
-  addTooltip = '',
+  headerIcon,
 }: {
   children: any,
   title: string,
   gridBody?: boolean,
-  showAdd?: boolean,
-  addTooltip?: string,
+  headerIcon?: any,
 }) => (
   <div className={styles.sectionClass}>
-    <SectionHeader text={title} showAdd={showAdd} addTooltip={addTooltip} />
+    <SectionHeader text={title} headerIcon={headerIcon} />
     <div
       className={cx(styles.sectionBodyClass, {
         [styles.sectionBodyGridClass]: gridBody,
@@ -50,8 +35,7 @@ const StyleSection = ({
 
 StyleSection.defaultProps = {
   gridBody: true,
-  showAdd: false,
-  addTooltip: '',
+  headerIcon: undefined,
 };
 
 export default StyleSection;

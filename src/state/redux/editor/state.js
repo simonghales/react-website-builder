@@ -59,8 +59,9 @@ export function getSelectedBlockStyle(state: EditorReduxState): BlockStyles {
   return getBlockStyles(selectedBlock);
 }
 
-function getMixinsFromState(state: EditorReduxState): MixinsModel {
-  return state.mixinStyles;
+export function getMixinsFromState(state: EditorReduxState): MixinsModel {
+  const { mixinStyles } = state;
+  return mixinStyles;
 }
 
 export function getSelectedBlockMixinsStyles(state: EditorReduxState): Array<MixinModel> {
@@ -140,4 +141,9 @@ export function getPreviousModule(state: EditorReduxState): DataModule | null {
   if (selectedModulesHistory.length === 0) return null;
   const moduleKey = selectedModulesHistory[selectedModulesHistory.length - 1];
   return getModuleFromState(state, moduleKey);
+}
+
+export function getCurrentBlockAddedMixins(state: EditorReduxState): Array<string> {
+  const currentBlockMixins = getSelectedBlockMixinsStyles(state);
+  return currentBlockMixins.map(mixin => mixin.key);
 }

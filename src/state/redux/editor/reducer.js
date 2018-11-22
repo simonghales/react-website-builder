@@ -3,6 +3,7 @@
 import { DUMMY_PAGE_DATA } from '../../../data/redux';
 import { getModuleFromState, getModuleTemplatesFromState, getSelectedModuleKey } from './state';
 import {
+  addMixinToBlockStylesMixins,
   addNewBlockToBlocks,
   removeBlockFromBlocks,
   removeBlockStylesMixinViaKey,
@@ -38,6 +39,53 @@ export type EditorReduxState = {
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
+
+const ADD_MIXIN_TO_BLOCK = 'ADD_MIXIN_TO_BLOCK';
+
+type AddMixinToBlockPayload = {
+  blockKey: string,
+  mixinKey: string,
+};
+
+type AddMixinToBlockAction = {
+  type: string,
+  payload: AddMixinToBlockPayload,
+};
+
+export function addMixinToBlock(blockKey: string, mixinKey: string): AddMixinToBlockAction {
+  return {
+    type: ADD_MIXIN_TO_BLOCK,
+    payload: {
+      blockKey,
+      mixinKey,
+    },
+  };
+}
+
+function handleAddMixinToBlock(
+  state: EditorReduxState,
+  { blockKey, mixinKey }: AddMixinToBlockPayload
+): EditorReduxState {
+  const selectedModuleKey = getSelectedModuleKey(state);
+  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const block = getBlockFromModuleBlocks(blockKey, selectedModule);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [selectedModuleKey]: {
+        ...selectedModule,
+        blocks: {
+          ...selectedModule.blocks,
+          [blockKey]: {
+            ...block,
+            mixinStyles: addMixinToBlockStylesMixins(block, mixinKey),
+          },
+        },
+      },
+    },
+  };
+}
 
 const UPDATE_BLOCK_STYLES_MIXINS_ORDER = 'UPDATE_BLOCK_STYLES_MIXINS_ORDER';
 
@@ -590,6 +638,7 @@ type Actions =
   | CreateNewModuleFromSelectedBlockAction;
 
 const ACTION_HANDLERS = {
+  [ADD_MIXIN_TO_BLOCK]: handleAddMixinToBlock,
   [UPDATE_BLOCK_STYLES_MIXINS_ORDER]: handleUpdateBlockStylesMixinsOrder,
   [REMOVE_BLOCK_STYLES_MIXIN]: handleRemoveBlockStylesMixin,
   [RETURN_TO_PREVIOUS_SELECTED_MODULE]: handleReturnToPreviousSelectedModule,

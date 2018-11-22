@@ -41,6 +41,19 @@ export function updateBlockStylesMixinsOrderByKeys(
   });
 }
 
+export function addMixinToBlockStylesMixins(
+  dataBlock: DataBlockModel,
+  mixinKey: string
+): DataBlockMixinStylesModel {
+  const { mixinStyles = [] } = dataBlock;
+  return mixinStyles.concat([
+    {
+      key: mixinKey,
+      disabledModifiers: {},
+    },
+  ]);
+}
+
 export function removeBlockStylesMixinViaKey(
   dataBlock: DataBlockModel,
   mixinKey: string
