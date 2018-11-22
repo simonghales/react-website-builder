@@ -51,6 +51,16 @@ class TextAlignInput extends Component<Props, State> {
     };
   }
 
+  componentWillReceiveProps(nextProps: Props): void {
+    const { inheritedValue } = this.props;
+    const { selectedOption } = this.state;
+    if (nextProps.inheritedValue !== inheritedValue && selectedOption === inheritedValue) {
+      this.setState({
+        selectedOption: nextProps.inheritedValue,
+      });
+    }
+  }
+
   handleSelectOption = (value: string) => {
     const { selectedOption } = this.state;
     const { updateStyle, inheritedValue } = this.props;

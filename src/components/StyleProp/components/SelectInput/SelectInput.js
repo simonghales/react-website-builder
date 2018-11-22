@@ -121,6 +121,14 @@ type State = {
   selected: Selected,
 };
 
+function parseSelectedValue(selectedValue: Selected): string {
+  if (!selectedValue) return '';
+  if (selectedValue instanceof Array) {
+    return selectedValue.map(value => value.value.trim()).join(', ');
+  }
+  return selectedValue.value;
+}
+
 class SelectInput extends Component<Props, State> {
   static defaultProps = {
     noOptionsMessage: '',
@@ -133,6 +141,17 @@ class SelectInput extends Component<Props, State> {
     };
   }
 
+  componentWillReceiveProps(nextProps: Props): void {
+    const { inheritedValue } = this.props;
+    const { selected } = this.state;
+    const selectedValue = parseSelectedValue(selected);
+    if (nextProps.inheritedValue !== inheritedValue && selectedValue === inheritedValue) {
+      this.setState({
+        selected: parseSelectInputStyleValue(nextProps.inheritedValue),
+      });
+    }
+  }
+
   handleChange = (newValue: Selected) => {
     const { updateStyle, inheritedValue } = this.props;
     const updateValue =
@@ -140,13 +159,8 @@ class SelectInput extends Component<Props, State> {
     this.setState({
       selected: updateValue,
     });
-    if (!newValue) {
-      updateStyle(''); // todo - handle better
-    } else if (newValue instanceof Array) {
-      updateStyle(newValue.map(value => value.value).join(', '));
-    } else {
-      updateStyle(newValue.value);
-    }
+    const storedValue = parseSelectedValue(newValue);
+    updateStyle(storedValue);
   };
 
   render() {

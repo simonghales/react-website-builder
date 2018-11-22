@@ -28,6 +28,16 @@ class Input extends Component<Props, State> {
     };
   }
 
+  componentWillReceiveProps(nextProps: Props): void {
+    const { inheritedValue } = this.props;
+    const { text } = this.state;
+    if (nextProps.inheritedValue !== inheritedValue && text === inheritedValue) {
+      this.setState({
+        text: nextProps.inheritedValue,
+      });
+    }
+  }
+
   handleInputChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     const { onChange, inheritedValue } = this.props;
     const inputValue = event.target.value.toString();
