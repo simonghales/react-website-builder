@@ -1,5 +1,5 @@
 // @flow
-import Module from 'blocks/module/Module/Module';
+import Module from 'blocks/groups/module/Module/Module';
 import type { SitePageDataBlocks } from '../blocks/models';
 import type { DataModule } from './models';
 import { getBlockUniqueId } from '../../blocks/utils';

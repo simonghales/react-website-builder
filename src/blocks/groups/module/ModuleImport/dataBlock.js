@@ -1,8 +1,8 @@
 // @flow
 
-import { getBlockUniqueId } from '../../utils';
-import { blockGroups, blockTypes } from '../../config';
-import { EMPTY_BLOCK_STYLES } from '../../../data/styles/defaults';
+import { getBlockUniqueId } from '../../../utils';
+import { blockGroups, blockTypes } from '../../../config';
+import { EMPTY_BLOCK_STYLES } from '../../../../data/styles/defaults';
 import config from './config';
 
 const dataBlock = ({ linkedModuleKey, label }: { linkedModuleKey: string, label: string }) => ({

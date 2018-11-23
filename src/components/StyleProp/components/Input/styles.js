@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'emotion';
-import colors from '../../styles/config/colors';
-import measurements from '../../styles/config/measurements';
+import colors from '../../../../styles/config/colors';
+import measurements from '../../../../styles/config/measurements';
 
 const inputReset = css`
   font: inherit;

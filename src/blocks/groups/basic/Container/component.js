@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { css } from 'emotion';
 import type { ContainerProps } from './props';
-import { withBlockHighlighter } from '../../../preview/components/BlockHighlighterWrapper/BlockHighlighterWrapper';
+import { withBlockHighlighter } from '../../../../preview/components/BlockHighlighterWrapper/BlockHighlighterWrapper';
 
 class ContainerComponent extends Component<ContainerProps> {
   render() {

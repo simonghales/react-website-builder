@@ -1,6 +1,6 @@
 // @flow
 
-import type { MappedStyleModel } from '../../../data/styles/models';
+import type { MappedStyleModel } from '../../../../data/styles/models';
 
 export type ElementProps = {
   element: string,

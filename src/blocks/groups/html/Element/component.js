@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { css } from 'emotion';
 import type { ElementProps } from './props';
-import { withBlockHighlighter } from '../../../preview/components/BlockHighlighterWrapper/BlockHighlighterWrapper';
+import { withBlockHighlighter } from '../../../../preview/components/BlockHighlighterWrapper/BlockHighlighterWrapper';
 
 function renderChildren(content, children) {
   return (

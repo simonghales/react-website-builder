@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import styles from './styles';
-import Input, { inputStyleTypes } from '../Input/Input';
+import Input, { inputStyleTypes } from '../StyleProp/components/Input/Input';
 
 type Props = {
   label: string,
@@ -9,7 +9,7 @@ type Props = {
   onUpdate: (value: any) => void,
 };
 
-const Field = ({ label, value, onUpdate }: Props) => (
+const BlockProp = ({ label, value, onUpdate }: Props) => (
   <div className={styles.containerClass}>
     <div className={styles.labelClass}>{label}:</div>
     <div className={styles.valueClass}>
@@ -18,4 +18,4 @@ const Field = ({ label, value, onUpdate }: Props) => (
   </div>
 );
 
-export default Field;
+export default BlockProp;

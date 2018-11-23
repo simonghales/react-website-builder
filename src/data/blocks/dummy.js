@@ -1,11 +1,11 @@
 // @flow
 import { getBlockUniqueId } from '../../blocks/utils';
-import Element from '../../blocks/html/Element/Element';
+import Element from '../../blocks/groups/html/Element/Element';
 import { blockGroups, blockTypes } from '../../blocks/config';
-import Module from '../../blocks/module/Module/Module';
-import ModuleImport from '../../blocks/module/ModuleImport/ModuleImport';
-import Heading from '../../blocks/basic/Heading/Heading';
-import Container from '../../blocks/basic/Container/Container';
+import Module from '../../blocks/groups/module/Module/Module';
+import ModuleImport from '../../blocks/groups/module/ModuleImport/ModuleImport';
+import Heading from '../../blocks/groups/basic/Heading/Heading';
+import Container from '../../blocks/groups/basic/Container/Container';
 import { DUMMY_STYLE_EMPTY, DUMMY_STYLE_TEST } from '../styles/dummy';
 import type { DataBlockModel } from './models';
 

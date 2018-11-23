@@ -1,6 +1,6 @@
 // @flow
 
-import type { BlockModel } from '../../models';
+import type { BlockModel } from '../../../models';
 import HeadingComponent from './component';
 import { headingDefaultProps } from './props';
 import config from './config';

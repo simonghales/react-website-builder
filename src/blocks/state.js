@@ -12,8 +12,7 @@ import type { DataModule } from '../data/modules/models';
 import type { DataBlockModel } from '../data/blocks/models';
 import { getBlockUniqueId } from './utils';
 import { blockGroups, blockTypes } from './config';
-import ModuleImport from './module/ModuleImport/ModuleImport';
-import { DUMMY_STYLE_EMPTY } from '../data/styles/dummy';
+import ModuleImport from './groups/module/ModuleImport/ModuleImport';
 import type { ModuleTemplate } from '../data/moduleTemplates/models';
 import { EMPTY_BLOCK_STYLES } from '../data/styles/defaults';
 

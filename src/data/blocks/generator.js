@@ -1,7 +1,7 @@
 // @flow
 
 import type { DataBlockModel } from './models';
-import ModuleImport from '../../blocks/module/ModuleImport/ModuleImport';
+import ModuleImport from '../../blocks/groups/module/ModuleImport/ModuleImport';
 
 export function generateNewModuleTemplateBlock(
   linkedModuleKey: string,

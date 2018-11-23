@@ -1,9 +1,9 @@
 // @flow
 
-import { getBlockUniqueId } from '../../utils';
-import { blockGroups, blockTypes } from '../../config';
+import { getBlockUniqueId } from '../../../utils';
+import { blockGroups, blockTypes } from '../../../config';
 import config from './config';
-import { EMPTY_BLOCK_STYLES } from '../../../data/styles/defaults';
+import { EMPTY_BLOCK_STYLES } from '../../../../data/styles/defaults';
 
 const dataBlock = () => ({
   key: getBlockUniqueId(),

@@ -1,6 +1,6 @@
 // @flow
 
-import type { BlockModel } from '../../models';
+import type { BlockModel } from '../../../models';
 import ModuleImportComponent from './component';
 import { moduleImportDefaultProps, moduleImportPropsConfig } from './props';
 import dataBlock from './dataBlock';

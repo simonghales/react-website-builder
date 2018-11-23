@@ -3,7 +3,7 @@
 import type { DataBlockMappedMixinsModel, DataBlockModel, SitePageDataBlocks } from './models';
 import { getBlockFromDataBlock } from '../../blocks/blocks';
 import { getBlockFromBlocks, getDataBlockType } from './models';
-import ModuleImport from '../../blocks/module/ModuleImport/ModuleImport';
+import ModuleImport from '../../blocks/groups/module/ModuleImport/ModuleImport';
 import type { ModuleTemplates } from '../moduleTemplates/models';
 import {
   getModuleTemplateFromModuleTemplates,

@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-import Field from '../../../../../components/Field/Field';
+import BlockProp from '../../../../../components/BlockProp/BlockProp';
 import styles from './styles';
 import type { DataBlockModel } from '../../../../../data/blocks/models';
 import { getBlockPropLabel } from '../../../../../data/blocks/models';
@@ -20,7 +20,7 @@ type PropFieldProps = {
 
 const PropField = ({ label, value, blockKey, propKey, updateProp }: PropFieldProps) => (
   <div className={styles.fieldClass}>
-    <Field
+    <BlockProp
       label={label}
       value={value}
       onUpdate={(newValue: any) => updateProp(blockKey, propKey, newValue)}

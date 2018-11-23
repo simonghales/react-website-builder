@@ -1,13 +1,13 @@
 // @flow
 
-import type {BlockGroupModel, BlockModel} from './models';
-import Heading from './basic/Heading/Heading';
-import Container from './basic/Container/Container';
-import Module from './module/Module/Module';
-import ModuleImport from './module/ModuleImport/ModuleImport';
-import Element from './html/Element/Element';
-import type {DataBlockModel} from '../data/blocks/models';
-import {blockGroups} from './config';
+import type { BlockGroupModel, BlockModel } from './models';
+import Heading from './groups/basic/Heading/Heading';
+import Container from './groups/basic/Container/Container';
+import Module from './groups/module/Module/Module';
+import ModuleImport from './groups/module/ModuleImport/ModuleImport';
+import Element from './groups/html/Element/Element';
+import type { DataBlockModel } from '../data/blocks/models';
+import { blockGroups } from './config';
 
 export const basicBlocks: BlockGroupModel = {
   key: blockGroups.Basic,
@@ -44,6 +44,7 @@ export const allBlocks: AllBlocksModel = {
 
 export const addableBlocks: AllBlocksModel = {
   [basicBlocks.key]: basicBlocks,
+  [htmlBlocks.key]: htmlBlocks,
 };
 
 export function getBlockGroup(groupKey: string): BlockGroupModel | null {

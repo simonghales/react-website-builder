@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { css } from 'emotion';
 import type { HeadingProps } from './props';
-import { withBlockHighlighter } from '../../../preview/components/BlockHighlighterWrapper/BlockHighlighterWrapper';
+import { withBlockHighlighter } from '../../../../preview/components/BlockHighlighterWrapper/BlockHighlighterWrapper';
 
 class HeadingComponent extends Component<HeadingProps> {
   render() {

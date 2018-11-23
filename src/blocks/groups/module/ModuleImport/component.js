@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import type { ModuleImportProps } from './props';
-import { withBlockHighlighter } from '../../../preview/components/BlockHighlighterWrapper/BlockHighlighterWrapper';
+import { withBlockHighlighter } from '../../../../preview/components/BlockHighlighterWrapper/BlockHighlighterWrapper';
 
 class ModuleImportComponent extends Component<ModuleImportProps> {
   render() {

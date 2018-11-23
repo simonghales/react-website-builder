@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Input, { inputStyleTypes } from '../../Input/Input';
+import Input, { inputStyleTypes } from './Input/Input';
 import type { StylePropInputProps } from './models';
 
 const TextInput = ({ styleValue, inheritedValue, updateStyle }: StylePropInputProps) => (
