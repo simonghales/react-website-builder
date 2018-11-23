@@ -274,6 +274,7 @@ function handleSetSelectedModule(
     ...state,
     selectedModule: moduleKey,
     selectedModulesHistory: state.selectedModulesHistory.concat([currentSelectedModuleKey]),
+    hoveredBlockKey: '',
   };
 }
 

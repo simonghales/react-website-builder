@@ -9,11 +9,12 @@ export function parsePropValue(
   blockData: MappedDataBlockModel,
   propKey: string,
   propValue: any,
-  propConfig: BlockModelPropsConfig
+  propConfig: BlockModelPropsConfig,
+  hoveredBlockKey: string
 ) {
   if (propConfig.type && propConfig.type === blockPropsConfigTypes.blocks) {
     const blockChildren = blockData.blockChildren ? blockData.blockChildren : [];
-    return previewBlocksParser(blockChildren);
+    return previewBlocksParser(blockChildren, hoveredBlockKey);
   }
   if (propConfig.type && propConfig.type === blockPropsConfigTypes.module) {
     const { module } = blockData;

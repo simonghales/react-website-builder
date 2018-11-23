@@ -55,12 +55,17 @@ class BlocksManager extends Component<Props> {
     updateBlocksOrder(blocksOrder, rootBlocksOrder);
   };
 
+  handleMouseLeave = () => {
+    const { setHoveredBlock } = this.props;
+    setHoveredBlock('');
+  };
+
   render() {
     const { blocks, selectBlock, selectModule, selectedBlock, setHoveredBlock } = this.props;
     const rootBlock = blocks[0];
     const nestBlocks = rootBlock.blockChildren ? rootBlock.blockChildren : [];
     return (
-      <div className={styles.containerClass}>
+      <div className={styles.containerClass} onMouseLeave={this.handleMouseLeave}>
         <RootBlock
           block={rootBlock}
           selectBlock={selectBlock}

@@ -1,7 +1,8 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 import { css } from 'emotion';
 import type { ElementProps } from './props';
+import { withBlockHighlighter } from '../../../preview/components/BlockHighlighterWrapper/BlockHighlighterWrapper';
 
 function renderChildren(content, children) {
   return (
@@ -12,13 +13,17 @@ function renderChildren(content, children) {
   );
 }
 
-const ElementComponent = (props: ElementProps) => {
-  const { element, content, children, customStyles, ...otherProps } = props;
-  return (
-    <props.element className={css(customStyles)} {...otherProps}>
-      {renderChildren(content, children)}
-    </props.element>
-  );
-};
+class ElementComponent extends Component<ElementProps> {
+  render() {
+    const { element, content, children, customStyles, ...otherProps } = this.props;
+    // eslint-disable-next-line prefer-destructuring
+    const props = this.props;
+    return (
+      <props.element className={css(customStyles)} {...otherProps}>
+        {renderChildren(content, children)}
+      </props.element>
+    );
+  }
+}
 
-export default ElementComponent;
+export default withBlockHighlighter(ElementComponent);

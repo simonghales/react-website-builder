@@ -10,10 +10,10 @@ type Props = {
   hoveredBlockKey: string,
 };
 
-const PreviewPage = ({ data }: Props) => (
+const PreviewPage = ({ data, hoveredBlockKey }: Props) => (
   <React.Fragment>
-    <div className={styles.containerClass}>{previewBlocksParser(data)}</div>
-    <BlockHighlighter />
+    <div className={styles.containerClass}>{previewBlocksParser(data, hoveredBlockKey)}</div>
+    <BlockHighlighter hoveredBlockKey={hoveredBlockKey} />
   </React.Fragment>
 );
 

@@ -41,7 +41,7 @@ class PreviewView extends Component<Props, State> {
 
   handleHoveredBlockUpdateEvent = (event: any) => {
     const { detail } = event;
-    if (!detail) {
+    if (!detail && detail !== '') {
       console.warn(`No detail provided`);
       return;
     }
