@@ -6,7 +6,12 @@ import type {
   SitePageDataBlocks,
 } from '../../../data/blocks/models';
 import type { EditorReduxState } from './reducer';
-import { getBlockFromBlocks, getMappedDataBlocks } from '../../../data/blocks/models';
+import {
+  getBlockFromBlocks,
+  getDataBlockLabel,
+  getMappedDataBlocks,
+  mapDataBlockModuleKey,
+} from '../../../data/blocks/models';
 import type { BlockStyles } from '../../../data/styles/models';
 import { getBlockStyles } from '../../../data/styles/state';
 import type { DataModule, DataModules } from '../../../data/modules/models';
@@ -16,12 +21,19 @@ import {
   getSelectedBlockFromModule,
   getSelectedBlockKeyFromModule,
 } from '../../../data/modules/state';
-import { getDataBlockMappedMixins, getDataBlockMixins } from '../../../data/blocks/state';
+import {
+  getBlockChildrenKeys,
+  getBlockLabel,
+  getDataBlockMappedMixins,
+  getDataBlockMixins,
+  isBlockModuleBlock,
+} from '../../../data/blocks/state';
 import type { MixinModel, MixinsModel } from '../../../data/mixins/models';
 import { getBlockMixinsStyles } from '../../../data/mixins/state';
 import type { ModuleTemplates } from '../../../data/moduleTemplates/models';
 import { getModuleTemplateModuleKey } from '../../../data/moduleTemplates/state';
 import type { ReduxState } from '../store';
+import { getBlockFromDataBlock } from '../../../blocks/blocks';
 
 export function getModuleFromState(state: EditorReduxState, moduleKey: string): DataModule {
   const { modules } = state;
@@ -146,4 +158,38 @@ export function getPreviousModule(state: EditorReduxState): DataModule | null {
 export function getCurrentBlockAddedMixins(state: EditorReduxState): Array<string> {
   const currentBlockMixins = getSelectedBlockMixinsStyles(state);
   return currentBlockMixins.map(mixin => mixin.key);
+}
+
+export function getBlockFromSelectedModule(
+  state: EditorReduxState,
+  blockKey: string
+): DataBlockModel {
+  const module = getSelectedModule(state);
+  const block = getBlockFromModuleBlocks(blockKey, module);
+  return block;
+}
+
+export type DataBlockPreviewProps = {
+  type: string,
+  label: string,
+  selected: boolean,
+  isRootBlock: boolean,
+  isModule: boolean,
+  moduleKey: string,
+};
+
+export function getDataBlockPreviewProps(
+  state: EditorReduxState,
+  blockKey: string
+): DataBlockPreviewProps {
+  const modules = getModulesFromState(state);
+  const moduleTemplates = getModuleTemplatesFromState(state);
+  const dataBlock = getBlockFromSelectedModule(state, blockKey);
+  return {
+    type: getBlockLabel(dataBlock, modules, moduleTemplates),
+    label: getDataBlockLabel(dataBlock),
+    isRootBlock: dataBlock.isParentModule,
+    isModule: isBlockModuleBlock(dataBlock),
+    moduleKey: mapDataBlockModuleKey(dataBlock, modules, moduleTemplates),
+  };
 }

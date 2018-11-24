@@ -3,110 +3,49 @@
 import React from 'react';
 import Nestable from 'react-nestable';
 import { cx } from 'emotion';
-import type { MappedDataBlockModel, MappedDataBlocks } from '../../../../../data/blocks/models';
-import { getDataBlockLabel } from '../../../../../data/blocks/models';
 import BlockPreview from '../BlockPreview/BlockPreview';
 import styles from './styles';
-import { isBlockModuleBlock } from '../../../../../data/blocks/state';
+import type { BlocksKeys } from '../../../../../state/redux/editor/selector';
 
-export type NestItem = {
+export type CondensedNestItem = {
   id: string,
-  block: MappedDataBlockModel,
-  children: Array<NestItem>,
-  selectedBlock: string,
-  selectBlock: (blockKey: string) => void,
-  selectModule: (moduleKey: string) => void,
-  setHoveredBlock: (blockKey: string) => void,
+  blockKey: string,
+  children: Array<CondensedNestItem>,
   childrenEnabled: boolean,
   classes: string,
+  selected: boolean,
 };
 
-function mapBlocksToNestItems(
-  blocks: Array<MappedDataBlockModel>,
-  selectedBlock: string,
-  selectBlock: (blockKey: string) => void,
-  selectModule: (moduleKey: string) => void,
-  setHoveredBlock: (blockKey: string) => void
-): Array<NestItem> {
-  return blocks.map((block: MappedDataBlockModel) => {
-    const item: NestItem = {
-      id: block.key,
-      block,
-      children: [],
-      selectedBlock,
-      selectBlock,
-      selectModule,
-      setHoveredBlock,
-      childrenEnabled: block.childrenAllowed,
-      classes: cx({
-        [styles.classNames.nestItemSelected]: selectedBlock === block.key,
-      }),
-    };
-    if (block.blockChildren) {
-      item.children = mapBlocksToNestItems(
-        block.blockChildren,
-        selectedBlock,
-        selectBlock,
-        selectModule,
-        setHoveredBlock
-      );
-    }
-    return item;
-  });
+function mapBlocksKeysToCondensedNestItems(
+  blocksKeys: Array<BlocksKeys>
+): Array<CondensedNestItem> {
+  return blocksKeys.map(block => ({
+    id: block.key,
+    blockKey: block.key,
+    children: mapBlocksKeysToCondensedNestItems(block.children),
+    childrenEnabled: block.childrenEnabled,
+    classes: cx({
+      [styles.classNames.nestItemSelected]: block.selected,
+    }),
+    selected: block.selected,
+  }));
 }
 
-function renderNestItem({ item }: { item: NestItem }) {
-  const { block, selectedBlock, selectBlock, selectModule, setHoveredBlock } = item;
-  return (
-    <BlockPreview
-      type={block.blockLabel}
-      label={getDataBlockLabel(block)}
-      blockChildren={[]}
-      key={block.key}
-      blockKey={block.key}
-      selected={selectedBlock === block.key}
-      selectBlock={selectBlock}
-      selectedBlock={selectedBlock}
-      selectModule={() => {
-        const { moduleKey } = block;
-        if (moduleKey) {
-          selectModule(moduleKey);
-        }
-      }}
-      isParentModule={block.isParentModule}
-      isModule={isBlockModuleBlock(block)}
-      setHoveredBlock={setHoveredBlock}
-    />
-  );
+function renderCondensedNestItem({ item }: { item: CondensedNestItem }) {
+  const { blockKey, selected } = item;
+  return <BlockPreview blockKey={blockKey} selected={selected} />;
 }
 
 type Props = {
-  blocks: MappedDataBlocks,
-  onChange: (items: Array<NestItem>, item: NestItem) => void,
-  selectedBlock: string,
-  selectBlock: (blockKey: string) => void,
-  selectModule: (moduleKey: string) => void,
-  setHoveredBlock: (blockKey: string) => void,
+  blocksKeys: Array<BlocksKeys>,
+  onChange: (items: Array<CondensedNestItem>, item: CondensedNestItem) => void,
 };
 
-const NestList = ({
-  blocks,
-  onChange,
-  selectedBlock,
-  selectBlock,
-  selectModule,
-  setHoveredBlock,
-}: Props) => (
+const NestList = ({ blocksKeys, onChange }: Props) => (
   <div className={styles.containerClass}>
     <Nestable
-      items={mapBlocksToNestItems(
-        blocks,
-        selectedBlock,
-        selectBlock,
-        selectModule,
-        setHoveredBlock
-      )}
-      renderItem={renderNestItem}
+      items={mapBlocksKeysToCondensedNestItems(blocksKeys)}
+      renderItem={renderCondensedNestItem}
       onChange={onChange}
       maxDepth={50}
     />

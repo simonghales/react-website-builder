@@ -87,7 +87,7 @@ function mapDataBlockModule(
   return undefined;
 }
 
-function mapDataBlockModuleKey(
+export function mapDataBlockModuleKey(
   dataBlock: DataBlockModel,
   modules: DataModules,
   moduleTemplates: ModuleTemplates

@@ -1,16 +1,22 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
 import { MdArrowForward } from 'react-icons/md';
 import { cx } from 'emotion';
 import styles from '../BlocksManager/styles';
+import type { ReduxState } from '../../../../../state/redux/store';
+import { getDataBlockPreviewProps } from '../../../../../state/redux/editor/state';
+import { setHoveredBlockKey } from '../../../../../state/redux/ui/reducer';
+import { setSelectedBlock, setSelectedModule } from '../../../../../state/redux/editor/reducer';
 
 type Props = {
   type: string,
   label: string,
   selected: boolean,
   blockKey: string,
+  moduleKey: string,
   selectBlock: (blockKey: string) => void,
-  selectModule: () => void,
+  selectModule: (moduleKey: string) => void,
   setHoveredBlock: (blockKey: string) => void,
   isRootBlock?: boolean,
   isModule?: boolean,
@@ -22,6 +28,7 @@ const BlockPreview = ({
   label,
   selected,
   blockKey,
+  moduleKey,
   selectBlock,
   selectModule,
   setHoveredBlock,
@@ -57,7 +64,7 @@ const BlockPreview = ({
         <div
           className={styles.blockPreviewEnterClass}
           onClick={e => {
-            selectModule();
+            selectModule(moduleKey);
             e.stopPropagation();
           }}
         >
@@ -75,4 +82,24 @@ BlockPreview.defaultProps = {
   isModule: false,
 };
 
-export default BlockPreview;
+const mapStateToProps = (state: ReduxState, { blockKey }: { blockKey: string }) => {
+  const blockPreviewProps = getDataBlockPreviewProps(state.editor, blockKey);
+  return {
+    type: blockPreviewProps.type,
+    label: blockPreviewProps.label,
+    isRootBlock: blockPreviewProps.isRootBlock,
+    isModule: blockPreviewProps.isModule,
+    moduleKey: blockPreviewProps.moduleKey,
+  };
+};
+
+const mapDispatchToProps = {
+  setHoveredBlock: (blockKey: string) => setHoveredBlockKey(blockKey),
+  selectBlock: (blockKey: string) => setSelectedBlock(blockKey),
+  selectModule: (moduleKey: string) => setSelectedModule(moduleKey),
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BlockPreview);
