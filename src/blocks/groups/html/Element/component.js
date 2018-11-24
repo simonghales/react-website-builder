@@ -13,7 +13,7 @@ function renderChildren(content, children) {
   );
 }
 
-class ElementComponent extends Component<ElementProps> {
+export class ElementComponentRaw extends Component<ElementProps> {
   render() {
     const { element, content, children, customStyles, ...otherProps } = this.props;
     // eslint-disable-next-line prefer-destructuring
@@ -26,4 +26,4 @@ class ElementComponent extends Component<ElementProps> {
   }
 }
 
-export default withBlockHighlighter(ElementComponent);
+export default withBlockHighlighter(ElementComponentRaw);

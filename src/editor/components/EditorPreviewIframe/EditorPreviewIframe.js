@@ -116,7 +116,7 @@ class EditorPreviewIframe extends Component<Props, State> {
 
 const mapStateToProps = (state: ReduxState) => ({
   blocks: getPreviewMappedBlocks(state.editor),
-  hoveredBlockKey: state.editor.hoveredBlockKey,
+  hoveredBlockKey: state.ui.hoveredBlockKey,
 });
 
 export default connect(mapStateToProps)(EditorPreviewIframe);

@@ -14,5 +14,4 @@ export const DUMMY_PAGE_DATA: EditorReduxState = {
   selectedModule: DUMMY_PAGE_MODULE.key,
   mixinStyles: DUMMY_MIXINS,
   selectedModulesHistory: [],
-  hoveredBlockKey: '',
 };

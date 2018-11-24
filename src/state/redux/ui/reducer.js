@@ -2,11 +2,43 @@
 
 export type UiReduxState = {
   addingBlock: boolean,
+  hoveredBlockKey: string,
 };
 
 export const initialUiReduxState: UiReduxState = {
   addingBlock: false,
+  hoveredBlockKey: '',
 };
+
+const SET_HOVERED_BLOCK_KEY = 'SET_HOVERED_BLOCK_KEY';
+
+type SetHoveredBlockKeyPayload = {
+  blockKey: string,
+};
+
+type SetHoveredBlockKeyAction = {
+  type: string,
+  payload: SetHoveredBlockKeyPayload,
+};
+
+export function setHoveredBlockKey(blockKey: string): SetHoveredBlockKeyAction {
+  return {
+    type: SET_HOVERED_BLOCK_KEY,
+    payload: {
+      blockKey,
+    },
+  };
+}
+
+function handleSetHoveredBlockKey(
+  state: UiReduxState,
+  { blockKey }: SetHoveredBlockKeyPayload
+): UiReduxState {
+  return {
+    ...state,
+    hoveredBlockKey: blockKey,
+  };
+}
 
 const SET_ADDING_BLOCK = 'SET_ADDING_BLOCK';
 
@@ -41,6 +73,7 @@ function handleSetAddingBlock(
 type Actions = SetAddingBlockAction;
 
 const ACTION_HANDLERS = {
+  [SET_HOVERED_BLOCK_KEY]: handleSetHoveredBlockKey,
   [SET_ADDING_BLOCK]: handleSetAddingBlock,
 };
 

@@ -6,8 +6,14 @@ import { withBlockHighlighter } from '../../../../preview/components/BlockHighli
 
 class HeadingComponent extends Component<HeadingProps> {
   render() {
-    const { text, customStyles } = this.props;
-    return <h3 className={css(customStyles)}>{text}</h3>;
+    const { element, text, customStyles } = this.props;
+    // eslint-disable-next-line no-unused-vars,prefer-destructuring
+    const props = this.props;
+    return (
+      <props.element element={element} className={css(customStyles)}>
+        {text}
+      </props.element>
+    );
   }
 }
 

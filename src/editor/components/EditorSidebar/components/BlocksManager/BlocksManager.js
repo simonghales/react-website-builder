@@ -10,7 +10,6 @@ import {
 } from '../../../../../state/redux/editor/state';
 import {
   setBlocksOrder,
-  setHoveredBlockKey,
   setSelectedBlock,
   setSelectedModule,
 } from '../../../../../state/redux/editor/reducer';
@@ -18,6 +17,7 @@ import NestList from '../NestList/NestList';
 import type { NestItem } from '../NestList/NestList';
 import type { BlocksOrder } from '../../../../../state/redux/editor/modifiers';
 import RootBlock from '../RootBlock/RootBlock';
+import { setHoveredBlockKey } from '../../../../../state/redux/ui/reducer';
 
 function mapBlocksOrder(items: Array<NestItem>) {
   let blocks = {};

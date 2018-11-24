@@ -36,40 +36,9 @@ export type EditorReduxState = {
   selectedModule: string,
   selectedModulesHistory: Array<string>,
   mixinStyles: MixinsModel,
-  hoveredBlockKey: string,
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
-
-const SET_HOVERED_BLOCK_KEY = 'SET_HOVERED_BLOCK_KEY';
-
-type SetHoveredBlockKeyPayload = {
-  blockKey: string,
-};
-
-type SetHoveredBlockKeyAction = {
-  type: string,
-  payload: SetHoveredBlockKeyPayload,
-};
-
-export function setHoveredBlockKey(blockKey: string): SetHoveredBlockKeyAction {
-  return {
-    type: SET_HOVERED_BLOCK_KEY,
-    payload: {
-      blockKey,
-    },
-  };
-}
-
-function handleSetHoveredBlockKey(
-  state: EditorReduxState,
-  { blockKey }: SetHoveredBlockKeyPayload
-): EditorReduxState {
-  return {
-    ...state,
-    hoveredBlockKey: blockKey,
-  };
-}
 
 const ADD_MIXIN_TO_BLOCK = 'ADD_MIXIN_TO_BLOCK';
 
@@ -670,7 +639,6 @@ type Actions =
   | CreateNewModuleFromSelectedBlockAction;
 
 const ACTION_HANDLERS = {
-  [SET_HOVERED_BLOCK_KEY]: handleSetHoveredBlockKey,
   [ADD_MIXIN_TO_BLOCK]: handleAddMixinToBlock,
   [UPDATE_BLOCK_STYLES_MIXINS_ORDER]: handleUpdateBlockStylesMixinsOrder,
   [REMOVE_BLOCK_STYLES_MIXIN]: handleRemoveBlockStylesMixin,

@@ -4,6 +4,7 @@ import { getBlockUniqueId } from '../../../utils';
 import { blockGroups, blockTypes } from '../../../config';
 import config from './config';
 import { EMPTY_BLOCK_STYLES } from '../../../../data/styles/defaults';
+import { headingDefaultProps } from './props';
 
 const dataBlock = () => ({
   key: getBlockUniqueId(),
@@ -12,6 +13,7 @@ const dataBlock = () => ({
   blockType: blockTypes.module,
   label: 'Heading',
   props: {
+    element: headingDefaultProps.element,
     text: 'Enter your text here',
   },
   propsConfig: {
