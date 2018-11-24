@@ -1,11 +1,13 @@
 // @flow
 
-import React from 'react';
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import Nestable from 'react-nestable';
 import { cx } from 'emotion';
 import BlockPreview from '../BlockPreview/BlockPreview';
 import styles from './styles';
 import type { BlocksKeys } from '../../../../../state/redux/editor/selector';
+import { goToModule } from '../../../../routing';
 
 export type CondensedNestItem = {
   id: string,
@@ -31,25 +33,44 @@ function mapBlocksKeysToCondensedNestItems(
   }));
 }
 
-function renderCondensedNestItem({ item }: { item: CondensedNestItem }) {
+function renderCondensedNestItem(
+  { item }: { item: CondensedNestItem },
+  navigateToModule: (moduleKey: string) => void
+) {
   const { blockKey, selected } = item;
-  return <BlockPreview blockKey={blockKey} selected={selected} />;
+  return (
+    <BlockPreview blockKey={blockKey} selected={selected} navigateToModule={navigateToModule} />
+  );
 }
 
 type Props = {
   blocksKeys: Array<BlocksKeys>,
+  currentModuleKey: string,
   onChange: (items: Array<CondensedNestItem>, item: CondensedNestItem) => void,
+  history: any,
 };
 
-const NestList = ({ blocksKeys, onChange }: Props) => (
-  <div className={styles.containerClass}>
-    <Nestable
-      items={mapBlocksKeysToCondensedNestItems(blocksKeys)}
-      renderItem={renderCondensedNestItem}
-      onChange={onChange}
-      maxDepth={50}
-    />
-  </div>
-);
+class NestList extends Component<Props> {
+  navigateToModule = (moduleKey: string) => {
+    const { currentModuleKey, history } = this.props;
+    goToModule(moduleKey, currentModuleKey, history);
+  };
 
-export default NestList;
+  handleRenderItem = item => renderCondensedNestItem(item, this.navigateToModule);
+
+  render() {
+    const { blocksKeys, onChange } = this.props;
+    return (
+      <div className={styles.containerClass}>
+        <Nestable
+          items={mapBlocksKeysToCondensedNestItems(blocksKeys)}
+          renderItem={this.handleRenderItem}
+          onChange={onChange}
+          maxDepth={50}
+        />
+      </div>
+    );
+  }
+}
+
+export default withRouter(NestList);

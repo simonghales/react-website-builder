@@ -40,6 +40,42 @@ export type EditorReduxState = {
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
 
+const SET_INITIAL_MODULE_HISTORY = 'SET_INITIAL_MODULE_HISTORY';
+
+type SetInitialModuleHistoryPayload = {
+  moduleKey: string,
+  previousModuleKey: string,
+};
+
+type SetInitialModuleHistoryAction = {
+  type: string,
+  payload: SetInitialModuleHistoryPayload,
+};
+
+export function setInitialModuleHistory(
+  moduleKey: string,
+  previousModuleKey: string
+): SetInitialModuleHistoryAction {
+  return {
+    type: SET_INITIAL_MODULE_HISTORY,
+    payload: {
+      moduleKey,
+      previousModuleKey,
+    },
+  };
+}
+
+function handleSetInitialModuleHistory(
+  state: EditorReduxState,
+  { moduleKey, previousModuleKey }: SetInitialModuleHistoryPayload
+): EditorReduxState {
+  return {
+    ...state,
+    selectedModule: moduleKey,
+    selectedModulesHistory: [previousModuleKey],
+  };
+}
+
 const ADD_MIXIN_TO_BLOCK = 'ADD_MIXIN_TO_BLOCK';
 
 type AddMixinToBlockPayload = {
@@ -239,10 +275,22 @@ function handleSetSelectedModule(
   { moduleKey }: SetSelectedModulePayload
 ): EditorReduxState {
   const currentSelectedModuleKey = getSelectedModuleKey(state);
+  const previousModuleKey =
+    state.selectedModulesHistory.length > 0
+      ? state.selectedModulesHistory[state.selectedModulesHistory.length - 1]
+      : '';
+  let updatedSelectedModulesHistory = state.selectedModulesHistory.slice();
+  if (moduleKey === previousModuleKey) {
+    updatedSelectedModulesHistory.pop();
+  } else {
+    updatedSelectedModulesHistory = updatedSelectedModulesHistory.concat([
+      currentSelectedModuleKey,
+    ]);
+  }
   return {
     ...state,
     selectedModule: moduleKey,
-    selectedModulesHistory: state.selectedModulesHistory.concat([currentSelectedModuleKey]),
+    selectedModulesHistory: updatedSelectedModulesHistory,
     hoveredBlockKey: '',
   };
 }
@@ -639,6 +687,7 @@ type Actions =
   | CreateNewModuleFromSelectedBlockAction;
 
 const ACTION_HANDLERS = {
+  [SET_INITIAL_MODULE_HISTORY]: handleSetInitialModuleHistory,
   [ADD_MIXIN_TO_BLOCK]: handleAddMixinToBlock,
   [UPDATE_BLOCK_STYLES_MIXINS_ORDER]: handleUpdateBlockStylesMixinsOrder,
   [REMOVE_BLOCK_STYLES_MIXIN]: handleRemoveBlockStylesMixin,

@@ -18,6 +18,7 @@ type Props = {
   selectBlock: (blockKey: string) => void,
   selectModule: (moduleKey: string) => void,
   setHoveredBlock: (blockKey: string) => void,
+  navigateToModule: (moduleKey: string) => void,
   isRootBlock?: boolean,
   isModule?: boolean,
   children?: any,
@@ -31,6 +32,7 @@ const BlockPreview = ({
   moduleKey,
   selectBlock,
   selectModule,
+  navigateToModule,
   setHoveredBlock,
   isRootBlock,
   isModule,
@@ -64,7 +66,7 @@ const BlockPreview = ({
         <div
           className={styles.blockPreviewEnterClass}
           onClick={e => {
-            selectModule(moduleKey);
+            navigateToModule(moduleKey);
             e.stopPropagation();
           }}
         >

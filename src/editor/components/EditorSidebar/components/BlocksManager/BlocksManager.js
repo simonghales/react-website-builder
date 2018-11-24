@@ -16,6 +16,7 @@ import RootBlock from '../RootBlock/RootBlock';
 import { setHoveredBlockKey } from '../../../../../state/redux/ui/reducer';
 import type { BlocksKeys } from '../../../../../state/redux/editor/selector';
 import {
+  getCurrentModuleKey,
   getEditorSidebarBlocks,
   getSelectedBlockKey,
 } from '../../../../../state/redux/editor/selector';
@@ -42,6 +43,7 @@ function mapRootBlocksOrder(items: Array<CondensedNestItem>): Array<string> {
 type Props = {
   blocksKeys: BlocksKeys,
   selectedBlock: string,
+  currentModuleKey: string,
   setHoveredBlock: (blockKey: string) => void,
   updateBlocksOrder: (blocksOrder: BlocksOrder, rootBlocksOrder: Array<string>) => void,
 };
@@ -60,12 +62,16 @@ class BlocksManager extends Component<Props> {
   };
 
   render() {
-    const { blocksKeys, selectedBlock } = this.props;
+    const { blocksKeys, selectedBlock, currentModuleKey } = this.props;
     const rootBlockKey = blocksKeys.key;
     return (
       <div className={styles.containerClass} onMouseLeave={this.handleMouseLeave}>
         <RootBlock blockKey={rootBlockKey} selected={rootBlockKey === selectedBlock}>
-          <NestList blocksKeys={blocksKeys.children} onChange={this.handleChange} />
+          <NestList
+            blocksKeys={blocksKeys.children}
+            onChange={this.handleChange}
+            currentModuleKey={currentModuleKey}
+          />
         </RootBlock>
       </div>
     );
@@ -75,6 +81,7 @@ class BlocksManager extends Component<Props> {
 const mapStateToProps = (state: ReduxState) => ({
   blocksKeys: getEditorSidebarBlocks(state),
   selectedBlock: getSelectedBlockKey(state),
+  currentModuleKey: getCurrentModuleKey(state),
 });
 
 const mapDispatchToProps = {

@@ -50,3 +50,15 @@ export const getSelectedBlockKey = createSelector(
     return selectedBlockKey;
   }
 );
+
+export const getCurrentModuleKey = createSelector(
+  [getModule],
+  (module: DataModule) => module.key
+);
+
+const getPreviousModules = (state: ReduxState) => state.editor.selectedModulesHistory;
+
+export const getPreviousModulesKeys = createSelector(
+  [getPreviousModules],
+  (modulesKeys: Array<string>) => modulesKeys
+);

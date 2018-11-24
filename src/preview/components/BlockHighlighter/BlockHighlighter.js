@@ -14,6 +14,7 @@ type State = {
   y: number,
   width: number,
   height: number,
+  visible: boolean,
 };
 
 class BlockHighlighter extends Component<Props, State> {
@@ -25,6 +26,7 @@ class BlockHighlighter extends Component<Props, State> {
       y: 0,
       width: 0,
       height: 0,
+      visible: false,
     };
   }
 
@@ -41,18 +43,20 @@ class BlockHighlighter extends Component<Props, State> {
     if (!detail) {
       console.warn(`No detail provided`);
     }
-    const { clientRect, blockKey }: { clientRect: BlockClientRect, blockKey: string } = detail;
+    const { clientRect, blockKey, visible }: { clientRect: BlockClientRect, blockKey: string, visible: boolean } = detail;
+    console.log('clientRect', clientRect);
     this.setState({
       blockKey,
       x: clientRect.x,
       y: clientRect.y,
       width: clientRect.width,
       height: clientRect.height,
+      visible,
     });
   };
 
   render() {
-    const { blockKey, x, y, width, height } = this.state;
+    const { blockKey, x, y, width, height, visible } = this.state;
     const { hoveredBlockKey } = this.props;
     return (
       <div
@@ -62,7 +66,7 @@ class BlockHighlighter extends Component<Props, State> {
           top: y,
           width,
           height,
-          display: hoveredBlockKey && hoveredBlockKey === blockKey ? 'block' : 'none',
+          display: visible && hoveredBlockKey && hoveredBlockKey === blockKey ? 'block' : 'none',
         }}
       />
     );

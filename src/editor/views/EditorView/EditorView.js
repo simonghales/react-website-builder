@@ -1,6 +1,7 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { cx } from 'emotion';
 import styles from './styles';
 import EditorSidebar from '../../components/EditorSidebar/EditorSidebar';
@@ -9,45 +10,100 @@ import type { ReduxState } from '../../../state/redux/store';
 import { getAddingBlock } from '../../../state/redux/ui/state';
 import { setAddingBlock } from '../../../state/redux/ui/reducer';
 import Tooltip from '../../../components/Tooltip/Tooltip';
+import { setInitialModuleHistory, setSelectedModule } from '../../../state/redux/editor/reducer';
 
 type Props = {
   addingBlock: boolean,
   completeAddingBlock: () => void,
+  setInitialHistory: (moduleKey: string, previousModuleKey: string) => void,
+  setModule: (moduleKey: string) => void,
+  match: {
+    params: {
+      moduleKey?: string,
+      previousModuleKey?: string,
+    },
+  },
 };
 
-const EditorView = ({ addingBlock, completeAddingBlock }: Props) => (
-  <div className={styles.containerClass}>
-    <Tooltip />
-    <header className={styles.headerClass}>header..</header>
-    <main className={styles.mainClass}>
-      <div className={styles.editorClass}>
-        <EditorSidebar />
+const getParamModuleKey = (props: Props): string => {
+  const { match } = props;
+  const { params } = match;
+  const { moduleKey = '' } = params;
+  return moduleKey;
+};
+
+class EditorView extends Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    this.checkUrlParams(props);
+  }
+
+  checkUrlParams(props: Props = this.props) {
+    const { match } = props;
+    const { params } = match;
+    const { previousModuleKey = '' } = params;
+    const moduleKey = getParamModuleKey(props);
+    if (moduleKey) {
+      const { setInitialHistory } = this.props;
+      setInitialHistory(moduleKey, previousModuleKey);
+    }
+  }
+
+  componentWillReceiveProps(nextProps: Props): void {
+    this.checkUpdatedUrlParams(nextProps);
+  }
+
+  checkUpdatedUrlParams(nextProps: Props) {
+    const moduleKey = getParamModuleKey(nextProps);
+    const previousModuleKey = getParamModuleKey(this.props);
+    if (moduleKey !== previousModuleKey) {
+      const { setModule } = this.props;
+      setModule(moduleKey);
+    }
+  }
+
+  render() {
+    const { addingBlock, completeAddingBlock } = this.props;
+    return (
+      <div className={styles.containerClass}>
+        <Tooltip />
+        <header className={styles.headerClass}>header..</header>
+        <main className={styles.mainClass}>
+          <div className={styles.editorClass}>
+            <EditorSidebar />
+          </div>
+          <div className={styles.previewClass}>
+            <div
+              className={cx(styles.previewContentClass, {
+                [styles.previewContentDisabledClass]: addingBlock,
+              })}
+            >
+              <EditorBlockView />
+            </div>
+            {addingBlock && (
+              <div className={styles.previewBlockerClass} onClick={completeAddingBlock} />
+            )}
+          </div>
+        </main>
       </div>
-      <div className={styles.previewClass}>
-        <div
-          className={cx(styles.previewContentClass, {
-            [styles.previewContentDisabledClass]: addingBlock,
-          })}
-        >
-          <EditorBlockView />
-        </div>
-        {addingBlock && (
-          <div className={styles.previewBlockerClass} onClick={completeAddingBlock} />
-        )}
-      </div>
-    </main>
-  </div>
-);
+    );
+  }
+}
 
 const mapStateToProps = (state: ReduxState) => ({
   addingBlock: getAddingBlock(state.ui),
 });
 
 const mapDispatchToProps = {
+  setInitialHistory: (moduleKey: string, previousModuleKey: string) =>
+    setInitialModuleHistory(moduleKey, previousModuleKey),
   completeAddingBlock: () => setAddingBlock(false),
+  setModule: (moduleKey: string) => setSelectedModule(moduleKey),
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EditorView);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(EditorView)
+);

@@ -58,11 +58,15 @@ export function withBlockHighlighter(WrappedComponent: any) {
         x: 0,
         y: 0,
       };
+      let visible = false;
       try {
         // eslint-disable-next-line react/no-find-dom-node
         const domNode: any = ReactDOM.findDOMNode(this.childRef.current);
         console.log('domNode', domNode);
-        clientRect = domNode.getBoundingClientRect();
+        if (domNode) {
+          clientRect = domNode.getBoundingClientRect();
+          visible = true;
+        }
       } catch (e) {
         console.error(e);
       }
@@ -73,6 +77,7 @@ export function withBlockHighlighter(WrappedComponent: any) {
           detail: {
             clientRect,
             blockKey: blockHighlighterKey,
+            visible,
           },
         })
       );

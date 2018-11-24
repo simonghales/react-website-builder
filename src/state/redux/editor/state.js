@@ -172,7 +172,6 @@ export function getBlockFromSelectedModule(
 export type DataBlockPreviewProps = {
   type: string,
   label: string,
-  selected: boolean,
   isRootBlock: boolean,
   isModule: boolean,
   moduleKey: string,

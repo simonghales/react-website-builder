@@ -10,7 +10,7 @@ import { DUMMY_STYLE_EMPTY, DUMMY_STYLE_TEST } from '../styles/dummy';
 import type { DataBlockModel } from './models';
 
 const DUMMY_BLOCK_HEADING: DataBlockModel = {
-  key: getBlockUniqueId(),
+  key: 'N7vqq3r2ykL',
   groupKey: blockGroups.Basic,
   blockKey: Heading.key,
   blockType: blockTypes.module,
@@ -30,7 +30,7 @@ const DUMMY_BLOCK_HEADING: DataBlockModel = {
 };
 
 const DUMMY_BLOCK_SUBHEADING: DataBlockModel = {
-  key: getBlockUniqueId(),
+  key: 'R1RLqJMMBkR',
   groupKey: blockGroups.Basic,
   blockKey: Heading.key,
   blockType: blockTypes.module,
@@ -50,7 +50,7 @@ const DUMMY_BLOCK_SUBHEADING: DataBlockModel = {
 };
 
 const DUMMY_BLOCK_PARAGRAPH: DataBlockModel = {
-  key: getBlockUniqueId(),
+  key: 'x7JB7l5ogG3',
   groupKey: blockGroups.HTML,
   blockKey: Element.key,
   blockType: blockTypes.html,
@@ -66,7 +66,7 @@ const DUMMY_BLOCK_PARAGRAPH: DataBlockModel = {
 };
 
 const DUMMY_BLOCK_CONTAINER: DataBlockModel = {
-  key: getBlockUniqueId(),
+  key: 'y9mP23n8XOz',
   groupKey: blockGroups.Basic,
   blockKey: Container.key,
   blockType: blockTypes.module,
@@ -81,7 +81,7 @@ const DUMMY_BLOCK_CONTAINER: DataBlockModel = {
 };
 
 export const DUMMY_BLOCK_MODULE_SUB: DataBlockModel = {
-  key: getBlockUniqueId(),
+  key: 'gJ09lMVPDKY',
   groupKey: blockGroups.Module,
   blockKey: ModuleImport.key,
   blockType: blockTypes.module,
@@ -97,7 +97,7 @@ export const DUMMY_BLOCK_MODULE_SUB: DataBlockModel = {
 };
 
 export const DUMMY_BLOCK_MODULE: DataBlockModel = {
-  key: getBlockUniqueId(),
+  key: '7n7Q1N5KQxj',
   groupKey: blockGroups.Module,
   blockKey: Module.key,
   blockType: blockTypes.module,
@@ -126,7 +126,7 @@ export const DUMMY_BLOCKS = {
 };
 
 export const DUMMY_BLOCK_PAGE_INTRO_MODULE: DataBlockModel = {
-  key: getBlockUniqueId(),
+  key: 'k5O5gJK11JE',
   groupKey: blockGroups.Module,
   blockKey: ModuleImport.key,
   blockType: blockTypes.module,
@@ -142,7 +142,7 @@ export const DUMMY_BLOCK_PAGE_INTRO_MODULE: DataBlockModel = {
 };
 
 export const DUMMY_BLOCK_PAGE_PARAGRAPH: DataBlockModel = {
-  key: getBlockUniqueId(),
+  key: 'z7ykJn5ym2',
   groupKey: blockGroups.HTML,
   blockKey: Element.key,
   blockType: blockTypes.html,
@@ -168,7 +168,7 @@ export const DUMMY_BLOCK_PAGE_PARAGRAPH: DataBlockModel = {
 };
 
 export const DUMMY_BLOCK_PAGE_MODULE: DataBlockModel = {
-  key: getBlockUniqueId(),
+  key: 'E1PNmVBg5EK',
   groupKey: blockGroups.Module,
   blockKey: Module.key,
   blockType: blockTypes.module,
@@ -188,7 +188,7 @@ export const DUMMY_BLOCK_PAGE_MODULE: DataBlockModel = {
 };
 
 export const DUMMY_BLOCK_SUB_MODULE: DataBlockModel = {
-  key: getBlockUniqueId(),
+  key: 'qpjPDjW9DnG',
   groupKey: blockGroups.Module,
   blockKey: Module.key,
   blockType: blockTypes.module,

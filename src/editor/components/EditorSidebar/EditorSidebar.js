@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { MdAdd, MdClose, MdKeyboardBackspace } from 'react-icons/md';
 import { connect } from 'react-redux';
 import { cx } from 'emotion';
@@ -14,13 +15,17 @@ import { setAddingBlock } from '../../../state/redux/ui/reducer';
 import { returnToPreviousSelectedModule } from '../../../state/redux/editor/reducer';
 import { getPreviousModule } from '../../../state/redux/editor/state';
 import type { DataModule } from '../../../data/modules/models';
+import { getPreviousModulesKeys } from '../../../state/redux/editor/selector';
+import { goToModule } from '../../routing';
 
 type Props = {
   addingBlock: boolean,
+  previousModulesKeys: Array<string>,
   previousModule: DataModule | null,
   startAddingBlock: () => void,
   completeAddingBlock: () => void,
   returnToPreviousModule: () => void,
+  history: any,
 };
 
 type State = {};
@@ -46,6 +51,17 @@ class EditorSidebar extends Component<Props, State> {
     }
   };
 
+  handleReturnToPreviousModule = () => {
+    const { previousModule, previousModulesKeys, history } = this.props;
+    const copyOfPreviousModulesKeys = previousModulesKeys.slice();
+    const moduleKey = copyOfPreviousModulesKeys.pop();
+    const previousModuleKey =
+      copyOfPreviousModulesKeys.length > 0 ? copyOfPreviousModulesKeys.pop() : '';
+    console.log('previousModule', previousModule);
+    console.log('moduleKey', moduleKey, 'previousModuleKey', previousModuleKey);
+    goToModule(moduleKey, previousModuleKey, history);
+  };
+
   render() {
     const { addingBlock, previousModule, returnToPreviousModule } = this.props;
     return (
@@ -58,7 +74,7 @@ class EditorSidebar extends Component<Props, State> {
           <div className={styles.addBlockSectionClass}>
             <div className={styles.returnToWrapperClass}>
               {previousModule && (
-                <div className={styles.returnToClass} onClick={returnToPreviousModule}>
+                <div className={styles.returnToClass} onClick={this.handleReturnToPreviousModule}>
                   <MdKeyboardBackspace size={18} />
                   <div>{previousModule.name}</div>
                 </div>
@@ -88,6 +104,7 @@ class EditorSidebar extends Component<Props, State> {
 const mapStateToProps = (state: ReduxState) => ({
   addingBlock: getAddingBlock(state.ui),
   previousModule: getPreviousModule(state.editor),
+  previousModulesKeys: getPreviousModulesKeys(state),
 });
 
 const mapDispatchToProps = {
@@ -96,7 +113,9 @@ const mapDispatchToProps = {
   returnToPreviousModule: () => returnToPreviousSelectedModule(),
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EditorSidebar);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(EditorSidebar)
+);
