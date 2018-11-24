@@ -44,7 +44,14 @@ function getMergedPropConfig(
 }
 
 function filterVisiblePropsFields(blockData: DataBlockModel, block: BlockModel): Array<string> {
-  return Object.keys(blockData.props).filter(propKey => {
+  const allBlockPropKeys = {};
+  Object.keys(blockData.props).forEach(propKey => {
+    allBlockPropKeys[propKey] = true;
+  });
+  Object.keys(block.propsConfig).forEach(propKey => {
+    allBlockPropKeys[propKey] = true;
+  });
+  return Object.keys(allBlockPropKeys).filter(propKey => {
     const propConfig = getMergedPropConfig(blockData, block, propKey);
     console.log('propConfig', propConfig);
     return !propConfig.hidden;

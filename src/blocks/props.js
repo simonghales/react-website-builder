@@ -3,6 +3,8 @@
 export const blockPropsConfigTypes = {
   string: 'string',
   html: 'html',
+  htmlHeadings: 'htmlHeadings',
+  htmlContainers: 'htmlContainers',
   module: 'module',
   blocks: 'blocks',
 };

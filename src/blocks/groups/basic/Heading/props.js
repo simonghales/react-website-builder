@@ -17,7 +17,7 @@ export const headingDefaultProps = {
 export const headingPropsConfig = {
   element: {
     label: 'Element',
-    type: blockPropsConfigTypes.html,
+    type: blockPropsConfigTypes.htmlHeadings,
   },
   text: {
     type: blockPropsConfigTypes.string,

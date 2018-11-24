@@ -3,13 +3,36 @@ import React from 'react';
 import styles from './styles';
 import Input, { inputStyleTypes } from '../StyleProp/components/Input/Input';
 import { blockPropsConfigTypes } from '../../blocks/props';
-import HTMLSelector from './components/HTMLSelector/HTMLSelector';
+import HTMLSelector, { htmlSelectorOptions } from './components/HTMLSelector/HTMLSelector';
+import { elementDefaultProps } from '../../blocks/groups/html/Element/props';
+import { containerDefaultProps } from '../../blocks/groups/basic/Container/props';
+import { headingDefaultProps } from '../../blocks/groups/basic/Heading/props';
 
 const propInputComponents = {
   [blockPropsConfigTypes.string]: props => <Input styleType={inputStyleTypes.dark} {...props} />,
   [blockPropsConfigTypes.blocks]: () => null,
   [blockPropsConfigTypes.module]: () => null,
-  [blockPropsConfigTypes.html]: props => <HTMLSelector {...props} />,
+  [blockPropsConfigTypes.html]: props => (
+    <HTMLSelector
+      options={htmlSelectorOptions.all}
+      defaultHtmlElement={elementDefaultProps.element}
+      {...props}
+    />
+  ),
+  [blockPropsConfigTypes.htmlContainers]: props => (
+    <HTMLSelector
+      options={htmlSelectorOptions.container}
+      defaultHtmlElement={containerDefaultProps.element}
+      {...props}
+    />
+  ),
+  [blockPropsConfigTypes.htmlHeadings]: props => (
+    <HTMLSelector
+      options={htmlSelectorOptions.heading}
+      defaultHtmlElement={headingDefaultProps.element}
+      {...props}
+    />
+  ),
 };
 
 function getPropInputComponent(type: string) {
