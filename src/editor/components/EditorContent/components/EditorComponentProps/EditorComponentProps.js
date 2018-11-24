@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import BlockProp from '../../../../../components/BlockProp/BlockProp';
 import styles from './styles';
 import type { DataBlockModel } from '../../../../../data/blocks/models';
-import { getBlockPropLabel } from '../../../../../data/blocks/models';
+import { getBlockPropLabel, getBlockPropType } from '../../../../../data/blocks/models';
 import { setBlockPropValue } from '../../../../../state/redux/editor/reducer';
 import { getBlock, getBlockGroup } from '../../../../../blocks/blocks';
 import type { BlockModel, BlockModelPropsConfig } from '../../../../../blocks/models';
@@ -15,14 +15,16 @@ type PropFieldProps = {
   propKey: string,
   label: string,
   value: string,
+  propType: string,
   updateProp: (blockKey: string, propKey: string, value: any) => void,
 };
 
-const PropField = ({ label, value, blockKey, propKey, updateProp }: PropFieldProps) => (
+const PropField = ({ label, value, blockKey, propKey, updateProp, propType }: PropFieldProps) => (
   <div className={styles.fieldClass}>
     <BlockProp
       label={label}
       value={value}
+      propType={propType}
       onUpdate={(newValue: any) => updateProp(blockKey, propKey, newValue)}
     />
   </div>
@@ -44,6 +46,7 @@ function getMergedPropConfig(
 function filterVisiblePropsFields(blockData: DataBlockModel, block: BlockModel): Array<string> {
   return Object.keys(blockData.props).filter(propKey => {
     const propConfig = getMergedPropConfig(blockData, block, propKey);
+    console.log('propConfig', propConfig);
     return !propConfig.hidden;
   });
 }
@@ -72,6 +75,7 @@ const EditorComponentProps = ({ selectedBlock, updateProp }: Props) => {
           const value = selectedBlock.props[propKey];
           const propConfig = getMergedPropConfig(selectedBlock, block, propKey);
           const label = getBlockPropLabel(propKey, propConfig);
+          const propType = getBlockPropType(propConfig);
           const blockKey = selectedBlock.key;
           return (
             <PropField
@@ -80,6 +84,7 @@ const EditorComponentProps = ({ selectedBlock, updateProp }: Props) => {
               propKey={propKey}
               value={value}
               label={label}
+              propType={propType}
               updateProp={updateProp}
             />
           );

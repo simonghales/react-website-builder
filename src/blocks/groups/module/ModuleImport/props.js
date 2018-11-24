@@ -1,5 +1,7 @@
 // @flow
 
+import { blockPropsConfigTypes } from '../../../props';
+
 export type ModuleImportProps = {
   children: any,
   module: any,
@@ -13,10 +15,10 @@ export const moduleImportDefaultProps = {
 export const moduleImportPropsConfig = {
   children: {
     hidden: true,
-    type: 'blocks',
+    type: blockPropsConfigTypes.blocks,
   },
   module: {
     hidden: true,
-    type: 'module',
+    type: blockPropsConfigTypes.module,
   },
 };

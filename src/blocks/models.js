@@ -1,6 +1,7 @@
 // @flow
 
-import type { BlockPropsConfigTypes, DataBlockModel } from '../data/blocks/models';
+import type { DataBlockModel } from '../data/blocks/models';
+import type {BlockPropsConfigTypes} from './props';
 
 export type BlockModelPropsConfig = {
   label?: string,

@@ -1,6 +1,7 @@
 // @flow
 
 import type { MappedStyleModel } from '../../../../data/styles/models';
+import { blockPropsConfigTypes } from '../../../props';
 
 export type HeadingProps = {
   text: string,
@@ -9,4 +10,10 @@ export type HeadingProps = {
 
 export const headingDefaultProps = {
   text: '',
+};
+
+export const headingPropsConfig = {
+  text: {
+    type: blockPropsConfigTypes.string,
+  },
 };

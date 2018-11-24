@@ -1,6 +1,7 @@
 // @flow
 
 import type { MappedStyleModel } from '../../../../data/styles/models';
+import { blockPropsConfigTypes } from '../../../props';
 
 export type ElementProps = {
   element: string,
@@ -16,12 +17,16 @@ export const elementDefaultProps = {
 };
 
 export const elementPropsConfig = {
+  element: {
+    label: 'Element',
+    type: blockPropsConfigTypes.html,
+  },
   content: {
     label: 'Content',
-    type: 'string',
+    type: blockPropsConfigTypes.string,
   },
   children: {
     hidden: true,
-    type: 'blocks',
+    type: blockPropsConfigTypes.blocks,
   },
 };

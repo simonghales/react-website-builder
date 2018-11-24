@@ -1,7 +1,7 @@
 // @flow
 
 import type { MappedDataBlockModel } from '../data/blocks/models';
-import { blockPropsConfigTypes } from '../data/blocks/models';
+import { blockPropsConfigTypes } from '../blocks/props';
 import { previewBlocksParser, previewModuleParser } from './parser';
 import type { BlockModelPropsConfig } from '../blocks/models';
 

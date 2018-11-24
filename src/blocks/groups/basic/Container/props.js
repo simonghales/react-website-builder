@@ -1,6 +1,7 @@
 // @flow
 
 import type { MappedStyleModel } from '../../../../data/styles/models';
+import { blockPropsConfigTypes } from '../../../props';
 
 export type ContainerProps = {
   children: any,
@@ -14,6 +15,6 @@ export const containerDefaultProps = {
 export const containerPropsConfig = {
   children: {
     hidden: true,
-    type: 'blocks',
+    type: blockPropsConfigTypes.blocks,
   },
 };

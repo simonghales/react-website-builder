@@ -2,6 +2,7 @@ import { getBlockUniqueId } from '../../../utils';
 import { blockGroups, blockTypes } from '../../../config';
 import config from './config';
 import { EMPTY_BLOCK_STYLES } from '../../../../data/styles/defaults';
+import { containerDefaultProps } from './props';
 
 const dataBlock = () => ({
   key: getBlockUniqueId(),
@@ -10,7 +11,7 @@ const dataBlock = () => ({
   blockType: blockTypes.module,
   label: 'Container',
   props: {
-    children: null,
+    ...containerDefaultProps,
   },
   propsConfig: {},
   blockChildrenKeys: [],

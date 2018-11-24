@@ -4,7 +4,7 @@ import { getBlockUniqueId } from '../../../utils';
 import { blockGroups, blockTypes } from '../../../config';
 import { EMPTY_BLOCK_STYLES } from '../../../../data/styles/defaults';
 import config from './config';
-import { blockPropsConfigTypes } from '../../../props';
+import { elementDefaultProps } from './props';
 
 const dataBlock = () => ({
   key: getBlockUniqueId(),
@@ -13,15 +13,9 @@ const dataBlock = () => ({
   blockType: blockTypes.html,
   label: 'HTML Element',
   props: {
-    element: 'p',
-    content: '',
+    ...elementDefaultProps,
   },
-  propsConfig: {
-    element: {
-      label: 'Element',
-      type: blockPropsConfigTypes.html,
-    },
-  },
+  propsConfig: {},
   blockChildrenKeys: [],
   isParentModule: false,
   rawStyles: {

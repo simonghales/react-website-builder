@@ -12,7 +12,7 @@ type InputStyleTypes = $Keys<typeof inputStyleTypes>;
 type Props = {
   styleType: InputStyleTypes,
   value: string,
-  inheritedValue: string,
+  inheritedValue?: string,
   onChange: (value: string) => void,
 };
 
@@ -21,6 +21,10 @@ type State = {
 };
 
 class Input extends Component<Props, State> {
+  static defaultProps = {
+    inheritedValue: '',
+  };
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -39,7 +43,7 @@ class Input extends Component<Props, State> {
 
   getDisplayValue(): string {
     const { text } = this.state;
-    const { inheritedValue } = this.props;
+    const { inheritedValue = '' } = this.props;
     return text !== '' ? text : inheritedValue;
   }
 

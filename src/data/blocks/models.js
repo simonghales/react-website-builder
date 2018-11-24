@@ -10,15 +10,8 @@ import { getMappedDataLinkedModule, getMappedLinkedModuleKey } from '../moduleTe
 import type { ModuleTemplates } from '../moduleTemplates/models';
 import { getBlockLabel } from './state';
 import type { MixinsModel } from '../mixins/models';
-import {blockTypes} from '../../blocks/config';
-
-export const blockPropsConfigTypes = {
-  module: 'module',
-  blocks: 'blocks',
-  string: 'string',
-};
-
-export type BlockPropsConfigTypes = $Keys<typeof blockPropsConfigTypes>;
+import { blockTypes } from '../../blocks/config';
+import { blockPropsConfigTypes } from '../../blocks/props';
 
 export type DataBlockMixinModel = {
   key: string,
@@ -165,4 +158,8 @@ export function getDataBlockLabel(data: DataBlockModel): string {
 
 export function getBlockPropLabel(propKey: string, propConfig: BlockModelPropsConfig): string {
   return propConfig && propConfig.label ? propConfig.label : propKey;
+}
+
+export function getBlockPropType(propConfig: BlockModelPropsConfig): string {
+  return propConfig && propConfig.type ? propConfig.type : blockPropsConfigTypes.string;
 }
