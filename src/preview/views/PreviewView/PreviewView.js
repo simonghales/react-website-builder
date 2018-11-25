@@ -44,7 +44,7 @@ class PreviewView extends Component<Props, State> {
   };
 
   updateParentWindow() {
-    window.parent.postMessage(PREVIEW_IFRAME_BROADCAST_INIT);
+    window.parent.postMessage(PREVIEW_IFRAME_BROADCAST_INIT, "*");
   }
 
   render() {
