@@ -10,6 +10,8 @@ const containerClass = css`
   right: 0;
   bottom: 0;
   color: ${colors.white};
+  display: flex;
+  flex-direction: column;
 `;
 
 const headerClass = css`
@@ -18,7 +20,7 @@ const headerClass = css`
 
 const mainClass = css`
   display: flex;
-  height: 100%;
+  flex: 1;
 `;
 
 const editorClass = css`

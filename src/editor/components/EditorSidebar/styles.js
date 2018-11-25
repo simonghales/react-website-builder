@@ -27,6 +27,8 @@ const containerClass = css`
   position: relative;
   z-index: ${zindexes.sidebar};
   transition: box-shadow 250ms ease;
+  display: flex;
+  flex-direction: column;
 `;
 
 const containerRaisedClass = css`
@@ -97,6 +99,36 @@ const addBlockToggleClass = css`
   ${squareButton};
 `;
 
+const blocksSectionClass = css`
+    flex: 1;
+`;
+
+const saveChangesClass = css`
+    background-color: ${colors.blackInactiveBlue};
+    border-top: 3px solid ${colors.brightBlue};
+    height: 60px;
+
+padding: 10px 10px 12px 10px;
+
+text-align: center;
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+cursor: pointer;
+font-weight: 500;
+text-transform: uppercase;
+color: ${colors.brightBlue};
+
+&:hover {
+    background-color: ${colors.brightBlue};
+    color: ${colors.white};
+}
+
+`;
+
 export default {
   classNames,
   wrapperClass,
@@ -107,4 +139,6 @@ export default {
   addBlockToggleClass,
   returnToWrapperClass,
   returnToClass,
+  blocksSectionClass,
+  saveChangesClass,
 };

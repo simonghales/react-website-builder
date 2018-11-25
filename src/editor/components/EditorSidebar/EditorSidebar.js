@@ -63,10 +63,10 @@ class EditorSidebar extends Component<Props, State> {
               {addingBlock ? <MdClose size={20} /> : <MdAdd size={20} />}
             </div>
           </div>
-          <div>
+          <div className={styles.blocksSectionClass}>
             <BlocksManager />
           </div>
-          <div>save changes</div>
+          <div className={styles.saveChangesClass}>save changes</div>
         </div>
         <SlideOutContainer visible={addingBlock}>
           <AddBlockSlideout />

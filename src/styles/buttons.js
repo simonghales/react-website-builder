@@ -14,7 +14,7 @@ export const squareButton = css`
   cursor: pointer;
 
   &:hover {
-    background-color: ${colors.light};
-    color: ${colors.blackBlue};
+    background-color: ${colors.blackBlueLight};
+    //color: ${colors.blackBlue};
   }
 `;

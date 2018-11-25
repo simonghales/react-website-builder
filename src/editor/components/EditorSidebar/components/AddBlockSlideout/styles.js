@@ -9,7 +9,9 @@ const containerClass = css`
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: ${colors.blackBlue};
+  background-color: ${colors.darkBlue};
+  border-top: 1px solid ${colors.blackBlue};
+  border-left: 1px solid ${colors.blackBlue};
 `;
 
 const headerClass = css`
@@ -46,7 +48,7 @@ const blockClass = css`
   cursor: pointer;
 
   &:hover {
-    background-color: ${colors.light};
+    background-color: ${colors.brightBlue};
   }
 `;
 
@@ -67,8 +69,8 @@ const blockIconClass = css`
   color: ${colors.lightMid};
 
   .${classNames.addBlockBlock}:hover & {
-    color: ${colors.light};
-    background-color: ${colors.blackInactiveBlue};
+    color: ${colors.white};
+    background-color: #136ada;
   }
 `;
 
@@ -79,7 +81,7 @@ const blockLabelClass = css`
   font-weight: ${fontWeights.medium};
 
   .${classNames.addBlockBlock}:hover & {
-    color: ${colors.blackBlue};
+    color: ${colors.white};
   }
 `;
 

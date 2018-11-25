@@ -73,8 +73,9 @@ class EditorView extends Component<Props> {
   render() {
     const { addingBlock, completeAddingBlock } = this.props;
     return (
-      <div className={styles.containerClass}>
+      <React.Fragment>
         <Tooltip />
+      <div className={styles.containerClass}>
         <header className={styles.headerClass}>header..</header>
         <main className={styles.mainClass}>
           <div className={styles.editorClass}>
@@ -94,6 +95,7 @@ class EditorView extends Component<Props> {
           </div>
         </main>
       </div>
+      </React.Fragment>
     );
   }
 }
