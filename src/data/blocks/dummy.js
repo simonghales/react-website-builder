@@ -8,6 +8,7 @@ import Heading from '../../blocks/groups/basic/Heading/Heading';
 import Container from '../../blocks/groups/basic/Container/Container';
 import { DUMMY_STYLE_EMPTY, DUMMY_STYLE_TEST } from '../styles/dummy';
 import type { DataBlockModel } from './models';
+import { DUMMY_INTRO_MODULE } from '../modules/dummy';
 
 const DUMMY_BLOCK_HEADING: DataBlockModel = {
   key: 'N7vqq3r2ykL',
@@ -91,7 +92,7 @@ export const DUMMY_BLOCK_MODULE_SUB: DataBlockModel = {
   },
   propsConfig: {},
   blockChildrenKeys: [],
-  linkedModuleKey: 'DUMMY_MODULE_TEMPLATE_SUB',
+  moduleKey: 'DUMMY_SUB_MODULE',
   isParentModule: false,
   rawStyles: DUMMY_STYLE_EMPTY,
 };
@@ -136,7 +137,7 @@ export const DUMMY_BLOCK_PAGE_INTRO_MODULE: DataBlockModel = {
   },
   propsConfig: {},
   blockChildrenKeys: [],
-  linkedModuleKey: 'DUMMY_MODULE_TEMPLATE_INTRO',
+  moduleKey: 'DUMMY_INTRO_MODULE',
   isParentModule: false,
   rawStyles: DUMMY_STYLE_EMPTY,
 };
@@ -156,14 +157,14 @@ export const DUMMY_BLOCK_PAGE_PARAGRAPH: DataBlockModel = {
   isParentModule: false,
   rawStyles: DUMMY_STYLE_TEST,
   mixinStyles: [
-    // {
-    //   key: 'DUMMY_MIXIN_CENTERED',
-    //   disabledModifiers: {},
-    // },
-    // {
-    //   key: 'DUMMY_MIXIN_HEADING',
-    //   disabledModifiers: {},
-    // },
+    {
+      key: 'DUMMY_MIXIN_CENTERED',
+      disabledModifiers: {},
+    },
+    {
+      key: 'DUMMY_MIXIN_HEADING',
+      disabledModifiers: {},
+    },
   ],
 };
 

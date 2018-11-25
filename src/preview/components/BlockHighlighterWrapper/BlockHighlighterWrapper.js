@@ -46,7 +46,6 @@ export function withBlockHighlighter(WrappedComponent: any) {
     }
 
     updateHighlighter() {
-      console.log('updateHighlighter');
       if (!this.childRef.current) return;
       let clientRect: BlockClientRect = {
         bottom: 0,
@@ -62,7 +61,6 @@ export function withBlockHighlighter(WrappedComponent: any) {
       try {
         // eslint-disable-next-line react/no-find-dom-node
         const domNode: any = ReactDOM.findDOMNode(this.childRef.current);
-        console.log('domNode', domNode);
         if (domNode) {
           clientRect = domNode.getBoundingClientRect();
           visible = true;
@@ -70,7 +68,6 @@ export function withBlockHighlighter(WrappedComponent: any) {
       } catch (e) {
         console.error(e);
       }
-      console.log('clientRect', clientRect);
       const { blockHighlighterKey } = this.props;
       window.dispatchEvent(
         new CustomEvent(PREVIEW_BLOCK_HOVERED_CLIENT_RECT, {

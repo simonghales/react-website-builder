@@ -143,3 +143,32 @@ export function doesModuleChildrenContainModule(
   const allChildModules = recursivelyGetAllModuleChildModules(module, modules, moduleTemplates);
   return !!allChildModules[moduleKeyToCheck];
 }
+
+export function moduleKeyIsChildOfModule(moduleKeyToCheck: string, module: DataModule): boolean {
+  let isChild = false;
+  Object.keys(module.blocks).forEach(blockKey => {
+    const block = module.blocks[blockKey];
+    if (block.moduleKey && block.moduleKey === moduleKeyToCheck) {
+      isChild = true;
+    }
+  });
+  return isChild;
+}
+
+export function getModuleKeyFromModule(module: DataModule): string {
+  return module.key;
+}
+
+export function getModuleParentModules(
+  moduleKeyToMatch: string,
+  modules: DataModules
+): Array<DataModule> {
+  const parentModules = [];
+  Object.keys(modules).forEach(moduleKey => {
+    const module = modules[moduleKey];
+    if (moduleKeyIsChildOfModule(moduleKeyToMatch, module)) {
+      parentModules.push(module);
+    }
+  });
+  return parentModules;
+}

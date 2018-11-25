@@ -16,7 +16,7 @@ type Props = {
   addingBlock: boolean,
   completeAddingBlock: () => void,
   setInitialHistory: (moduleKey: string, previousModuleKey: string) => void,
-  setModule: (moduleKey: string) => void,
+  setModule: (moduleKey: string, previousModuleKey: string) => void,
   match: {
     params: {
       moduleKey?: string,
@@ -30,6 +30,13 @@ const getParamModuleKey = (props: Props): string => {
   const { params } = match;
   const { moduleKey = '' } = params;
   return moduleKey;
+};
+
+const getParamPreviousModuleKey = (props: Props): string => {
+  const { match } = props;
+  const { params } = match;
+  const { previousModuleKey = '' } = params;
+  return previousModuleKey;
 };
 
 class EditorView extends Component<Props> {
@@ -56,9 +63,10 @@ class EditorView extends Component<Props> {
   checkUpdatedUrlParams(nextProps: Props) {
     const moduleKey = getParamModuleKey(nextProps);
     const previousModuleKey = getParamModuleKey(this.props);
+    const newPreviousModuleKey = getParamPreviousModuleKey(nextProps);
     if (moduleKey !== previousModuleKey) {
       const { setModule } = this.props;
-      setModule(moduleKey);
+      setModule(moduleKey, newPreviousModuleKey);
     }
   }
 
@@ -98,7 +106,8 @@ const mapDispatchToProps = {
   setInitialHistory: (moduleKey: string, previousModuleKey: string) =>
     setInitialModuleHistory(moduleKey, previousModuleKey),
   completeAddingBlock: () => setAddingBlock(false),
-  setModule: (moduleKey: string) => setSelectedModule(moduleKey),
+  setModule: (moduleKey: string, previousModuleKey: string) =>
+    setSelectedModule(moduleKey, previousModuleKey),
 };
 
 export default withRouter(

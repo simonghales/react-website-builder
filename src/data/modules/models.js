@@ -10,6 +10,7 @@ export type DataModule = {
   blocks: SitePageDataBlocks,
   rootBlock: string,
   selectedBlock: string,
+  isTemplate: boolean,
 };
 
 export type MappedDataModule = {

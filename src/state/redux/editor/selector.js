@@ -3,8 +3,14 @@
 import { createSelector } from 'reselect';
 import type { ReduxState } from '../store';
 import { getSelectedModule } from './state';
-import type { DataModule } from '../../../data/modules/models';
-import { getSelectedBlockKeyFromModule } from '../../../data/modules/state';
+import type { DataModule, DataModules } from '../../../data/modules/models';
+import {
+  doesModuleChildrenContainModule,
+  getModuleFromModules,
+  getModuleKeyFromModule,
+  getModuleParentModules,
+  getSelectedBlockKeyFromModule,
+} from '../../../data/modules/state';
 import type { SitePageDataBlocks } from '../../../data/blocks/models';
 import { getBlockFromDataBlock } from '../../../blocks/blocks';
 import { getBlockChildrenKeys } from '../../../data/blocks/state';
@@ -57,8 +63,36 @@ export const getCurrentModuleKey = createSelector(
 );
 
 const getPreviousModules = (state: ReduxState) => state.editor.selectedModulesHistory;
+const getModules = (state: ReduxState) => state.editor.modules;
 
 export const getPreviousModulesKeys = createSelector(
   [getPreviousModules],
   (modulesKeys: Array<string>) => modulesKeys
+);
+
+export const getPreviousModule = createSelector(
+  [getPreviousModules, getModules],
+  (modulesKeys: Array<string>, modules: DataModules) => {
+    if (modulesKeys.length > 0) {
+      const previousModuleKey = modulesKeys[modulesKeys.length - 1];
+      return getModuleFromModules(previousModuleKey, modules);
+    }
+    return null;
+  }
+);
+
+export const getParentModules = createSelector(
+  [getModule, getModules],
+  (module: DataModule, modules: DataModules) => {
+    const moduleKeyToMatch = getModuleKeyFromModule(module);
+    return getModuleParentModules(moduleKeyToMatch, modules);
+  }
+);
+
+export const getAddableModules = createSelector(
+  [getModules],
+  (modules: DataModules) =>
+    Object.keys(modules)
+      .map(moduleKey => modules[moduleKey])
+      .filter(module => module.isTemplate)
 );

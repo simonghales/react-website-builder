@@ -43,8 +43,11 @@ class BlockHighlighter extends Component<Props, State> {
     if (!detail) {
       console.warn(`No detail provided`);
     }
-    const { clientRect, blockKey, visible }: { clientRect: BlockClientRect, blockKey: string, visible: boolean } = detail;
-    console.log('clientRect', clientRect);
+    const {
+      clientRect,
+      blockKey,
+      visible,
+    }: { clientRect: BlockClientRect, blockKey: string, visible: boolean } = detail;
     this.setState({
       blockKey,
       x: clientRect.x,

@@ -1,7 +1,12 @@
 // @flow
 
 import { DUMMY_PAGE_DATA } from '../../../data/redux';
-import { getModuleFromState, getModuleTemplatesFromState, getSelectedModuleKey } from './state';
+import {
+  getModuleFromState,
+  getModulesFromState,
+  getModuleTemplatesFromState,
+  getSelectedModuleKey,
+} from './state';
 import {
   addMixinToBlockStylesMixins,
   addNewBlockToBlocks,
@@ -69,10 +74,13 @@ function handleSetInitialModuleHistory(
   state: EditorReduxState,
   { moduleKey, previousModuleKey }: SetInitialModuleHistoryPayload
 ): EditorReduxState {
+  const selectedModulesHistory = previousModuleKey ? [previousModuleKey] : [];
+  const modules = getModulesFromState(state);
+  const selectedModule = modules[moduleKey] ? moduleKey : Object.keys(modules)[0];
   return {
     ...state,
-    selectedModule: moduleKey,
-    selectedModulesHistory: [previousModuleKey],
+    selectedModule,
+    selectedModulesHistory,
   };
 }
 
@@ -254,6 +262,7 @@ const SET_SELECTED_MODULE = 'SET_SELECTED_MODULE';
 
 type SetSelectedModulePayload = {
   moduleKey: string,
+  previousModuleKey: string,
 };
 
 type SetSelectedModuleAction = {
@@ -261,32 +270,37 @@ type SetSelectedModuleAction = {
   payload: SetSelectedModulePayload,
 };
 
-export function setSelectedModule(moduleKey: string): SetSelectedModuleAction {
+export function setSelectedModule(
+  moduleKey: string,
+  previousModuleKey: string
+): SetSelectedModuleAction {
   return {
     type: SET_SELECTED_MODULE,
     payload: {
       moduleKey,
+      previousModuleKey,
     },
   };
 }
 
 function handleSetSelectedModule(
   state: EditorReduxState,
-  { moduleKey }: SetSelectedModulePayload
+  { moduleKey, previousModuleKey }: SetSelectedModulePayload
 ): EditorReduxState {
   const currentSelectedModuleKey = getSelectedModuleKey(state);
-  const previousModuleKey =
+  const currentPreviousModuleKey =
     state.selectedModulesHistory.length > 0
       ? state.selectedModulesHistory[state.selectedModulesHistory.length - 1]
       : '';
   let updatedSelectedModulesHistory = state.selectedModulesHistory.slice();
-  if (moduleKey === previousModuleKey) {
+  if (moduleKey === currentPreviousModuleKey) {
     updatedSelectedModulesHistory.pop();
-  } else {
+  } else if (previousModuleKey) {
     updatedSelectedModulesHistory = updatedSelectedModulesHistory.concat([
       currentSelectedModuleKey,
     ]);
   }
+  console.log('updatedSelectedModulesHistory', updatedSelectedModulesHistory, previousModuleKey);
   return {
     ...state,
     selectedModule: moduleKey,
@@ -670,8 +684,6 @@ function handleCreateNewModuleFromSelectedBlock(state: EditorReduxState): Editor
       ...state.moduleTemplates,
       [newModuleTemplate.key]: newModuleTemplate,
     },
-    selectedModule: newModule.key,
-    selectedModulesHistory: state.selectedModulesHistory.concat([selectedModuleKey]),
   };
 }
 

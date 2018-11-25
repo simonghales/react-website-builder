@@ -11,14 +11,12 @@ import type {
   AddBlockGroupModel,
   AddBlockModel,
 } from '../../../../../blocks/models';
-import {
-  getAddableModuleTemplates,
-  getSelectedModuleKey,
-} from '../../../../../state/redux/editor/state';
+import { getSelectedModuleKey } from '../../../../../state/redux/editor/state';
 import { addNewBlock, addNewModule } from '../../../../../state/redux/editor/reducer';
 import { setAddingBlock } from '../../../../../state/redux/ui/reducer';
 import { getDisabledBlocks } from './state';
 import type { DisabledBlocks } from './state';
+import { getAddableModules } from '../../../../../state/redux/editor/selector';
 
 const Block = ({
   block,
@@ -127,8 +125,8 @@ const AddBlockSlideout = ({
 );
 
 const mapStateToProps = (state: ReduxState) => {
-  const moduleTemplateModules = getAddableModuleTemplates(state.editor);
-  const addableBlockGroups = getAddableBlockGroups(moduleTemplateModules);
+  const addableModules = getAddableModules(state);
+  const addableBlockGroups = getAddableBlockGroups(addableModules);
   const selectedModuleKey = getSelectedModuleKey(state.editor);
   const disabledBlocks = getDisabledBlocks(addableBlockGroups, selectedModuleKey);
   return {
