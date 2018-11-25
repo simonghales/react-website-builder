@@ -2,20 +2,23 @@
 import { transparentize } from 'polished';
 
 const white = '#FFFFFF';
-const light = '#d2deff';
+const light = '#eaf0ff';
 const lightClose = transparentize(0.1, light);
 const lightSlight = transparentize(0.25, light);
 const lightMid = transparentize(0.5, light);
 const lightFaint = transparentize(0.7, light);
 const lightFaintest = transparentize(0.9, light);
-const blackBlue = '#0b111f';
-const blackInactiveBlue = '#111b30';
-const darkBlue = '#141E34';
+const blackBlue = '#20242d';
+const blackInactiveBlue = '#04060b';
+const darkBlue = '#080B12';
 const mediumBlue = '#152036';
 const siteBackground = darkBlue;
 const faintInput = transparentize(0.75, '#000626');
-const darkInput = transparentize(0.65, '#000626');
-const darkInputFocused = transparentize(0.45, '#000626');
+const darkInput = `rgba(83, 87, 96, 0.3)`;
+const darkInputFocused = `rgba(73, 77, 87, 0.3)`;
+const brightBlue = '#2383ff';
+
+// #373e4b
 
 export default {
   white,
@@ -33,4 +36,5 @@ export default {
   faintInput,
   darkInput,
   darkInputFocused,
+  brightBlue,
 };

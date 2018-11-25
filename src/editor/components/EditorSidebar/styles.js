@@ -23,7 +23,7 @@ const wrapperClass = css`
 const containerClass = css`
   width: 100%;
   height: 100%;
-  background-color: ${colors.mediumBlue};
+  background-color: ${colors.darkBlue};
   position: relative;
   z-index: ${zindexes.sidebar};
   transition: box-shadow 250ms ease;

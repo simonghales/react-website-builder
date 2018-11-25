@@ -52,7 +52,9 @@ const BlockPreview = ({
     }}
   >
     <div
-      className={styles.blockPreviewInfoClass}
+      className={cx(styles.blockPreviewInfoClass, {
+        [styles.classNames.notSelectedBlock]: !selected,
+      })}
       onClick={e => {
         selectBlock(blockKey);
         e.stopPropagation();
@@ -64,7 +66,9 @@ const BlockPreview = ({
       </div>
       {isModule && (
         <div
-          className={styles.blockPreviewEnterClass}
+          className={cx(styles.blockPreviewEnterClass, {
+            [styles.blockPreviewEnterSelectedClass]: selected,
+          })}
           onClick={e => {
             navigateToModule(moduleKey);
             e.stopPropagation();

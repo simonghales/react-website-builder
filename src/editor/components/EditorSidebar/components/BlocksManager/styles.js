@@ -13,21 +13,31 @@ const containerClass = css`
 const classNames = {
   block: 'block',
   selectedBlock: 'selectedBlock',
+  notSelectedBlock: 'notSelectedBlock',
 };
+
+const blockColors = {
+  bg: colors.blackInactiveBlue,
+  activeBg: colors.blackBlue,
+  inactiveBg: '#131723',
+  barHighlight: colors.brightBlue,
+  barDim: '#3f4962',
+  bar: '#768099',
+}
+
+const notSelectedState = `&.${classNames.notSelectedBlock}`;
 
 const activeBgColor = colors.blackBlue;
 
 const blockPreviewClass = css`
-  //background: ${transparentize(0.7, colors.blackBlue)};
-  background: ${colors.blackInactiveBlue};
+  background: ${blockColors.bg};
   position: relative;
-  //transition: background 150ms ease;
 `;
 
 const rootBlockPreviewClass = css``;
 
 const selectedBlockClass = css`
-  background: ${activeBgColor};
+  background: ${blockColors.activeBg};
 
   &::after {
     content: '';
@@ -37,26 +47,83 @@ const selectedBlockClass = css`
     left: 0;
     bottom: 0;
     width: 3px;
-    background-color: ${colors.light};
+    background-color: ${blockColors.barHighlight};
   }
 
+  &:hover,
   .${classNames.block} {
-    background: ${activeBgColor};
+    background: ${blockColors.activeBg};
   }
 `;
-
 const blockPreviewInfoClass = css`
   padding: 5px 5px 5px 10px;
-  opacity: 0.5;
+  //opacity: 0.5;
   cursor: pointer;
   display: flex;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+  color: ${transparentize(0.5,colors.light)};
 
   .nestable-drag-layer .nestable-item-copy &,
   &:hover,
   .${classNames.selectedBlock} > & {
-    opacity: 1;
+  color: ${colors.light};
   }
+  
+  .${classNames.selectedBlock} &, .nestItemSelected & {
+  
+    ${notSelectedState} {
+        background-color: ${blockColors.inactiveBg};
+        box-shadow: inset -1px 0 #0000004d;
+    }
+  
+  }
+  
+  ${notSelectedState} {
+    
+    &::after,
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 3px;
+      height: 100%;
+      background-color: ${blockColors.barDim};
+      visibility: hidden;
+    }
+    
+    &::after {
+      background-color: ${blockColors.bar};
+      //height: 50%;
+      transform: translateY(-100%);
+      
+      transition: transform 200ms ease-out, height 200ms ease;
+    }
+    
+    &:hover {
+      background: linear-gradient(to right, ${activeBgColor}, #141924);
+      box-shadow: inset -1px 0 #0000004d;
+      
+      &::before,
+      &::after
+      {
+          visibility: visible;
+      }
+      
+      &::after
+      {
+      height: 100%;
+      transform: translateY(0);
+      }
+      
+    }
+  }
+  
+ 
+  
 `;
 
 const blockPreviewTextClass = css`
@@ -65,14 +132,13 @@ const blockPreviewTextClass = css`
 
 const blockPreviewTypeClass = css`
   font-size: 12px;
-  font-weight: ${fontWeights.bold};
-  color: ${transparentize(0.5, colors.light)};
+  //font-weight: ${fontWeights.bold};
+  opacity: 0.5;
 `;
 
 const blockPreviewLabelClass = css`
   font-size: 14px;
   font-weight: ${fontWeights.medium};
-  color: ${colors.light};
 `;
 
 const blockPreviewEnterClass = css`
@@ -81,19 +147,24 @@ const blockPreviewEnterClass = css`
   align-items: center;
   padding: 5px;
   border-radius: 3px;
-  color: ${colors.light};
+  color: rgba(195, 217, 255, 0.5);
+  opacity: 0.5;
 
   &:hover {
-    background-color: ${colors.light};
-    color: ${colors.blackBlue};
+    background-color: rgba(136, 170, 255, 0.1);
+    opacity: 1;
   }
 
   svg {
   }
 `;
 
+const blockPreviewEnterSelectedClass = css`
+opacity: 1;
+`;
+
 const blockPreviewChildrenClass = css`
-  padding: 5px 0;
+  //padding-bottom: 5px;
 `;
 
 export default {
@@ -106,6 +177,7 @@ export default {
   blockPreviewTypeClass,
   blockPreviewLabelClass,
   blockPreviewEnterClass,
+  blockPreviewEnterSelectedClass,
   blockPreviewChildrenClass,
   classNames,
 };

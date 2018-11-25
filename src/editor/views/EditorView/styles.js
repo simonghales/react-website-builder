@@ -29,7 +29,7 @@ const editorClass = css`
 const previewClass = css`
   flex: 1;
   height: 100%;
-  background: linear-gradient(to bottom right, #1d253f, #172538);
+  background: linear-gradient(to bottom right, ${colors.blackBlue}, #1c2433);
   overflow: hidden;
   position: relative;
 `;

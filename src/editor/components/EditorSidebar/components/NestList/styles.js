@@ -1,6 +1,7 @@
 // @flow
 import { css } from 'emotion';
 import colors from '../../../../../styles/config/colors';
+import styles from '../BlocksManager/styles';
 
 const classNames = {
   nestItemSelected: 'nestItemSelected',
@@ -10,6 +11,24 @@ const containerClass = css`
   .nestable .nestable-list {
     padding-left: 10px;
     position: relative;
+    
+  }
+  
+  .nestItemSelected {
+  
+    .nestable-item {
+    background-color: #131723;
+    }
+  
+  }
+  
+  .nestable .nestable-list,
+  .nestable-item {
+    
+    .${styles.classNames.selectedBlock} & {
+        background-color: #131723;
+    }
+  
   }
 
   .nestable-item,
@@ -23,10 +42,10 @@ const containerClass = css`
   }
 
   .nestable-drag-layer .nestable-item-copy {
-    background-color: ${colors.blackInactiveBlue};
+    background-color: ${colors.blackBlue};
 
     .block {
-      background-color: ${colors.blackInactiveBlue};
+      background-color: ${colors.blackBlue};
     }
   }
 
@@ -50,13 +69,13 @@ const containerClass = css`
       left: 0;
       bottom: 0;
       width: 3px;
-      background-color: ${colors.light};
+      background-color: ${colors.brightBlue};
     }
   }
 
   .nestable-item.is-dragging:before {
-    background-color: ${colors.blackBlue};
-    border: 2px solid ${colors.light};
+    background-color: ${colors.blackInactiveBlue};
+    border: 2px solid ${colors.brightBlue};
   }
 `;
 
