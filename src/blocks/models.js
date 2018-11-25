@@ -1,7 +1,7 @@
 // @flow
 
 import type { DataBlockModel } from '../data/blocks/models';
-import type {BlockPropsConfigTypes} from './props';
+import type { BlockPropsConfigTypes } from './props';
 
 export type BlockModelPropsConfig = {
   label?: string,
@@ -18,6 +18,7 @@ export type BlockModel = {
   propsConfig: BlockModelPropsConfig,
   childrenAllowed: boolean,
   stylesEnabled: boolean,
+  htmlEnabled: boolean,
   dataBlock: ({ [string]: any }) => DataBlockModel,
 };
 

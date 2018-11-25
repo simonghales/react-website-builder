@@ -13,6 +13,7 @@ const containerBlock: BlockModel = {
   propsConfig: containerPropsConfig,
   childrenAllowed: true,
   stylesEnabled: true,
+  htmlEnabled: true,
   dataBlock,
 };
 

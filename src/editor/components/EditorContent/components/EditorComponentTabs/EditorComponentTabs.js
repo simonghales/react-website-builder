@@ -1,12 +1,13 @@
 // @flow
 import React from 'react';
-import { MdBrush, MdCode } from 'react-icons/md';
+import { MdFormatListBulleted, MdBrush, MdCode } from 'react-icons/md';
 import { cx } from 'emotion';
 import styles from './styles';
 
 export const editorComponentTabs = {
   Props: 'Props',
   Styles: 'Styles',
+  HTML: 'HTML',
 };
 
 export type EditorComponentTabsOptions = $Keys<typeof editorComponentTabs>;
@@ -24,7 +25,7 @@ const EditorComponentTabs = ({ selectedTab, selectTab }: Props) => (
       })}
       onClick={() => selectTab(editorComponentTabs.Props)}
     >
-      <MdCode />
+      <MdFormatListBulleted />
       <span>{editorComponentTabs.Props}</span>
     </div>
     <div
@@ -35,6 +36,15 @@ const EditorComponentTabs = ({ selectedTab, selectTab }: Props) => (
     >
       <MdBrush />
       <span>{editorComponentTabs.Styles}</span>
+    </div>
+    <div
+      className={cx(styles.tabClass, {
+        [styles.activeTabClass]: selectedTab === editorComponentTabs.HTML,
+      })}
+      onClick={() => selectTab(editorComponentTabs.HTML)}
+    >
+      <MdCode />
+      <span>{editorComponentTabs.HTML}</span>
     </div>
   </nav>
 );

@@ -13,6 +13,7 @@ const headingBlock: BlockModel = {
   propsConfig: headingPropsConfig,
   childrenAllowed: false,
   stylesEnabled: true,
+  htmlEnabled: true,
   dataBlock,
 };
 

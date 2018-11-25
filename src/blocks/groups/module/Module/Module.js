@@ -13,6 +13,7 @@ const moduleBlock: BlockModel = {
   propsConfig: modulePropsConfig,
   childrenAllowed: true,
   stylesEnabled: false,
+  htmlEnabled: false,
   dataBlock,
 };
 
