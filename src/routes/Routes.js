@@ -8,7 +8,7 @@ import PreviewRoute from './Preview';
 const Routes = () => (
   <React.Fragment>
     <Route path="/" exact component={LandingRoute} />
-    <Route path="/editor" component={EditorRoute} />
+    <Route path="/editor/:moduleKey?/:previousModuleKey?" component={EditorRoute} />
     <Route path="/preview" component={PreviewRoute} />
   </React.Fragment>
 );

@@ -1,104 +1,88 @@
 // @flow
-import React from 'react';
-import { cx } from 'emotion';
+
+import React, { Component } from 'react';
+import { MdAdd, MdClose } from 'react-icons/md';
 import { connect } from 'react-redux';
+import { cx } from 'emotion';
+import { CSSTransition } from 'react-transition-group';
 import styles from './styles';
-import type { DataBlockModelMapped, MappedDataBlocks } from '../../../data/blocks/models';
-import { getDataBlockLabel, getDataBlockType } from '../../../data/blocks/models';
+import BlocksManager from './components/BlocksManager/BlocksManager';
+import AddBlockSlideout from './components/AddBlockSlideout/AddBlockSlideout';
 import type { ReduxState } from '../../../state/redux/store';
-import { getEditorMappedBlocks, getSelectedBlockKey } from '../../../state/redux/editor/state';
-import { setSelectedBlock } from '../../../state/redux/editor/reducer';
-
-function getBlockBlockChildren(block: DataBlockModelMapped): Array<DataBlockModelMapped> {
-  return block.blockChildren ? block.blockChildren : [];
-}
-
-type BlockPreviewProps = {
-  type: string,
-  label: string,
-  selected: boolean,
-  blockChildren: MappedDataBlocks,
-  blockKey: string,
-  selectBlock: (blockKey: string) => void,
-  selectedBlock: string,
-};
-
-const BlockPreview = ({
-  type,
-  label,
-  selected,
-  blockChildren,
-  blockKey,
-  selectBlock,
-  selectedBlock,
-}: BlockPreviewProps) => (
-  <div
-    className={cx(styles.classNames.block, styles.blockPreviewClass, {
-      [styles.selectedBlockClass]: selected,
-      [styles.classNames.selectedBlock]: selected,
-    })}
-  >
-    <div
-      className={styles.blockPreviewTextClass}
-      onClick={e => {
-        selectBlock(blockKey);
-        e.stopPropagation();
-      }}
-    >
-      <div className={styles.blockPreviewTypeClass}>{type}</div>
-      <div className={styles.blockPreviewLabelClass}>{label}</div>
-    </div>
-    {blockChildren.length > 0 && (
-      <div className={styles.blockPreviewChildrenClass}>
-        <BlocksList
-          blocks={blockChildren}
-          selectBlock={selectBlock}
-          selectedBlock={selectedBlock}
-        />
-      </div>
-    )}
-  </div>
-);
-
-type BlocksListProps = {
-  blocks: MappedDataBlocks,
-  selectBlock: (blockKey: string) => void,
-  selectedBlock: string,
-};
-
-const BlocksList = ({ blocks, selectBlock, selectedBlock }: BlocksListProps) =>
-  blocks.map(block => (
-    <BlockPreview
-      type={getDataBlockType(block)}
-      label={getDataBlockLabel(block)}
-      blockChildren={getBlockBlockChildren(block)}
-      key={block.key}
-      blockKey={block.key}
-      selected={selectedBlock === block.key}
-      selectBlock={selectBlock}
-      selectedBlock={selectedBlock}
-    />
-  ));
+import { getAddingBlock } from '../../../state/redux/ui/state';
+import { setAddingBlock } from '../../../state/redux/ui/reducer';
+import ReturnToModule from './components/ReturnToModule/ReturnToModule';
 
 type Props = {
-  blocks: MappedDataBlocks,
-  selectBlock: (blockKey: string) => void,
-  selectedBlock: string,
+  addingBlock: boolean,
+  startAddingBlock: () => void,
+  completeAddingBlock: () => void,
 };
 
-const EditorSidebar = ({ blocks, selectBlock, selectedBlock }: Props) => (
-  <div className={styles.containerClass}>
-    <BlocksList blocks={blocks} selectBlock={selectBlock} selectedBlock={selectedBlock} />
-  </div>
+type State = {};
+
+const SlideOutContainer = ({ children, visible }: { children: any, visible: boolean }) => (
+  <CSSTransition
+    in={visible}
+    timeout={300}
+    classNames={styles.classNames.slideoutTransition}
+    unmountOnExit
+  >
+    <div className={styles.slideoutClass}>{children}</div>
+  </CSSTransition>
 );
 
+class EditorSidebar extends Component<Props, State> {
+  handleStartAddingBlock = () => {
+    const { addingBlock, startAddingBlock, completeAddingBlock } = this.props;
+    if (addingBlock) {
+      completeAddingBlock();
+    } else {
+      startAddingBlock();
+    }
+  };
+
+  render() {
+    const { addingBlock } = this.props;
+    return (
+      <div className={styles.wrapperClass}>
+        <div
+          className={cx(styles.containerClass, {
+            [styles.containerRaisedClass]: addingBlock,
+          })}
+        >
+          <div className={styles.addBlockSectionClass}>
+            <div className={styles.returnToWrapperClass}>
+              <ReturnToModule />
+            </div>
+            <div
+              className={styles.addBlockToggleClass}
+              onClick={this.handleStartAddingBlock}
+              data-tip={addingBlock ? 'Close' : 'Add a block'}
+            >
+              {addingBlock ? <MdClose size={20} /> : <MdAdd size={20} />}
+            </div>
+          </div>
+          <div>
+            <BlocksManager />
+          </div>
+          <div>save changes</div>
+        </div>
+        <SlideOutContainer visible={addingBlock}>
+          <AddBlockSlideout />
+        </SlideOutContainer>
+      </div>
+    );
+  }
+}
+
 const mapStateToProps = (state: ReduxState) => ({
-  blocks: getEditorMappedBlocks(state.editor),
-  selectedBlock: getSelectedBlockKey(state.editor),
+  addingBlock: getAddingBlock(state.ui),
 });
 
 const mapDispatchToProps = {
-  selectBlock: (blockKey: string) => setSelectedBlock(blockKey),
+  startAddingBlock: () => setAddingBlock(true),
+  completeAddingBlock: () => setAddingBlock(false),
 };
 
 export default connect(

@@ -5,9 +5,11 @@ export function parseSelectInputStyleValue(
 ): Array<{
   value: string,
   label: string,
-}> {
-  return styleValue.split(',').map((value: string) => ({
-    value,
-    label: value,
-  }));
+}> | null {
+  return styleValue
+    ? styleValue.split(',').map((value: string) => ({
+        value,
+        label: value,
+      }))
+    : null;
 }

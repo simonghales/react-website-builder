@@ -1,13 +1,15 @@
 // @flow
 import React from 'react';
-import type { DataBlockModel, DataBlockModelMapped, MappedDataBlocks } from '../data/blocks/models';
+import type { MappedDataBlockModel, MappedDataBlocks } from '../data/blocks/models';
 import { getBlock, getBlockGroup } from '../blocks/blocks';
 import type { BlockModel } from '../blocks/models';
 import { parsePropValue } from './props';
+import type { MappedDataModule } from '../data/modules/models';
 
 function getProps(
   block: BlockModel,
-  blockData: DataBlockModelMapped
+  blockData: MappedDataBlockModel,
+  hoveredBlockKey: string
 ): {
   [string]: any,
 } {
@@ -17,15 +19,26 @@ function getProps(
   };
   const parsedProps = {};
   Object.keys(props).forEach(propKey => {
-    const propConfig = blockData.propsConfig[propKey] ? blockData.propsConfig[propKey] : {};
-    parsedProps[propKey] = parsePropValue(blockData, propKey, props[propKey], propConfig);
+    const sourcePropConfig = block.propsConfig[propKey] ? block.propsConfig[propKey] : {};
+    const dataPropConfig = blockData.propsConfig[propKey] ? blockData.propsConfig[propKey] : {};
+    const combinedPropConfig = {
+      ...sourcePropConfig,
+      ...dataPropConfig,
+    };
+    parsedProps[propKey] = parsePropValue(
+      blockData,
+      propKey,
+      props[propKey],
+      combinedPropConfig,
+      hoveredBlockKey
+    );
   });
   const customStyles = blockData.styles ? blockData.styles : {};
   parsedProps.customStyles = customStyles;
   return parsedProps;
 }
 
-function renderBlock(blockData: DataBlockModelMapped) {
+function renderBlock(blockData: MappedDataBlockModel, hoveredBlockKey: string) {
   const blockGroup = getBlockGroup(blockData.groupKey);
   if (!blockGroup) {
     console.warn(`Unable to match block groupKey "${blockData.groupKey}"`);
@@ -36,10 +49,22 @@ function renderBlock(blockData: DataBlockModelMapped) {
     console.warn(`Unable to match block blockKey "${blockData.blockKey}"`);
     return null;
   }
-  const props = getProps(block, blockData);
-  return <block.component {...props} key={blockData.key} />;
+  const props = getProps(block, blockData, hoveredBlockKey);
+  return (
+    <block.component
+      {...props}
+      blockHighlighterKey={blockData.key}
+      blockHighlighterHovered={blockData.key === hoveredBlockKey}
+      key={blockData.key}
+    />
+  );
 }
 
-export function previewBlocksParser(blocks: MappedDataBlocks) {
-  return blocks.map(renderBlock);
+export function previewBlocksParser(blocks: MappedDataBlocks, hoveredBlockKey: string) {
+  return blocks.map(block => renderBlock(block, hoveredBlockKey));
+}
+
+export function previewModuleParser(module: MappedDataModule, hoveredBlockKey: string) {
+  const { blocks } = module;
+  return previewBlocksParser(blocks, hoveredBlockKey);
 }

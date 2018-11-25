@@ -1,6 +1,7 @@
 // @flow
 
 import { css } from 'emotion';
+import colors from 'styles/config/colors';
 import spacing from '../../../styles/config/spacing';
 
 const containerClass = css`
@@ -14,6 +15,27 @@ const headerClass = css`
   margin-top: ${spacing.medium}px;
   margin-bottom: ${spacing.medium}px;
   padding: 0 ${spacing.medium}px;
+`;
+
+const detailsClass = css`
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+`;
+
+const titleWrapperClass = css`
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  min-height: 30px;
+`;
+
+const buttonClass = css`
+  margin-right: 5px;
+
+  &:last-of-type {
+    margin-right: 10px;
+  }
 `;
 
 const mainClass = css`
@@ -36,6 +58,9 @@ const previewClass = css`
 export default {
   containerClass,
   headerClass,
+  detailsClass,
+  titleWrapperClass,
+  buttonClass,
   mainClass,
   editorClass,
   previewClass,

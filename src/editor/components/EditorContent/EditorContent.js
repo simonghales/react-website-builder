@@ -8,11 +8,10 @@ import EditorComponentProps from './components/EditorComponentProps/EditorCompon
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { EditorComponentTabsOptions } from './components/EditorComponentTabs/EditorComponentTabs';
 import EditorComponentStyles from './components/EditorComponentStyles/EditorComponentStyles';
-import type { BlockStyles } from '../../../data/styles/models';
+import { doesBlockAllowStyles } from '../../../data/blocks/state';
 
 type Props = {
   selectedBlock: DataBlockModel,
-  selectedBlockStyle: BlockStyles,
 };
 
 type State = {
@@ -23,7 +22,7 @@ class EditorContent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selectedTab: editorComponentTabs.Styles,
+      selectedTab: editorComponentTabs.Props,
     };
   }
 
@@ -34,7 +33,7 @@ class EditorContent extends Component<Props, State> {
   };
 
   render() {
-    const { selectedBlock, selectedBlockStyle } = this.props;
+    const { selectedBlock } = this.props;
     const { selectedTab } = this.state;
     return (
       <div className={styles.containerClass}>
@@ -45,8 +44,8 @@ class EditorContent extends Component<Props, State> {
           ) : (
             <EditorComponentStyles
               blockKey={selectedBlock.key}
-              blockStyles={selectedBlockStyle}
               key={selectedBlock.key}
+              disabled={!doesBlockAllowStyles(selectedBlock)}
             />
           )}
         </div>

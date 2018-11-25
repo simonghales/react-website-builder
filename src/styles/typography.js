@@ -12,20 +12,26 @@ export const smallFont = css`
   font-size: ${getFontSize(fontSizes.small)};
 `;
 
-export const smallHeading = css`
-  ${smallFont};
-  color: ${colors.lightFaint};
-  font-weight: ${fontWeights.bold};
-`;
-
 export const smallPlusFont = css`
   font-size: ${getFontSize(fontSizes.smallPlus)};
+`;
+
+export const smallHeading = css`
+  ${smallPlusFont};
+  color: ${colors.lightFaint};
+  font-weight: ${fontWeights.bold};
 `;
 
 export const smallPlusText = css`
   ${smallPlusFont};
   color: ${transparentize(0.3, colors.light)};
   font-weight: ${fontWeights.medium};
+`;
+
+export const sectionHeading = css`
+  ${smallPlusText};
+  color: ${colors.lightFaint};
+  text-transform: uppercase;
 `;
 
 export const mediumFont = css`
@@ -55,5 +61,5 @@ export const tinyFont = css`
 
 export const tinyLabel = css`
   ${tinyFont};
-  color: ${transparentize(0.3, colors.light)};
+  color: ${colors.light};
 `;

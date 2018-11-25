@@ -10,13 +10,14 @@ const options = [
   },
 ];
 
-const FontWeightInput = ({ styleValue, updateStyle }: StylePropInputProps) => (
+const FontWeightInput = ({ styleValue, inheritedValue, updateStyle }: StylePropInputProps) => (
   <SelectInput
     isCreatable
     isMulti={false}
     noOptionsMessage="Type to add custom value."
     options={options}
     styleValue={styleValue}
+    inheritedValue={inheritedValue}
     updateStyle={updateStyle}
   />
 );

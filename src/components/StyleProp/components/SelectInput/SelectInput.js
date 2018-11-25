@@ -111,6 +111,7 @@ type Props = {
   noOptionsMessage?: string,
   options: Array<SelectOption>,
   styleValue: string,
+  inheritedValue: string,
   updateStyle: (value: string) => void,
 };
 
@@ -119,6 +120,14 @@ type Selected = Array<SelectOption> | SelectOption | null;
 type State = {
   selected: Selected,
 };
+
+function parseSelectedValue(selectedValue: Selected): string {
+  if (!selectedValue) return '';
+  if (selectedValue instanceof Array) {
+    return selectedValue.map(value => value.value.trim()).join(', ');
+  }
+  return selectedValue.value;
+}
 
 class SelectInput extends Component<Props, State> {
   static defaultProps = {
@@ -137,23 +146,26 @@ class SelectInput extends Component<Props, State> {
     this.setState({
       selected: newValue,
     });
-    if (!newValue) {
-      updateStyle(''); // todo - handle better
-    } else if (newValue instanceof Array) {
-      updateStyle(newValue.map(value => value.value).join(', '));
-    } else {
-      updateStyle(newValue.value);
-    }
+    const storedValue = parseSelectedValue(newValue);
+    updateStyle(storedValue);
   };
 
-  render() {
+  getDisplayValue() {
     const { selected } = this.state;
+    if (!selected || selected.length === 0) {
+      const { inheritedValue } = this.props;
+      return parseSelectInputStyleValue(inheritedValue);
+    }
+    return selected;
+  }
+
+  render() {
     const { noOptionsMessage, options, isMulti, isCreatable } = this.props;
 
     const sharedProps = {
       onChange: this.handleChange,
       styles: customStyles,
-      value: selected,
+      value: this.getDisplayValue(),
       options,
       placeholder: '',
       isMulti,

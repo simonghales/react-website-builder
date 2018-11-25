@@ -61,8 +61,14 @@ class TextAlignInput extends Component<Props, State> {
     updateStyle(newValue);
   };
 
-  render() {
+  getDisplayValue() {
     const { selectedOption } = this.state;
+    const { inheritedValue } = this.props;
+    return selectedOption === '' ? inheritedValue : selectedOption;
+  }
+
+  render() {
+    const selectedOption = this.getDisplayValue();
     return (
       <div className={styles.containerClass}>
         {options.map(option => (

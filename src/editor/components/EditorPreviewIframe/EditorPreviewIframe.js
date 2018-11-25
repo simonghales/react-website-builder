@@ -2,16 +2,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { PREVIEW_IFRAME_BROADCAST_INIT } from '../../../preview/constants';
-import { PREVIEW_CONTENT_UPDATE_EVENT } from '../../../preview/event';
-import { DUMMY_PAGE_DATA } from '../../../data/blocks/dummy';
+import {
+  PREVIEW_CONTENT_UPDATE_EVENT,
+  PREVIEW_HOVERED_BLOCK_UPDATE_EVENT,
+} from '../../../preview/event';
 import styles from './styles';
-import { getMappedDataBlocks } from '../../../data/blocks/models';
 import type { ReduxState } from '../../../state/redux/store';
-import { getEditorMappedBlocks } from '../../../state/redux/editor/state';
+import { getPreviewMappedBlocks } from '../../../state/redux/editor/state';
 import type { MappedDataBlocks } from '../../../data/blocks/models';
 
 type Props = {
   blocks: MappedDataBlocks,
+  hoveredBlockKey: string,
 };
 
 type State = {
@@ -33,6 +35,8 @@ class EditorPreviewIframe extends Component<Props, State> {
 
   componentDidMount() {
     this.addIframeListener();
+    this.updateIframeData();
+    this.updateHoveredBlockKey();
   }
 
   componentWillUnmount() {
@@ -56,14 +60,35 @@ class EditorPreviewIframe extends Component<Props, State> {
     }
   };
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: Props) {
+    // eslint-disable-next-line react/destructuring-assignment
+    if (prevProps.hoveredBlockKey !== this.props.hoveredBlockKey) {
+      this.updateHoveredBlockKey();
+    }
     this.updateIframeData();
   }
 
-  updateIframeData() {
+  getIframe(): null | HTMLIFrameElement {
     const { iframeInit } = this.state;
-    if (!iframeInit) return;
+    if (!iframeInit) return null;
     const iframe = this.iframeRef.current;
+    if (!iframe) return null;
+    return iframe;
+  }
+
+  updateHoveredBlockKey() {
+    const iframe = this.getIframe();
+    if (!iframe) return;
+    const { hoveredBlockKey } = this.props;
+    iframe.contentWindow.dispatchEvent(
+      new CustomEvent(PREVIEW_HOVERED_BLOCK_UPDATE_EVENT, {
+        detail: hoveredBlockKey,
+      })
+    );
+  }
+
+  updateIframeData() {
+    const iframe = this.getIframe();
     if (!iframe) return;
     const { blocks } = this.props;
     iframe.contentWindow.dispatchEvent(
@@ -90,7 +115,8 @@ class EditorPreviewIframe extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: ReduxState) => ({
-  blocks: getEditorMappedBlocks(state.editor),
+  blocks: getPreviewMappedBlocks(state.editor),
+  hoveredBlockKey: state.ui.hoveredBlockKey,
 });
 
 export default connect(mapStateToProps)(EditorPreviewIframe);

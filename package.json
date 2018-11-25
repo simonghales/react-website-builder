@@ -3,18 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "array-move": "^1.0.0",
     "emotion": "^9.2.12",
+    "hashids": "^1.2.2",
+    "html-tags": "^2.0.0",
     "lodash": "^4.17.11",
     "polished": "^2.3.0",
     "react": "^16.6.1",
+    "react-beautiful-dnd": "ianstormtaylor/react-beautiful-dnd#release",
+    "react-click-outside": "^3.0.1",
     "react-dom": "^16.6.1",
     "react-emotion": "^9.2.12",
     "react-icons": "^3.2.2",
+    "react-nestable": "simonghales/react-nestable",
     "react-redux": "^5.1.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1",
     "react-select": "^2.1.1",
-    "redux": "^4.0.1"
+    "react-tooltip": "^3.9.0",
+    "react-transition-group": "^2.5.0",
+    "redux": "^4.0.1",
+    "reselect": "^4.0.0"
   },
   "devDependencies": {
     "@babel/preset-flow": "^7.0.0",

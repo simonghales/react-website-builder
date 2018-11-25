@@ -1,52 +1,35 @@
 // @flow
 import React from 'react';
-import { cx } from 'emotion';
 import { connect } from 'react-redux';
 import styles from './styles';
 import StyleProp from '../../../../../components/StyleProp/StyleProp';
-import type { BlockStyles } from '../../../../../data/styles/models';
+import type { BlockStyles, EditorMappedStylesContainer } from '../../../../../data/styles/models';
 import { appearanceStyleSection, dimensionsStyleSection, textStyleSection } from './data';
 import type { StyleSectionModel } from './data';
 import { setBlockStyleValue } from '../../../../../state/redux/editor/reducer';
-
-const SectionHeader = ({ text }: { text: string }) => (
-  <header className={styles.sectionHeaderClass}>
-    <div className={styles.sectionHeaderTitleClass}>{text}</div>
-  </header>
-);
-
-const StyleSection = ({
-  children,
-  title,
-  gridBody,
-}: {
-  children: any,
-  title: string,
-  gridBody?: boolean,
-}) => (
-  <div className={styles.sectionClass}>
-    <SectionHeader text={title} />
-    <div
-      className={cx(styles.sectionBodyClass, {
-        [styles.sectionBodyGridClass]: gridBody,
-      })}
-    >
-      {children}
-    </div>
-  </div>
-);
-
-StyleSection.defaultProps = {
-  gridBody: true,
-};
+import EditorStylesMixins from './components/EditorStylesMixins/EditorStylesMixins';
+import StyleSection from './components/StyleSection/StyleSection';
+import type { ReduxState } from '../../../../../state/redux/store';
+import {
+  getMixinsFromState,
+  getSelectedBlockStyle,
+  getSelectedModuleSelectedBlockMixins,
+} from '../../../../../state/redux/editor/state';
+import { getEditorMappedBlockStyles } from '../../../../../data/styles/state';
 
 type StyleSectionWrapperProps = {
   blockStyles: BlockStyles,
+  editorMappedStyles: EditorMappedStylesContainer,
   data: StyleSectionModel,
   updateStyle: (cssKey: string, value: string) => void,
 };
 
-const StyleSectionWrapper = ({ data, blockStyles, updateStyle }: StyleSectionWrapperProps) => (
+const StyleSectionWrapper = ({
+  data,
+  blockStyles,
+  editorMappedStyles,
+  updateStyle,
+}: StyleSectionWrapperProps) => (
   <StyleSection title={data.title} gridBody>
     {data.styles.map(style => (
       <StyleProp
@@ -54,6 +37,7 @@ const StyleSectionWrapper = ({ data, blockStyles, updateStyle }: StyleSectionWra
         columns={style.columns}
         key={style.styleProp.cssKey}
         blockStyles={blockStyles}
+        editorMappedStyles={editorMappedStyles}
         updateStyle={updateStyle}
       />
     ))}
@@ -62,7 +46,9 @@ const StyleSectionWrapper = ({ data, blockStyles, updateStyle }: StyleSectionWra
 
 type Props = {
   blockStyles: BlockStyles,
+  editorMappedStyles: EditorMappedStylesContainer,
   blockKey: string,
+  disabled: boolean,
   updateStyle: (
     blockKey: string,
     cssKey: string,
@@ -72,7 +58,7 @@ type Props = {
   ) => void,
 };
 
-const Main = ({ blockKey, blockStyles, updateStyle }: Props) => {
+const Main = ({ blockKey, blockStyles, editorMappedStyles, updateStyle }: Props) => {
   const modifier = 'default'; // todo - variable
   const section = 'editor'; // todo - variable
   const update = (cssKey: string, value: string) => {
@@ -80,15 +66,22 @@ const Main = ({ blockKey, blockStyles, updateStyle }: Props) => {
   };
   return (
     <div className={styles.mainClass}>
-      <StyleSectionWrapper data={textStyleSection} blockStyles={blockStyles} updateStyle={update} />
+      <StyleSectionWrapper
+        data={textStyleSection}
+        blockStyles={blockStyles}
+        editorMappedStyles={editorMappedStyles}
+        updateStyle={update}
+      />
       <StyleSectionWrapper
         data={appearanceStyleSection}
         blockStyles={blockStyles}
+        editorMappedStyles={editorMappedStyles}
         updateStyle={update}
       />
       <StyleSectionWrapper
         data={dimensionsStyleSection}
         blockStyles={blockStyles}
+        editorMappedStyles={editorMappedStyles}
         updateStyle={update}
       />
       <StyleSection title="Custom" gridBody={false}>
@@ -98,23 +91,38 @@ const Main = ({ blockKey, blockStyles, updateStyle }: Props) => {
   );
 };
 
-const Side = () => (
+const Side = ({ blockKey }: Props) => (
   <div className={styles.sideClass}>
-    <StyleSection title="Mixins" gridBody={false}>
-      <div>Mixins</div>
-    </StyleSection>
+    <EditorStylesMixins blockKey={blockKey} />
     <StyleSection title="Modifiers" gridBody={false}>
       <div>Modifiers</div>
     </StyleSection>
   </div>
 );
 
-const EditorComponentStyles = (props: Props) => (
-  <div className={styles.containerClass}>
-    <Main {...props} />
-    <Side {...props} />
-  </div>
-);
+const EditorComponentStyles = (props: Props) => {
+  const { disabled } = props;
+  if (disabled) {
+    return <div>This block cannot be styled.</div>;
+  }
+  return (
+    <div className={styles.containerClass}>
+      <Main {...props} />
+      <Side {...props} />
+    </div>
+  );
+};
+
+const mapStateToProps = (state: ReduxState) => {
+  const mixins = getMixinsFromState(state.editor);
+  const blockStyles = getSelectedBlockStyle(state.editor);
+  const blockMixins = getSelectedModuleSelectedBlockMixins(state.editor);
+  const editorMappedStyles = getEditorMappedBlockStyles(blockStyles.styles, blockMixins, mixins);
+  return {
+    blockStyles,
+    editorMappedStyles,
+  };
+};
 
 const mapDispatchToProps = {
   updateStyle: (
@@ -127,6 +135,6 @@ const mapDispatchToProps = {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(EditorComponentStyles);
