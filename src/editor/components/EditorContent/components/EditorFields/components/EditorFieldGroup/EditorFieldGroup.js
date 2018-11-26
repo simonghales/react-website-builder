@@ -10,10 +10,10 @@ type Props = {
 }
 
 const EditorFieldGroup = ({label, fields}: Props) => (
-  <div>
+  <div className={styles.fieldGroupClass}>
     {
       label && (
-        <header>{label}</header>
+        <header className={styles.labelClass}>{label}</header>
       )
     }
     <div>

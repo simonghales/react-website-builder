@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './styles';
 import Input, { inputStyleTypes } from '../StyleProp/components/Input/Input';
 import { blockPropsConfigTypes } from '../../blocks/props';
-import HTMLSelector, { htmlSelectorOptions } from '../../editor/components/inputs/HTMLSelector/HTMLSelector';
+import HTMLSelector, { htmlSelectorOptions } from '../../editor/components/inputs/extended/HTMLSelector/HTMLSelector';
 import { elementDefaultProps } from '../../blocks/groups/html/Element/props';
 import { containerDefaultProps } from '../../blocks/groups/basic/Container/props';
 import { headingDefaultProps } from '../../blocks/groups/basic/Heading/props';
