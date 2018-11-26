@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { MdAdd } from 'react-icons/md';
 import { connect } from 'react-redux';
 import BlockProp from '../../../../../components/BlockProp/BlockProp';
 import styles from './styles';
@@ -75,7 +76,12 @@ const EditorComponentProps = ({ selectedBlock, updateProp }: Props) => {
   return (
     <div className={styles.containerClass}>
       <div className={styles.addPropClass}>
-        <Button type={buttonTypes.slim}>Add Prop</Button>
+        <Button type={buttonTypes.slimIcon}>
+          <MdAdd/>
+          <span>
+            Add Prop
+          </span>
+        </Button>
       </div>
       <div>
         {filterVisiblePropsFields(selectedBlock, block).map(propKey => {

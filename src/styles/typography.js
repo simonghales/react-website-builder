@@ -19,7 +19,6 @@ export const smallPlusFont = css`
 export const smallHeading = css`
   ${smallPlusFont};
   color: ${colors.lightFaint};
-  font-weight: ${fontWeights.bold};
 `;
 
 export const smallPlusText = css`
@@ -42,6 +41,10 @@ export const mediumHeading = css`
   ${mediumFont};
   color: ${colors.light};
   font-weight: ${fontWeights.bold};
+`;
+
+export const mediumTab = css`
+  ${smallPlusText};
 `;
 
 export const mediumLargeFont = css`

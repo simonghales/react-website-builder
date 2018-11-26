@@ -1,6 +1,7 @@
 // @flow
 import { transparentize } from 'polished';
 import { css } from 'emotion';
+import colors from '../../styles/config/colors';
 import fontWeights from '../../styles/config/fontWeights';
 
 const buttonReset = css`
@@ -17,17 +18,33 @@ const buttonClass = css`
 `;
 
 const buttonSlimClass = css`
-  color: ${transparentize(0.5, '#B7C4E8')};
-  font-weight: ${fontWeights.bold};
-  font-size: 15px;
-  text-transform: uppercase;
-  padding: 2px 45px 3px 45px;
-  background: ${transparentize(0.975, '#B7C4E8')};
-  border: 2px solid ${transparentize(0.5, '#B7C4E8')};
+  color: ${colors.lightMid};
+  font-size: 14px;
+  font-weight: ${fontWeights.medium};
+  padding: 5px 8px;
+  background-color: ${colors.darkInput};
   border-radius: 3px;
+  
+  &:hover {
+    color: ${colors.light};
+  }
+  
+`;
+
+const buttonSlimIconClass = css`
+    ${buttonSlimClass};
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+    
+    svg {
+        margin-right: 3px;
+    }
+    
 `;
 
 export default {
   buttonClass,
   buttonSlimClass,
+  buttonSlimIconClass,
 };

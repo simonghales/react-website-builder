@@ -16,7 +16,7 @@ const classNames = {
   notSelectedBlock: 'notSelectedBlock',
 };
 
-const blockColors = {
+export const blockPreviewColors = {
   bg: colors.blackInactiveBlue,
   activeBg: colors.blackBlue,
   inactiveBg: '#131723',
@@ -30,14 +30,14 @@ const notSelectedState = `&.${classNames.notSelectedBlock}`;
 const activeBgColor = colors.blackBlue;
 
 const blockPreviewClass = css`
-  background: ${blockColors.bg};
+  background: ${blockPreviewColors.bg};
   position: relative;
 `;
 
 const rootBlockPreviewClass = css``;
 
 const selectedBlockClass = css`
-  background: ${blockColors.activeBg};
+  background: ${blockPreviewColors.activeBg};
 
   &::after {
     content: '';
@@ -47,12 +47,12 @@ const selectedBlockClass = css`
     left: 0;
     bottom: 0;
     width: 3px;
-    background-color: ${blockColors.barHighlight};
+    background-color: ${blockPreviewColors.barHighlight};
   }
 
   &:hover,
   .${classNames.block} {
-    background: ${blockColors.activeBg};
+    background: ${blockPreviewColors.activeBg};
   }
 `;
 const blockPreviewInfoClass = css`
@@ -74,7 +74,7 @@ const blockPreviewInfoClass = css`
   .${classNames.selectedBlock} &, .nestItemSelected & {
   
     ${notSelectedState} {
-        background-color: ${blockColors.inactiveBg};
+        background-color: ${blockPreviewColors.inactiveBg};
         box-shadow: inset -1px 0 #0000004d;
     }
   
@@ -91,12 +91,12 @@ const blockPreviewInfoClass = css`
       bottom: 0;
       width: 3px;
       height: 100%;
-      background-color: ${blockColors.barDim};
+      background-color: ${blockPreviewColors.barDim};
       visibility: hidden;
     }
     
     &::after {
-      background-color: ${blockColors.bar};
+      background-color: ${blockPreviewColors.bar};
       //height: 50%;
       transform: translateY(-100%);
       

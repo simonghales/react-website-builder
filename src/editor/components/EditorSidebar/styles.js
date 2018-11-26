@@ -104,28 +104,23 @@ const blocksSectionClass = css`
 `;
 
 const saveChangesClass = css`
-    background-color: ${colors.blackInactiveBlue};
+    background: linear-gradient(to bottom, ${colors.blackInactiveBlue}, ${colors.darkBlue});
     border-top: 3px solid ${colors.brightBlue};
     height: 60px;
+    padding: 10px 10px 12px 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: ${colors.brightBlue};
 
-padding: 10px 10px 12px 10px;
-
-text-align: center;
-
-display: flex;
-
-justify-content: center;
-
-align-items: center;
-cursor: pointer;
-font-weight: 500;
-text-transform: uppercase;
-color: ${colors.brightBlue};
-
-&:hover {
-    background-color: ${colors.brightBlue};
-    color: ${colors.white};
-}
+    &:hover {
+        background: ${colors.brightBlue};
+        color: ${colors.white};
+    }
 
 `;
 

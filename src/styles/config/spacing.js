@@ -1,5 +1,5 @@
 export default {
-  smallPlus: 20,
+  smallPlus: 16,
   medium: 30,
-  mediumPlus: 40,
+  mediumPlus: 32,
 };

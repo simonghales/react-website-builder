@@ -14,8 +14,7 @@ const buttonClass = css`
   cursor: pointer;
 
   &:hover {
-    background-color: ${colors.light};
-    color: ${colors.blackBlue};
+    color: ${colors.light};
   }
 `;
 
