@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import SelectInput from './SelectInput/SelectInput';
+import SelectInput from './SelectInput/OLDSelectInput';
 import type { StylePropInputProps } from './models';
 
 const options = [

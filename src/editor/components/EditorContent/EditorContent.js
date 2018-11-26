@@ -9,6 +9,7 @@ import type { DataBlockModel } from '../../../data/blocks/models';
 import type { EditorComponentTabsOptions } from './components/EditorComponentTabs/EditorComponentTabs';
 import EditorComponentStyles from './components/EditorComponentStyles/EditorComponentStyles';
 import { doesBlockAllowStyles } from '../../../data/blocks/state';
+import EditorComponentHtml from "./components/EditorComponentHtml/EditorComponentHtml";
 
 type Props = {
   selectedBlock: DataBlockModel,
@@ -22,7 +23,7 @@ class EditorContent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selectedTab: editorComponentTabs.Props,
+      selectedTab: editorComponentTabs.HTML,
     };
   }
 
@@ -32,22 +33,37 @@ class EditorContent extends Component<Props, State> {
     });
   };
 
-  render() {
+  renderMainContent() {
+    const { selectedTab } = this.state;
     const { selectedBlock } = this.props;
+    if (selectedTab === editorComponentTabs.Props) {
+      return (
+        <EditorComponentProps selectedBlock={selectedBlock} key={selectedBlock.key} />
+      )
+    } else if (selectedTab === editorComponentTabs.Styles) {
+      return (
+        <EditorComponentStyles
+          blockKey={selectedBlock.key}
+          key={selectedBlock.key}
+          disabled={!doesBlockAllowStyles(selectedBlock)}
+        />
+      )
+    } else {
+      return (
+        <EditorComponentHtml
+          key={selectedBlock.key}
+        />
+      )
+    }
+  }
+
+  render() {
     const { selectedTab } = this.state;
     return (
       <div className={styles.containerClass}>
         <EditorComponentTabs selectedTab={selectedTab} selectTab={this.handleSelectTab} />
         <div className={styles.mainClass}>
-          {selectedTab === editorComponentTabs.Props ? (
-            <EditorComponentProps selectedBlock={selectedBlock} key={selectedBlock.key} />
-          ) : (
-            <EditorComponentStyles
-              blockKey={selectedBlock.key}
-              key={selectedBlock.key}
-              disabled={!doesBlockAllowStyles(selectedBlock)}
-            />
-          )}
+          {this.renderMainContent()}
         </div>
       </div>
     );

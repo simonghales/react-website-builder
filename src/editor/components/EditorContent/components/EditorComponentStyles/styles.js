@@ -19,6 +19,7 @@ const mainClass = css`
   grid-column-end: 5;
   height: 100%;
   overflow-y: auto;
+  padding-bottom: 30px;
 `;
 
 const sideClass = css`
@@ -26,12 +27,17 @@ const sideClass = css`
   grid-column-end: 9;
   height: 100%;
   overflow-y: auto;
+  padding-bottom: 30px;
 `;
 
 const sectionClass = css`
-  &:not(:first-child) {
-    margin-top: 20px;
-  }
+    margin-bottom: 20px;
+    
+    &:last-child
+    {
+    margin-bottom: 40px;
+    }
+    
 `;
 
 const sectionHeaderClass = css`

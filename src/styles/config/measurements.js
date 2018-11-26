@@ -1,3 +1,3 @@
 export default {
-  inputHeight: 40,
+  inputHeight: 37,
 };

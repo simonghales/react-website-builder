@@ -1,7 +1,7 @@
 // @flow
 import htmlTags from 'html-tags';
 import React, { Component } from 'react';
-import SelectInput from '../../../StyleProp/components/SelectInput/SelectInput';
+import SelectInput from "../SelectInput/SelectInput";
 
 type SelectOption = {
   value: string,

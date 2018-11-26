@@ -41,6 +41,7 @@ const buttonClass = css`
 const mainClass = css`
   display: flex;
   flex: 1;
+  overflow: hidden;
 `;
 
 const editorClass = css`

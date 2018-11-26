@@ -16,6 +16,7 @@ import {
   getSelectedModuleSelectedBlockMixins,
 } from '../../../../../state/redux/editor/state';
 import { getEditorMappedBlockStyles } from '../../../../../data/styles/state';
+import DisabledMessage from "../DisabledMessage/DisabledMessage";
 
 type StyleSectionWrapperProps = {
   blockStyles: BlockStyles,
@@ -103,7 +104,7 @@ const Side = ({ blockKey }: Props) => (
 const EditorComponentStyles = (props: Props) => {
   const { disabled } = props;
   if (disabled) {
-    return <div>This block cannot be styled.</div>;
+    return <DisabledMessage message="This block cannot be styled."/>
   }
   return (
     <div className={styles.containerClass}>

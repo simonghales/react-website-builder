@@ -5,15 +5,23 @@ import CreatableSelect from 'react-select/lib/Creatable';
 import colors from '../../../../styles/config/colors';
 import measurements from '../../../../styles/config/measurements';
 import { parseSelectInputStyleValue } from './state';
+import { inputStylesConfig } from "../TextInput/styles";
 
 const customStyles = {
   control: (baseStyles, state) => ({
     ...baseStyles,
-    backgroundColor: state.isFocused ? colors.darkInputFocused : colors.darkInput,
-    border: 0,
+    backgroundColor: state.isFocused ? inputStylesConfig.backgroundHoverColor : inputStylesConfig.backgroundColor,
+    borderWidth: 2,
+    borderStyle: 'solid',
+    borderColor: state.isFocused ? inputStylesConfig.borderFocusedColor :inputStylesConfig.backgroundColor,
     boxShadow: 0,
     borderRadius: 3,
-    minHeight: `${measurements.inputHeight}px`,
+    minHeight: `${inputStylesConfig.minHeight}px`,
+    transition: '',
+    ':hover': {
+      borderColor: state.isFocused ? inputStylesConfig.borderFocusedColor :inputStylesConfig.backgroundHoverColor,
+      backgroundColor: inputStylesConfig.backgroundHoverColor,
+    }
   }),
   placeholder: baseStyles => ({
     ...baseStyles,
@@ -23,6 +31,7 @@ const customStyles = {
   input: baseStyles => ({
     ...baseStyles,
     color: colors.light,
+    fontSize: inputStylesConfig.fontSize,
   }),
   dropdownIndicator: baseStyles => ({
     ...baseStyles,
@@ -69,7 +78,7 @@ const customStyles = {
   }),
   menu: baseStyles => ({
     ...baseStyles,
-    backgroundColor: '#000626',
+    backgroundColor: colors.blackInactiveBlue,
     margin: 0,
   }),
   menuList: baseStyles => ({
@@ -77,8 +86,8 @@ const customStyles = {
   }),
   option: (baseStyles, state) => ({
     ...baseStyles,
-    backgroundColor: '',
-    color: colors.lightMid,
+    backgroundColor: state.isFocused ? inputStylesConfig.borderFocusedColor : '',
+    color: state.isFocused ? colors.light : colors.lightMid,
     ':hover': {
       color: colors.light,
     },
