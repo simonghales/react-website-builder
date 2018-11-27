@@ -7,6 +7,10 @@ const wrapperClass = css`
   position: relative;
 `;
 
+const containerFocusedClass = css`
+  border-color: ${inputStylesConfig.borderFocusedColor};
+`;
+
 const containerClass = css`
   height: ${inputStylesConfig.minHeight}px;
   border: 2px solid ${inputStylesConfig.backgroundColor};
@@ -14,7 +18,7 @@ const containerClass = css`
   cursor: pointer;
 
   &:focus {
-    border-color: ${inputStylesConfig.borderFocusedColor};
+    ${containerFocusedClass};
   }
 `;
 
@@ -31,5 +35,6 @@ const menuClass = css`
 export default {
   wrapperClass,
   containerClass,
+  containerFocusedClass,
   menuClass,
 };

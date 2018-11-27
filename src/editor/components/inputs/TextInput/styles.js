@@ -4,6 +4,7 @@ import colors from 'styles/config/colors';
 import { inputReset } from '../../../../styles/inputs';
 
 export const inputStylesConfig = {
+  color: colors.light,
   fontSize: 14,
   minHeight: 41,
   backgroundColor: '#343b48',
@@ -18,7 +19,7 @@ const inputClass = css`
   border-radius: 3px;
   font-size: ${inputStylesConfig.fontSize}px;
   padding: 9px 5px;
-  color: ${colors.light};
+  color: ${inputStylesConfig.color};
 
   &:hover {
     background-color: ${inputStylesConfig.backgroundHoverColor};

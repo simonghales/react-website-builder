@@ -1,5 +1,7 @@
 // @flow
 import React, { Component } from 'react';
+import { debounce } from 'lodash';
+import { cx } from 'emotion';
 import styles from './styles';
 import ColorMenu from './components/ColorMenu/ColorMenu';
 
@@ -17,6 +19,7 @@ export const getRgbValue = ({
 
 type State = {
   color: string,
+  selectingColor: boolean,
 };
 
 class ColorSelector extends Component<{}, State> {
@@ -24,16 +27,20 @@ class ColorSelector extends Component<{}, State> {
     super(props);
     this.state = {
       color: '#F0F0F0',
+      selectingColor: false,
     };
   }
 
   handleColorChange = update => {
-    console.log('color change...'); // todo
-    // const color = update.rgb.a < 1 ? getRgbValue(update.rgb) : update.hex;
-    // this.setState({
-    //   color,
-    // });
+    console.log('update', update);
+    const color = update.rgb.a < 1 ? getRgbValue(update.rgb) : update.hex;
+    console.log('color', color);
+    this.setState({
+      color,
+    });
   };
+
+  debouncedHandleColorChange = debounce(this.handleColorChange, 200);
 
   handleInputChange = value => {
     this.setState({
@@ -41,18 +48,39 @@ class ColorSelector extends Component<{}, State> {
     });
   };
 
+  handleStartSelectingColor = () => {
+    this.setState({
+      selectingColor: true,
+    });
+  };
+
+  handleCloseColorMenu = () => {
+    this.setState({
+      selectingColor: false,
+    });
+  };
+
   render() {
-    const { color, colorType } = this.state;
+    const { color, selectingColor } = this.state;
     return (
       <div className={styles.wrapperClass}>
-        <div className={styles.containerClass} role="button" />
+        <div
+          className={cx(styles.containerClass, {
+            [styles.containerFocusedClass]: selectingColor,
+          })}
+          style={{
+            backgroundColor: color,
+          }}
+          onClick={this.handleStartSelectingColor}
+        />
         <div className={styles.menuClass}>
-          <ColorMenu
-            color={color}
-            colorType={colorType}
-            onChange={this.handleColorChange}
-            onInputChange={this.handleInputChange}
-          />
+          {selectingColor && (
+            <ColorMenu
+              color={color}
+              onChange={this.handleColorChange}
+              close={this.handleCloseColorMenu}
+            />
+          )}
         </div>
       </div>
     );

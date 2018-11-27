@@ -3,18 +3,54 @@ import { css } from 'emotion';
 import colors from 'styles/config/colors';
 import spacing from 'styles/config/spacing';
 import { inputReset } from '../../../../../../styles/inputs';
+import { inputStylesConfig } from '../../../TextInput/styles';
 
 const containerClass = css`
-  position: relative;
+  //position: relative;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 5px;
-    box-shadow: 0 10px 10px #04060b66;
+  //&::before {
+  //  content: '';
+  //  position: absolute;
+  //  top: 10px;
+  //  left: 10px;
+  //  right: 10px;
+  //  bottom: 5px;
+  //  box-shadow: 0 10px 10px #04060b66;
+  //}
+`;
+
+const chromePickerClass = css`
+  width: 100% !important;
+  background-color: #1c2433 !important;
+
+  span {
+    color: ${colors.lightMid} !important;
+  }
+
+  svg {
+    path {
+      fill: ${colors.lightMid} !important;
+    }
+
+    &:hover {
+      background-color: #2b374d !important;
+    }
+  }
+
+  input {
+    background-color: ${inputStylesConfig.backgroundColor} !important;
+    box-shadow: ${inputStylesConfig.backgroundColor} 0px 0px 0px 1px inset !important;
+    color: ${inputStylesConfig.color} !important;
+
+    &:focus,
+    &:hover {
+      background-color: ${inputStylesConfig.backgroundHoverColor} !important;
+      box-shadow: ${inputStylesConfig.backgroundHoverColor} 0px 0px 0px 1px inset !important;
+    }
+
+    &:focus {
+      box-shadow: ${inputStylesConfig.borderFocusedColor} 0px 0px 0px 1px inset !important;
+    }
   }
 `;
 
@@ -51,6 +87,10 @@ const colorPreviewClass = css`
   margin-right: 6px;
 `;
 
+const colorPreviewInnerClass = css`
+  height: 100%;
+`;
+
 const slidersWrapperClass = css`
   flex: 1;
 `;
@@ -78,11 +118,13 @@ const valueInputClass = css`
 
 export default {
   containerClass,
+  chromePickerClass,
   contentClass,
   saturationContainerClass,
   bottomClass,
   colorOptionsClass,
   colorPreviewClass,
+  colorPreviewInnerClass,
   slidersWrapperClass,
   sliderClass,
   valueWrapperClass,
