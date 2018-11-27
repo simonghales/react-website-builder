@@ -8,14 +8,15 @@ import HTMLSelector, {
 } from '../../../../../inputs/extended/HTMLSelector/HTMLSelector';
 import { elementDefaultProps } from '../../../../../../../blocks/groups/html/Element/props';
 import RadioSelector from '../../../../../inputs/RadioSelector/RadioSelector';
-import type { RadioSelectorOptionModel } from '../../../../../inputs/RadioSelector/RadioSelector';
 import TextAlignSelector from '../../../../../inputs/extended/TextAlignSelector/TextAlignSelector';
+import ColorSelector from '../../../../../inputs/ColorSelector/ColorSelector';
 
 export const editorInputTypes = {
   string: 'string',
   htmlSelector: 'htmlSelector',
   radioSelector: 'radioSelector',
   textAlign: 'textAlign',
+  color: 'color',
 };
 
 type FieldProps = {
@@ -25,6 +26,7 @@ type FieldProps = {
 
 const mappedFieldTypes = {
   [editorInputTypes.string]: (props: FieldProps) => <TextInput {...props} />,
+  [editorInputTypes.color]: (props: FieldProps) => <ColorSelector {...props} />,
   [editorInputTypes.textAlign]: (props: FieldProps) => <TextAlignSelector {...props} />,
   [editorInputTypes.radioSelector]: (props: FieldProps) => (
     <RadioSelector options={[]} {...props} />
@@ -51,26 +53,43 @@ type Props = {
   value: string,
   inputType: string,
   onChange: (value: string) => void,
+  noLabelWrapper: boolean,
 };
 
-const EditorField = ({ label, inputType, value, onChange }: Props) => {
+const EditorFieldInner = ({ label, inputType, value, onChange }: Props) => {
   const Input = getInput(inputType);
+  return (
+    <React.Fragment>
+      <div
+        className={cx(styles.labelClass, {
+          [styles.labelInactiveClass]: !value,
+        })}
+      >
+        {label}
+      </div>
+      <div className={styles.inputContainerClass}>
+        {Input({
+          value,
+          onChange,
+        })}
+      </div>
+    </React.Fragment>
+  );
+};
+
+const EditorField = (props: Props) => {
+  const { noLabelWrapper } = props;
+  if (noLabelWrapper) {
+    return (
+      <div className={styles.containerClass}>
+        <EditorFieldInner {...props} />
+      </div>
+    );
+  }
   return (
     <div className={styles.containerClass}>
       <label>
-        <div
-          className={cx(styles.labelClass, {
-            [styles.labelInactiveClass]: !value,
-          })}
-        >
-          {label}
-        </div>
-        <div className={styles.inputContainerClass}>
-          {Input({
-            value,
-            onChange,
-          })}
-        </div>
+        <EditorFieldInner {...props} />
       </label>
     </div>
   );

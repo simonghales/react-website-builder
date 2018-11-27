@@ -1,31 +1,32 @@
 // @flow
 import React from 'react';
-import type { EditorFieldModel } from "../../model";
-import EditorField from "../EditorField/EditorField";
+import type { EditorFieldModel } from '../../model';
+import EditorField from '../EditorField/EditorField';
 import styles from './styles';
 
 type Props = {
   label: string,
   fields: Array<EditorFieldModel>,
-}
+};
 
-const EditorFieldGroup = ({label, fields}: Props) => (
+const EditorFieldGroup = ({ label, fields }: Props) => (
   <div className={styles.fieldGroupClass}>
-    {
-      label && (
-        <header className={styles.labelClass}>{label}</header>
-      )
-    }
+    {label && <header className={styles.labelClass}>{label}</header>}
     <div>
-      {
-        fields.map((field: EditorFieldModel) => (
-          <div className={styles.fieldContainerClass} key={field.key}>
-            <EditorField key={field.key} label={field.label} value={field.value} onChange={field.onChange} inputType={field.inputType}/>
-          </div>
-        ))
-      }
+      {fields.map((field: EditorFieldModel) => (
+        <div className={styles.fieldContainerClass} key={field.key}>
+          <EditorField
+            key={field.key}
+            label={field.label}
+            value={field.value}
+            onChange={field.onChange}
+            inputType={field.inputType}
+            noLabelWrapper={field.noLabelWrapper}
+          />
+        </div>
+      ))}
     </div>
   </div>
-)
+);
 
 export default EditorFieldGroup;

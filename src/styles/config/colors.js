@@ -11,6 +11,7 @@ const lightFaintest = transparentize(0.9, light);
 const blackBlue = '#20242d';
 const blackBlueLight = 'rgb(47, 51, 61)';
 const blackInactiveBlue = '#04060b';
+const blackInactiveBlueMid = transparentize(0.25, blackBlue);
 const darkBlue = '#080B12';
 const mediumBlue = '#152036';
 const siteBackground = darkBlue;
@@ -32,6 +33,7 @@ export default {
   blackBlue,
   blackBlueLight,
   blackInactiveBlue,
+  blackInactiveBlueMid,
   darkBlue,
   mediumBlue,
   siteBackground,

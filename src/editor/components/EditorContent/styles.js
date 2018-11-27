@@ -12,7 +12,8 @@ const containerClass = css`
 const mainClass = css`
   margin-top: ${spacing.smallPlus}px;
   flex: 1;
-  overflow: hidden;
+  max-height: 100%;
+  //overflow: hidden;
   // overflow-y: auto;
   // margin-bottom: ${spacing.mediumPlus}px;
 `;

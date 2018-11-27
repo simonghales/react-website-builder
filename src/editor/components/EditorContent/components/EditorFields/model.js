@@ -7,6 +7,7 @@ export type EditorFieldModel = {
   value: string,
   inputType: string,
   onChange: (value: string) => void,
+  noLabelWrapper: boolean,
 };
 
 export type EditorFieldGroupModel = {
