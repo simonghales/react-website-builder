@@ -7,8 +7,8 @@ import EditorComponentTabs, {
 import EditorComponentProps from './components/EditorComponentProps/EditorComponentProps';
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { EditorComponentTabsOptions } from './components/EditorComponentTabs/EditorComponentTabs';
-import EditorComponentStyles from './components/EditorComponentStyles/EditorComponentStyles';
 import { doesBlockAllowStyles } from '../../../data/blocks/state';
+import EditorComponentStyles from './components/EditorComponentStyles/EditorComponentStyles';
 import EditorComponentHtml from './components/EditorComponentHtml/EditorComponentHtml';
 
 type Props = {

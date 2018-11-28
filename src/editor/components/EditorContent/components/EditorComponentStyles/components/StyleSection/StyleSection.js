@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { cx } from 'emotion';
-import styles from '../../styles';
+import styles from '../../../OLDEditorComponentStyles/styles';
 
 const SectionHeader = ({ text, headerIcon }: { text: string, headerIcon: any }) => (
   <header className={styles.sectionHeaderClass}>

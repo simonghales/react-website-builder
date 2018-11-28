@@ -10,8 +10,9 @@ export type BlockModelPropsConfig = {
 };
 
 export type BlockModel = {
-  component: any,
   key: string,
+  groupKey: string,
+  component: any,
   defaultProps: {
     [string]: any,
   },

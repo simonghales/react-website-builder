@@ -13,6 +13,7 @@ import ColorSelector from '../../../../../inputs/ColorSelector/ColorSelector';
 import FontFamilySelector from '../../../../../inputs/extended/FontFamilySelector/FontFamilySelector';
 import FontWeightSelector from '../../../../../inputs/extended/FontWeightSelector/FontWeightSelector';
 import FontStyleSelector from '../../../../../inputs/extended/FontStyleSelector/FontStyleSelector';
+import type { BlockModel } from '../../../../../../../blocks/models';
 
 export const editorInputTypes = {
   string: 'string',
@@ -41,12 +42,8 @@ const mappedFieldTypes = {
   [editorInputTypes.radioSelector]: (props: FieldProps) => (
     <RadioSelector options={[]} {...props} />
   ),
-  [editorInputTypes.htmlSelector]: (props: FieldProps) => (
-    <HTMLSelector
-      options={htmlSelectorOptions.all}
-      defaultHtmlElement={elementDefaultProps.element}
-      {...props}
-    />
+  [editorInputTypes.htmlSelector]: (props: FieldProps, block?: BlockModel) => (
+    <HTMLSelector block={block} {...props} />
   ),
 };
 
@@ -66,9 +63,10 @@ type Props = {
   onChange: (value: string) => void,
   // eslint-disable-next-line react/no-unused-prop-types
   noLabelWrapper: boolean,
+  block?: BlockModel,
 };
 
-const EditorFieldInner = ({ label, inputType, value, inheritedValue, onChange }: Props) => {
+const EditorFieldInner = ({ label, inputType, value, inheritedValue, onChange, block }: Props) => {
   const Input = getInput(inputType);
   return (
     <React.Fragment>
@@ -80,11 +78,14 @@ const EditorFieldInner = ({ label, inputType, value, inheritedValue, onChange }:
         {label}
       </div>
       <div className={styles.inputContainerClass}>
-        {Input({
-          value,
-          inheritedValue,
-          onChange,
-        })}
+        {Input(
+          {
+            value,
+            inheritedValue,
+            onChange,
+          },
+          block
+        )}
       </div>
     </React.Fragment>
   );

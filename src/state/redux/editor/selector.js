@@ -9,6 +9,7 @@ import {
   getModuleFromModules,
   getModuleKeyFromModule,
   getModuleParentModules,
+  getSelectedBlockFromModule,
   getSelectedBlockKeyFromModule,
 } from '../../../data/modules/state';
 import type { SitePageDataBlocks } from '../../../data/blocks/models';
@@ -95,4 +96,20 @@ export const getAddableModules = createSelector(
     Object.keys(modules)
       .map(moduleKey => modules[moduleKey])
       .filter(module => module.isTemplate)
+);
+
+export const getSelectedBlock = createSelector(
+  [getModule],
+  (module: DataModule) => {
+    const block = getSelectedBlockFromModule(module);
+    return block;
+  }
+);
+
+export const getSelectedBlockBlock = createSelector(
+  [getModule],
+  (module: DataModule) => {
+    const dataBlock = getSelectedBlockFromModule(module);
+    return getBlockFromDataBlock(dataBlock);
+  }
 );

@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'emotion';
-import colors from 'styles/config/colors';
+import colors from '../../../../../../../styles/config/colors';
 import { squareButton } from '../../../../../../../styles/buttons';
 
 const classNames = {
