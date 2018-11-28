@@ -4,6 +4,7 @@ import { debounce } from 'lodash';
 import { cx } from 'emotion';
 import styles from './styles';
 import ColorMenu from './components/ColorMenu/ColorMenu';
+import type { FieldProps } from '../../EditorContent/components/EditorFields/components/EditorField/EditorField';
 
 export const getRgbValue = ({
   r,
@@ -17,27 +18,29 @@ export const getRgbValue = ({
   a: number,
 }): string => `rgba(${r},${g},${b},${a})`;
 
+type Props = FieldProps;
+
 type State = {
   color: string,
   selectingColor: boolean,
 };
 
-class ColorSelector extends Component<{}, State> {
+class ColorSelector extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      color: '#F0F0F0',
+      color: props.value ? props.value : props.inheritedValue,
       selectingColor: false,
     };
   }
 
   handleColorChange = update => {
-    console.log('update', update);
     const color = update.rgb.a < 1 ? getRgbValue(update.rgb) : update.hex;
-    console.log('color', color);
     this.setState({
       color,
     });
+    const { onChange } = this.props;
+    onChange(color);
   };
 
   debouncedHandleColorChange = debounce(this.handleColorChange, 200);

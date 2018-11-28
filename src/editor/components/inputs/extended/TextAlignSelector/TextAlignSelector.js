@@ -7,6 +7,7 @@ import {
   MdFormatAlignRight,
 } from 'react-icons/md';
 import RadioSelector from '../../RadioSelector/RadioSelector';
+import type { FieldProps } from '../../../EditorContent/components/EditorFields/components/EditorField/EditorField';
 
 const options = [
   {
@@ -31,6 +32,8 @@ const options = [
   },
 ];
 
-const TextAlignSelector = () => <RadioSelector options={options} />;
+type Props = FieldProps;
+
+const TextAlignSelector = (props: Props) => <RadioSelector {...props} options={options} />;
 
 export default TextAlignSelector;

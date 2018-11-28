@@ -5,6 +5,7 @@ import { inputReset } from '../../../../styles/inputs';
 
 export const inputStylesConfig = {
   color: colors.light,
+  darkColor: colors.blackInactiveBlue,
   fontSize: 14,
   minHeight: 41,
   backgroundColor: '#343b48',

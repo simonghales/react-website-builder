@@ -1,16 +1,16 @@
 // @flow
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import styles from './styles';
 
 type Props = {
   value: string,
   inheritedValue?: string,
   onChange: (value: string) => void,
-}
+};
 
 type State = {
   inputValue: string,
-}
+};
 
 class TextInput extends Component<Props, State> {
   static defaultProps = {
@@ -21,7 +21,7 @@ class TextInput extends Component<Props, State> {
     super(props);
     this.state = {
       inputValue: props.value ? props.value : '',
-    }
+    };
   }
 
   handleInputChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -31,7 +31,7 @@ class TextInput extends Component<Props, State> {
       inputValue,
     });
     onChange(inputValue); // todo - debounce
-  }
+  };
 
   getDisplayValue(): string {
     const { inputValue } = this.state;
@@ -41,10 +41,14 @@ class TextInput extends Component<Props, State> {
 
   render() {
     return (
-      <input className={styles.inputClass} type="text" value={this.getDisplayValue()} onChange={this.handleInputChange} />
+      <input
+        className={styles.inputClass}
+        type="text"
+        value={this.getDisplayValue()}
+        onChange={this.handleInputChange}
+      />
     );
   }
-
 }
 
 export default TextInput;

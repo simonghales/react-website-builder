@@ -1,5 +1,6 @@
 // @flow
 import { css } from 'emotion';
+import colors from 'styles/config/colors';
 import spacing from 'styles/config/spacing';
 import { inputStylesConfig } from '../TextInput/styles';
 import { inputReset } from '../../../../styles/inputs';
@@ -24,6 +25,7 @@ const optionClass = css`
   display: flex;
   align-items: center;
   justify-content: center;
+  color: ${colors.lightMid};
 
   &:hover {
     background-color: ${inputStylesConfig.backgroundHoverColor};
@@ -41,6 +43,7 @@ const selectedColor = '#c7cfde';
 const selectedOptionClass = css`
   background-color: ${selectedColor};
   border-color: ${selectedColor};
+  color: ${inputStylesConfig.darkColor};
 
   &:hover {
     background-color: ${selectedColor};

@@ -13,6 +13,8 @@ import {
 import MixinList from './components/MixinList/MixinList';
 import AddMixinDropdown from './components/AddMixinDropdown/AddMixinDropdown';
 import styles from './styles';
+import EditorFieldGroup from '../../../EditorFields/components/EditorFieldGroup/EditorFieldGroup';
+import IconButton from '../../../../../../../components/IconButton/IconButton';
 
 type Props = {
   blockKey: string,
@@ -34,9 +36,11 @@ const AddButton = ({
   onClick: () => void,
   tooltip: string,
 }) => (
-  <div className={styles.addButtonClass} data-tip={tooltip} onClick={onClick}>
-    {isAdding ? <MdClose size={18} /> : <MdAdd size={18} />}
-  </div>
+  <IconButton
+    tooltip={tooltip}
+    onClick={onClick}
+    icon={isAdding ? <MdClose size={18} /> : <MdAdd size={18} />}
+  />
 );
 
 class EditorStylesMixins extends Component<Props, State> {
@@ -63,9 +67,9 @@ class EditorStylesMixins extends Component<Props, State> {
     const { blockKey, mixins, removeMixin, updateMixinsOrder } = this.props;
     const { addingMixin } = this.state;
     return (
-      <StyleSection
-        title="Mixins"
-        gridBody={false}
+      <EditorFieldGroup
+        label="Mixins"
+        grid={false}
         headerIcon={
           <AddButton
             isAdding={addingMixin}
@@ -82,7 +86,7 @@ class EditorStylesMixins extends Component<Props, State> {
           }}
         />
         {addingMixin && <AddMixinDropdown close={this.closeAddMixin} />}
-      </StyleSection>
+      </EditorFieldGroup>
     );
   }
 }

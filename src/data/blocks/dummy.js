@@ -155,7 +155,7 @@ export const DUMMY_BLOCK_PAGE_PARAGRAPH: DataBlockModel = {
   propsConfig: {},
   blockChildrenKeys: [],
   isParentModule: false,
-  rawStyles: DUMMY_STYLE_TEST,
+  rawStyles: DUMMY_STYLE_EMPTY, // DUMMY_STYLE_TEST
   mixinStyles: [
     {
       key: 'DUMMY_MIXIN_CENTERED',

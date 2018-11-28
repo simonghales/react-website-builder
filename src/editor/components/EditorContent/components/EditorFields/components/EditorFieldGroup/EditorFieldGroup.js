@@ -1,32 +1,36 @@
 // @flow
 import React from 'react';
-import type { EditorFieldModel } from '../../model';
-import EditorField from '../EditorField/EditorField';
+import { cx } from 'emotion';
 import styles from './styles';
 
 type Props = {
   label: string,
-  fields: Array<EditorFieldModel>,
+  children: any,
+  grid?: boolean,
+  headerIcon?: any,
 };
 
-const EditorFieldGroup = ({ label, fields }: Props) => (
+const EditorFieldGroup = ({ label, children, grid, headerIcon }: Props) => (
   <div className={styles.fieldGroupClass}>
-    {label && <header className={styles.labelClass}>{label}</header>}
-    <div>
-      {fields.map((field: EditorFieldModel) => (
-        <div className={styles.fieldContainerClass} key={field.key}>
-          <EditorField
-            key={field.key}
-            label={field.label}
-            value={field.value}
-            onChange={field.onChange}
-            inputType={field.inputType}
-            noLabelWrapper={field.noLabelWrapper}
-          />
-        </div>
-      ))}
+    {label && (
+      <header className={styles.labelClass}>
+        <div>{label}</div>
+        {headerIcon && <div>{headerIcon}</div>}
+      </header>
+    )}
+    <div
+      className={cx(styles.bodyClass, {
+        [styles.gridClass]: grid,
+      })}
+    >
+      {children}
     </div>
   </div>
 );
+
+EditorFieldGroup.defaultProps = {
+  grid: false,
+  headerIcon: undefined,
+};
 
 export default EditorFieldGroup;

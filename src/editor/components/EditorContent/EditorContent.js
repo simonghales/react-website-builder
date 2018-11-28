@@ -9,7 +9,7 @@ import type { DataBlockModel } from '../../../data/blocks/models';
 import type { EditorComponentTabsOptions } from './components/EditorComponentTabs/EditorComponentTabs';
 import EditorComponentStyles from './components/EditorComponentStyles/EditorComponentStyles';
 import { doesBlockAllowStyles } from '../../../data/blocks/state';
-import EditorComponentHtml from "./components/EditorComponentHtml/EditorComponentHtml";
+import EditorComponentHtml from './components/EditorComponentHtml/EditorComponentHtml';
 
 type Props = {
   selectedBlock: DataBlockModel,
@@ -37,24 +37,18 @@ class EditorContent extends Component<Props, State> {
     const { selectedTab } = this.state;
     const { selectedBlock } = this.props;
     if (selectedTab === editorComponentTabs.Props) {
-      return (
-        <EditorComponentProps selectedBlock={selectedBlock} key={selectedBlock.key} />
-      )
-    } else if (selectedTab === editorComponentTabs.Styles) {
+      return <EditorComponentProps selectedBlock={selectedBlock} key={selectedBlock.key} />;
+    }
+    if (selectedTab === editorComponentTabs.Styles) {
       return (
         <EditorComponentStyles
           blockKey={selectedBlock.key}
           key={selectedBlock.key}
           disabled={!doesBlockAllowStyles(selectedBlock)}
         />
-      )
-    } else {
-      return (
-        <EditorComponentHtml
-          key={selectedBlock.key}
-        />
-      )
+      );
     }
+    return <EditorComponentHtml key={selectedBlock.key} blockKey={selectedBlock.key} />;
   }
 
   render() {
@@ -62,9 +56,7 @@ class EditorContent extends Component<Props, State> {
     return (
       <div className={styles.containerClass}>
         <EditorComponentTabs selectedTab={selectedTab} selectTab={this.handleSelectTab} />
-        <div className={styles.mainClass}>
-          {this.renderMainContent()}
-        </div>
+        <div className={styles.mainClass}>{this.renderMainContent()}</div>
       </div>
     );
   }

@@ -10,6 +10,9 @@ import { elementDefaultProps } from '../../../../../../../blocks/groups/html/Ele
 import RadioSelector from '../../../../../inputs/RadioSelector/RadioSelector';
 import TextAlignSelector from '../../../../../inputs/extended/TextAlignSelector/TextAlignSelector';
 import ColorSelector from '../../../../../inputs/ColorSelector/ColorSelector';
+import FontFamilySelector from '../../../../../inputs/extended/FontFamilySelector/FontFamilySelector';
+import FontWeightSelector from '../../../../../inputs/extended/FontWeightSelector/FontWeightSelector';
+import FontStyleSelector from '../../../../../inputs/extended/FontStyleSelector/FontStyleSelector';
 
 export const editorInputTypes = {
   string: 'string',
@@ -17,10 +20,14 @@ export const editorInputTypes = {
   radioSelector: 'radioSelector',
   textAlign: 'textAlign',
   color: 'color',
+  fontFamily: 'fontFamily',
+  fontWeight: 'fontWeight',
+  fontStyle: 'fontStyle',
 };
 
-type FieldProps = {
+export type FieldProps = {
   value: string,
+  inheritedValue: string,
   onChange: (value: string) => void,
 };
 
@@ -28,6 +35,9 @@ const mappedFieldTypes = {
   [editorInputTypes.string]: (props: FieldProps) => <TextInput {...props} />,
   [editorInputTypes.color]: (props: FieldProps) => <ColorSelector {...props} />,
   [editorInputTypes.textAlign]: (props: FieldProps) => <TextAlignSelector {...props} />,
+  [editorInputTypes.fontFamily]: (props: FieldProps) => <FontFamilySelector {...props} />,
+  [editorInputTypes.fontWeight]: (props: FieldProps) => <FontWeightSelector {...props} />,
+  [editorInputTypes.fontStyle]: (props: FieldProps) => <FontStyleSelector {...props} />,
   [editorInputTypes.radioSelector]: (props: FieldProps) => (
     <RadioSelector options={[]} {...props} />
   ),
@@ -51,12 +61,14 @@ const getInput = (inputType: string) => {
 type Props = {
   label: string,
   value: string,
+  inheritedValue: string,
   inputType: string,
   onChange: (value: string) => void,
+  // eslint-disable-next-line react/no-unused-prop-types
   noLabelWrapper: boolean,
 };
 
-const EditorFieldInner = ({ label, inputType, value, onChange }: Props) => {
+const EditorFieldInner = ({ label, inputType, value, inheritedValue, onChange }: Props) => {
   const Input = getInput(inputType);
   return (
     <React.Fragment>
@@ -70,6 +82,7 @@ const EditorFieldInner = ({ label, inputType, value, onChange }: Props) => {
       <div className={styles.inputContainerClass}>
         {Input({
           value,
+          inheritedValue,
           onChange,
         })}
       </div>
@@ -77,22 +90,22 @@ const EditorFieldInner = ({ label, inputType, value, onChange }: Props) => {
   );
 };
 
-const EditorField = (props: Props) => {
+const EditorFieldInnerSwitch = (props: Props) => {
   const { noLabelWrapper } = props;
   if (noLabelWrapper) {
-    return (
-      <div className={styles.containerClass}>
-        <EditorFieldInner {...props} />
-      </div>
-    );
+    return <EditorFieldInner {...props} />;
   }
   return (
-    <div className={styles.containerClass}>
-      <label>
-        <EditorFieldInner {...props} />
-      </label>
-    </div>
+    <label>
+      <EditorFieldInner {...props} />
+    </label>
   );
 };
+
+const EditorField = (props: Props) => (
+  <div className={styles.containerClass}>
+    <EditorFieldInnerSwitch {...props} />
+  </div>
+);
 
 export default EditorField;
