@@ -13,6 +13,7 @@ import type { DataModule } from '../data/modules/models';
 import type { DataBlockModel } from '../data/blocks/models';
 import { getBlockUniqueId } from './utils';
 import { blockGroups, blockTypes } from './config';
+import Module from './groups/module/Module/Module';
 import ModuleImport from './groups/module/ModuleImport/ModuleImport';
 import type { ModuleTemplate } from '../data/moduleTemplates/models';
 import { EMPTY_BLOCK_STYLES } from '../data/styles/defaults';
@@ -146,4 +147,8 @@ export function getBlockHtmlPropsKeys(block: BlockModel): Array<string> {
   });
 
   return htmlProps;
+}
+
+export function isBlockModuleBlock(block: BlockModel): boolean {
+  return block.groupKey === blockGroups.Module && block.key === Module.key;
 }

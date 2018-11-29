@@ -13,17 +13,30 @@ import type { DataBlockModel } from '../../../../../data/blocks/models';
 import EditorFieldGroupFields from '../EditorFields/components/EditorFieldGroupFields/EditorFieldGroupFields';
 import EditorFieldGroup from '../EditorFields/components/EditorFieldGroup/EditorFieldGroup';
 import EditorHtmlAttributes from './component/EditorHtmlAttributes/EditorHtmlAttributes';
+import { setBlockPropValue } from '../../../../../state/redux/editor/reducer';
 
 type Props = {
   block: BlockModel,
   // eslint-disable-next-line react/no-unused-prop-types
   dataBlock: DataBlockModel,
-  htmlPropsFields: Array<EditorFieldModel>,
+  updateProp: (blockKey: string, propKey: string, value: string) => void,
 };
 
 class EditorComponentHtml extends Component<Props> {
+  updateProp = (propKey: string, value: string) => {
+    const { dataBlock } = this.props;
+    const { updateProp } = this.props;
+    return updateProp(dataBlock.key, propKey, value);
+  };
+
+  getHtmlPropsFields() {
+    const { block, dataBlock } = this.props;
+    return getHtmlPropsFields(block, dataBlock, this.updateProp);
+  }
+
   render() {
-    const { block, htmlPropsFields } = this.props;
+    const { block } = this.props;
+    const htmlPropsFields = this.getHtmlPropsFields();
     return (
       <EditorLayout>
         <EditorLayoutColumn columns={8}>
@@ -40,16 +53,17 @@ class EditorComponentHtml extends Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ReduxState, { dataBlock }: Props) => {
+const mapStateToProps = (state: ReduxState) => {
   const block = getSelectedBlockBlock(state);
-  const htmlPropsFields = getHtmlPropsFields(block, dataBlock);
   return {
     block,
-    htmlPropsFields,
   };
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  updateProp: (blockKey: string, propKey: string, value: string) =>
+    setBlockPropValue(blockKey, propKey, value),
+};
 
 export default connect(
   mapStateToProps,

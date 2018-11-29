@@ -6,6 +6,7 @@ import { getBlock, getBlockGroup } from '../blocks/blocks';
 import type { BlockModel } from '../blocks/models';
 import { parsePropValue } from './props';
 import type { MappedDataModule } from '../data/modules/models';
+import { isBlockModuleBlock } from '../blocks/state';
 
 function getProps(
   block: BlockModel,
@@ -57,6 +58,11 @@ function renderBlock(blockData: MappedDataBlockModel, hoveredBlockKey: string) {
   //   blockHighlighterHovered: blockData.key === hoveredBlockKey,
   //   key: blockData.key,
   // });
+
+  if (!isBlockModuleBlock(block)) {
+    console.log('dont return a component');
+  }
+
   const BlockComponent = block.component;
   return (
     <BlockComponent

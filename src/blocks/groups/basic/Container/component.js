@@ -6,10 +6,15 @@ import { withBlockHighlighter } from '../../../../preview/components/BlockHighli
 
 class ContainerComponent extends Component<ContainerProps> {
   render() {
-    const { children, customStyles } = this.props;
-    // eslint-disable-next-line no-unused-vars,prefer-destructuring
-    const props = this.props;
-    return <props.element className={css(customStyles)}>{children}</props.element>;
+    const { element, children, customStyles } = this.props;
+    const Element = element;
+    return React.createElement(
+      Element,
+      {
+        className: css(customStyles),
+      },
+      children
+    );
   }
 }
 

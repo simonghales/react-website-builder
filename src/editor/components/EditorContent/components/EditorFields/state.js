@@ -73,7 +73,8 @@ export function getDataBlockPropValue(propKey: string, dataBlock: DataBlockModel
 export function mapHtmlPropField(
   propKey: string,
   block: BlockModel,
-  dataBlock: DataBlockModel
+  dataBlock: DataBlockModel,
+  updateValue: (propKey: string, value: string) => void
 ): EditorFieldModel {
   const label = getPropFieldLabel(propKey, block, dataBlock);
   const value = getDataBlockPropValue(propKey, dataBlock);
@@ -84,7 +85,7 @@ export function mapHtmlPropField(
     value,
     inheritedValue: '',
     inputType: editorInputTypes.htmlSelector,
-    onChange: () => {},
+    onChange: (newValue: string) => updateValue(propKey, newValue),
     noLabelWrapper: false,
     columns: 0,
   };
@@ -92,8 +93,9 @@ export function mapHtmlPropField(
 
 export function getHtmlPropsFields(
   block: BlockModel,
-  dataBlock: DataBlockModel
+  dataBlock: DataBlockModel,
+  updateValue: (propKey: string, value: string) => void
 ): Array<EditorFieldModel> {
   const htmlPropsKeys = getBlockHtmlPropsKeys(block);
-  return htmlPropsKeys.map(propKey => mapHtmlPropField(propKey, block, dataBlock));
+  return htmlPropsKeys.map(propKey => mapHtmlPropField(propKey, block, dataBlock, updateValue));
 }
