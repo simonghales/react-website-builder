@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { css } from 'emotion';
 import type { ElementProps } from './props';
 import { withBlockHighlighter } from '../../../../preview/components/BlockHighlighterWrapper/BlockHighlighterWrapper';
+import { isHtmlElementVoid } from '../../../../utils/html';
 
 function renderChildren(content, children) {
   return (
@@ -23,7 +24,7 @@ export class ElementComponentRaw extends Component<ElementProps> {
         ...otherProps,
         className: css(customStyles),
       },
-      renderChildren(content, children)
+      isHtmlElementVoid(element) ? null : renderChildren(content, children)
     );
     // return (
     //   <props.element className={css(customStyles)} {...otherProps}>
