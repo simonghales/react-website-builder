@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import h from 'react-hyperscript';
 import type { MappedDataBlockModel, MappedDataBlocks } from '../data/blocks/models';
 import { getBlock, getBlockGroup } from '../blocks/blocks';
 import type { BlockModel } from '../blocks/models';
@@ -50,8 +51,15 @@ function renderBlock(blockData: MappedDataBlockModel, hoveredBlockKey: string) {
     return null;
   }
   const props = getProps(block, blockData, hoveredBlockKey);
+  // return h(block.component, {
+  //   ...props,
+  //   blockHighlighterKey: blockData.key,
+  //   blockHighlighterHovered: blockData.key === hoveredBlockKey,
+  //   key: blockData.key,
+  // });
+  const BlockComponent = block.component;
   return (
-    <block.component
+    <BlockComponent
       {...props}
       blockHighlighterKey={blockData.key}
       blockHighlighterHovered={blockData.key === hoveredBlockKey}

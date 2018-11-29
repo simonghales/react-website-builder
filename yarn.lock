@@ -7817,6 +7817,11 @@ react-error-overlay@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.0.tgz#c516995a5652e7bfbed8b497910d5280df74a7e8"
 
+react-hyperscript@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/react-hyperscript/-/react-hyperscript-3.2.0.tgz#24144ff6b1beb07af7154794a782a74b34920868"
+  integrity sha512-kf9VmxwCNqAImT3uDrCPJ8H5XdNzfSLps9x0qgJCH6OUCBiGAy1m9wHpedfr7GSuFqowhkNwv4ZuC40k3E/zRQ==
+
 react-icons@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-3.2.2.tgz#7b1dc795004a119a35175e62ecef91e5c9c90962"

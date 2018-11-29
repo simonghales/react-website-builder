@@ -16,13 +16,20 @@ function renderChildren(content, children) {
 export class ElementComponentRaw extends Component<ElementProps> {
   render() {
     const { element, content, children, customStyles, ...otherProps } = this.props;
-    // eslint-disable-next-line prefer-destructuring
-    const props = this.props;
-    return (
-      <props.element className={css(customStyles)} {...otherProps}>
-        {renderChildren(content, children)}
-      </props.element>
+    const Element = element;
+    return React.createElement(
+      Element,
+      {
+        ...otherProps,
+        className: css(customStyles),
+      },
+      renderChildren(content, children)
     );
+    // return (
+    //   <props.element className={css(customStyles)} {...otherProps}>
+    //     {renderChildren(content, children)}
+    //   </props.element>
+    // );
   }
 }
 
