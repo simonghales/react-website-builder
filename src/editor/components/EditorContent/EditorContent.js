@@ -48,7 +48,7 @@ class EditorContent extends Component<Props, State> {
         />
       );
     }
-    return <EditorComponentHtml key={selectedBlock.key} blockKey={selectedBlock.key} />;
+    return <EditorComponentHtml key={selectedBlock.key} blockKey={selectedBlock.key} dataBlock={selectedBlock} />;
   }
 
   render() {

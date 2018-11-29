@@ -2,6 +2,7 @@
 
 import type { MappedStyleModel } from '../../../../data/styles/models';
 import { blockPropsConfigTypes } from '../../../props';
+import { blockPropsDisplaySections } from '../../../props';
 
 export type ContainerProps = {
   element: string,
@@ -17,7 +18,8 @@ export const containerDefaultProps = {
 export const containerPropsConfig = {
   element: {
     label: 'Element',
-    type: blockPropsConfigTypes.htmlContainers,
+    type: blockPropsConfigTypes.html,
+    displaySection: blockPropsDisplaySections.html,
   },
   children: {
     hidden: true,

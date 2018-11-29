@@ -7,10 +7,11 @@ type Props = {
   label: string,
   children: any,
   grid?: boolean,
+  marginOffset?: boolean,
   headerIcon?: any,
 };
 
-const EditorFieldGroup = ({ label, children, grid, headerIcon }: Props) => (
+const EditorFieldGroup = ({ label, children, grid, marginOffset, headerIcon }: Props) => (
   <div className={styles.fieldGroupClass}>
     {label && (
       <header className={styles.labelClass}>
@@ -20,6 +21,7 @@ const EditorFieldGroup = ({ label, children, grid, headerIcon }: Props) => (
     )}
     <div
       className={cx(styles.bodyClass, {
+        [styles.marginOffsetClass]: marginOffset,
         [styles.gridClass]: grid,
       })}
     >
@@ -30,6 +32,7 @@ const EditorFieldGroup = ({ label, children, grid, headerIcon }: Props) => (
 
 EditorFieldGroup.defaultProps = {
   grid: false,
+  marginOffset: true,
   headerIcon: undefined,
 };
 

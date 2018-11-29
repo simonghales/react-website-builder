@@ -19,20 +19,6 @@ const propInputComponents = {
       {...props}
     />
   ),
-  [blockPropsConfigTypes.htmlContainers]: props => (
-    <HTMLSelector
-      options={htmlSelectorOptions.container}
-      defaultHtmlElement={containerDefaultProps.element}
-      {...props}
-    />
-  ),
-  [blockPropsConfigTypes.htmlHeadings]: props => (
-    <HTMLSelector
-      options={htmlSelectorOptions.heading}
-      defaultHtmlElement={headingDefaultProps.element}
-      {...props}
-    />
-  ),
 };
 
 function getPropInputComponent(type: string) {

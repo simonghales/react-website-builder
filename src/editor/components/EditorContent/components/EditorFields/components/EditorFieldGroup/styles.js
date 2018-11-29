@@ -23,13 +23,16 @@ const labelClass = css`
 
 const bodyClass = css`
   position: relative;
+  display: grid;
+`;
+
+const marginOffsetClass = css`
+  margin-top: -${spacing.tiny}px;
 `;
 
 const gridClass = css`
-  display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-column-gap: 10px;
-  margin-top: -${spacing.tiny}px;
 `;
 
 export default {
@@ -37,4 +40,5 @@ export default {
   labelClass,
   gridClass,
   bodyClass,
+  marginOffsetClass,
 };

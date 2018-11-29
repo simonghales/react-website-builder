@@ -3,12 +3,14 @@ import React from 'react';
 import type { EditorFieldModel } from '../../model';
 import styles from './styles';
 import EditorField from '../EditorField/EditorField';
+import type { BlockModel } from '../../../../../../../blocks/models';
 
 type Props = {
   fields: Array<EditorFieldModel>,
+  block?: BlockModel,
 };
 
-const EditorFieldGroupFields = ({ fields }: Props) => (
+const EditorFieldGroupFields = ({ fields, block }: Props) => (
   <React.Fragment>
     {fields.map((field: EditorFieldModel) => (
       <div
@@ -24,6 +26,7 @@ const EditorFieldGroupFields = ({ fields }: Props) => (
           onChange={field.onChange}
           inputType={field.inputType}
           noLabelWrapper={field.noLabelWrapper}
+          block={block}
         />
       </div>
     ))}

@@ -50,7 +50,7 @@ const DUMMY_BLOCK_SUBHEADING: DataBlockModel = {
   rawStyles: DUMMY_STYLE_TEST,
 };
 
-const DUMMY_BLOCK_PARAGRAPH: DataBlockModel = {
+export const DUMMY_BLOCK_PARAGRAPH: DataBlockModel = {
   key: 'x7JB7l5ogG3',
   groupKey: blockGroups.HTML,
   blockKey: Element.key,

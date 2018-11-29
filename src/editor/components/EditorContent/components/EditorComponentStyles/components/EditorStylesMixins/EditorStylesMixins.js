@@ -70,6 +70,7 @@ class EditorStylesMixins extends Component<Props, State> {
       <EditorFieldGroup
         label="Mixins"
         grid={false}
+        marginOffset={false}
         headerIcon={
           <AddButton
             isAdding={addingMixin}

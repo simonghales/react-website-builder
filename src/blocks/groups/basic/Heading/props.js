@@ -2,6 +2,7 @@
 
 import type { MappedStyleModel } from '../../../../data/styles/models';
 import { blockPropsConfigTypes } from '../../../props';
+import { blockPropsDisplaySections } from '../../../props';
 
 export type HeadingProps = {
   element: string,
@@ -17,7 +18,8 @@ export const headingDefaultProps = {
 export const headingPropsConfig = {
   element: {
     label: 'Element',
-    type: blockPropsConfigTypes.htmlHeadings,
+    type: blockPropsConfigTypes.html,
+    displaySection: blockPropsDisplaySections.html,
   },
   text: {
     type: blockPropsConfigTypes.string,

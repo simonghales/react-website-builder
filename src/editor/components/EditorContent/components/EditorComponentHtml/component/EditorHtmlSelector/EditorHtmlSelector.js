@@ -23,5 +23,4 @@ const EditorHtmlSelector = ({ block }: Props) => (
     />
   </EditorFieldGroup>
 );
-
 export default EditorHtmlSelector;

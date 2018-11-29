@@ -2,6 +2,7 @@
 
 import type { MappedStyleModel } from '../../../../data/styles/models';
 import { blockPropsConfigTypes } from '../../../props';
+import { blockPropsDisplaySections } from '../../../props';
 
 export type ElementProps = {
   element: string,
@@ -20,6 +21,7 @@ export const elementPropsConfig = {
   element: {
     label: 'Element',
     type: blockPropsConfigTypes.html,
+    displaySection: blockPropsDisplaySections.html,
   },
   content: {
     label: 'Content',

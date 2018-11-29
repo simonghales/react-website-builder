@@ -28,18 +28,22 @@ export type DataBlockMappedMixinModel = {
 
 export type DataBlockMappedMixinsModel = Array<DataBlockMappedMixinModel>;
 
+export type DataBlockPropsConfigModel = {
+  [string]: BlockModelPropsConfig,
+};
+
+export type DataBlockPropsModel = {
+  [string]: string,
+};
+
 export type DataBlockModel = {
   key: string,
   groupKey: string,
   blockKey: string,
   blockType: string,
   label: string,
-  props: {
-    [string]: any,
-  },
-  propsConfig: {
-    [string]: BlockModelPropsConfig,
-  },
+  props: DataBlockPropsModel,
+  propsConfig: DataBlockPropsConfigModel,
   blockChildrenKeys: Array<string>,
   isParentModule: boolean,
   moduleKey?: string,

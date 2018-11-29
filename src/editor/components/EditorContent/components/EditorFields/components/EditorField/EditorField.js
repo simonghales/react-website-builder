@@ -3,10 +3,7 @@ import React from 'react';
 import { cx } from 'emotion';
 import styles from './styles';
 import TextInput from '../../../../../inputs/TextInput/TextInput';
-import HTMLSelector, {
-  htmlSelectorOptions,
-} from '../../../../../inputs/extended/HTMLSelector/HTMLSelector';
-import { elementDefaultProps } from '../../../../../../../blocks/groups/html/Element/props';
+import HTMLSelector from '../../../../../inputs/extended/HTMLSelector/HTMLSelector';
 import RadioSelector from '../../../../../inputs/RadioSelector/RadioSelector';
 import TextAlignSelector from '../../../../../inputs/extended/TextAlignSelector/TextAlignSelector';
 import ColorSelector from '../../../../../inputs/ColorSelector/ColorSelector';

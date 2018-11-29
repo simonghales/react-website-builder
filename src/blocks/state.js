@@ -6,6 +6,7 @@ import type {
   AddBlockModel,
   BlockGroupModel,
   BlockModel,
+  BlockModelPropsConfig,
 } from './models';
 import { addableBlocks, getBlock, getBlockGroup } from './blocks';
 import type { DataModule } from '../data/modules/models';
@@ -15,6 +16,7 @@ import { blockGroups, blockTypes } from './config';
 import ModuleImport from './groups/module/ModuleImport/ModuleImport';
 import type { ModuleTemplate } from '../data/moduleTemplates/models';
 import { EMPTY_BLOCK_STYLES } from '../data/styles/defaults';
+import { blockPropsDisplaySections } from './props';
 
 function mapBlockToAddableBlock(block: BlockModel): AddBlockModel {
   return {
@@ -130,4 +132,18 @@ export function getBlockFromModule(
       ...EMPTY_BLOCK_STYLES,
     },
   };
+}
+
+export function getBlockHtmlPropsKeys(block: BlockModel): Array<string> {
+  const htmlProps = [];
+
+  const { propsConfig = {} } = block;
+  Object.keys(propsConfig).forEach(propKey => {
+    const propConfig: BlockModelPropsConfig = propsConfig[propKey];
+    if (propConfig.displaySection && propConfig.displaySection === blockPropsDisplaySections.html) {
+      htmlProps.push(propKey);
+    }
+  });
+
+  return htmlProps;
 }
