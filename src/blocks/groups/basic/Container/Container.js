@@ -14,6 +14,7 @@ const containerBlock: BlockModel = {
   defaultProps: containerDefaultProps,
   propsConfig: containerPropsConfig,
   childrenAllowed: true,
+  propsEnabled: false,
   stylesEnabled: true,
   htmlEnabled: true,
   dataBlock,

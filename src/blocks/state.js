@@ -166,3 +166,7 @@ export function getBlockContentPropsKeys(block: BlockModel): Array<string> {
 export function isBlockModuleBlock(block: BlockModel): boolean {
   return block.groupKey === blockGroups.Module && block.key === Module.key;
 }
+
+export function isBlockModuleImportBlock(block: BlockModel): boolean {
+  return block.groupKey === blockGroups.Module && block.key === ModuleImport.key;
+}

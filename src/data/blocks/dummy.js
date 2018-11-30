@@ -9,6 +9,7 @@ import Container from '../../blocks/groups/basic/Container/Container';
 import { DUMMY_STYLE_EMPTY, DUMMY_STYLE_TEST } from '../styles/dummy';
 import type { DataBlockModel } from './models';
 import { DUMMY_INTRO_MODULE } from '../modules/dummy';
+import { blockPropsConfigTypes } from '../../blocks/props';
 
 const DUMMY_BLOCK_HEADING: DataBlockModel = {
   key: 'N7vqq3r2ykL',
@@ -105,8 +106,15 @@ export const DUMMY_BLOCK_MODULE: DataBlockModel = {
   label: 'Site Intro',
   props: {
     children: null,
+    title: 'Simon Hales',
   },
-  propsConfig: {},
+  propsConfig: {
+    title: {
+      label: 'Title',
+      custom: true,
+      type: blockPropsConfigTypes.string,
+    },
+  },
   blockChildrenKeys: [
     DUMMY_BLOCK_HEADING.key,
     DUMMY_BLOCK_SUBHEADING.key,

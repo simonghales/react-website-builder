@@ -14,6 +14,7 @@ const moduleImportBlock: BlockModel = {
   defaultProps: moduleImportDefaultProps,
   propsConfig: moduleImportPropsConfig,
   childrenAllowed: false, // todo - make this flexible
+  propsEnabled: false,
   stylesEnabled: false,
   htmlEnabled: false,
   dataBlock,

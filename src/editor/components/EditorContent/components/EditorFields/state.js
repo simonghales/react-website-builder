@@ -78,6 +78,23 @@ export function getPropFieldLabel(
   return propKey;
 }
 
+export function getModulePropFieldLabel(
+  propKey: string,
+  propsConfig: DataBlockPropsConfigModel
+): string {
+  return propsConfig[propKey] && propsConfig[propKey].label ? propsConfig[propKey].label : propKey;
+}
+
+export function getModulePropFieldType(
+  propKey: string,
+  propsConfig: DataBlockPropsConfigModel
+): BlockPropsConfigTypes {
+  if (propsConfig[propKey] && propsConfig[propKey].type) {
+    return propsConfig[propKey].type;
+  }
+  return blockPropsConfigTypes.string;
+}
+
 export function getPropFieldType(
   propKey: string,
   block: BlockModel,
@@ -149,6 +166,29 @@ export function mapHtmlPropField(
   };
 }
 
+export function mapModuleHtmlPropField(
+  propKey: string,
+  dataBlock: DataBlockModel,
+  propsConfig: DataBlockPropsConfigModel,
+  updateValue: (propKey: string, value: string) => void
+) {
+  const label = getModulePropFieldLabel(propKey, propsConfig);
+  const value = getDataBlockPropValue(propKey, dataBlock);
+  const type = getModulePropFieldType(propKey, propsConfig);
+  const inputType = getFieldInputTypeFromPropType(type);
+  return {
+    key: propKey,
+    label,
+    labelHighlighted: true,
+    value,
+    inheritedValue: '',
+    inputType,
+    onChange: (newValue: string) => updateValue(propKey, newValue),
+    noLabelWrapper: false,
+    columns: 0,
+  };
+}
+
 export function getHtmlPropsFields(
   block: BlockModel,
   dataBlock: DataBlockModel,
@@ -165,4 +205,20 @@ export function getContentPropsFields(
 ): Array<EditorFieldModel> {
   const propsKeys = getBlockContentPropsKeys(block);
   return propsKeys.map(propKey => mapHtmlPropField(propKey, block, dataBlock, updateValue));
+}
+
+export function getDataBlockPropsKeys(dataBlock: DataBlockModel): Array<string> {
+  const propsConfig = getDataBlockPropsConfig(dataBlock);
+  return Object.keys(propsConfig);
+}
+
+export function getModuleImportContentPropsFields(
+  moduleBlockPropsConfig: DataBlockPropsConfigModel,
+  dataBlock: DataBlockModel,
+  updateValue: (propKey: string, value: string) => void
+): Array<EditorFieldModel> {
+  const propsKeys = Object.keys(moduleBlockPropsConfig);
+  return propsKeys.map(propKey =>
+    mapModuleHtmlPropField(propKey, dataBlock, moduleBlockPropsConfig, updateValue)
+  );
 }

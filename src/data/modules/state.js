@@ -2,7 +2,7 @@
 
 import type { DataModule, DataModules, MappedDataModule } from './models';
 import type { DataBlockModel, SitePageDataBlocks } from '../blocks/models';
-import { getMappedDataBlocks } from '../blocks/models';
+import { getBlockFromBlocks, getMappedDataBlocks } from '../blocks/models';
 import type { ModuleTemplates } from '../moduleTemplates/models';
 import type { MixinsModel } from '../mixins/models';
 import { blockGroups, blockTypes } from '../../blocks/config';
@@ -22,14 +22,19 @@ export function getSelectedBlockKeyFromModule(module: DataModule): string {
   return selectedBlock;
 }
 
-export function getModuleRootBlock(module: DataModule): DataBlockModel {
-  const { rootBlock } = module;
-  return module[rootBlock];
-}
-
 export function getModuleBlocks(module: DataModule): SitePageDataBlocks {
   const { blocks } = module;
   return blocks;
+}
+
+export function getModuleRootBlock(module: DataModule): DataBlockModel {
+  const { rootBlock: rootBlockKey } = module;
+  const blocks = getModuleBlocks(module);
+  const rootBlock = getBlockFromBlocks(blocks, rootBlockKey);
+  if (!rootBlock) {
+    throw new Error(`No root block found within module.`);
+  }
+  return rootBlock;
 }
 
 export function getBlockFromModuleBlocks(blockKey: string, module: DataModule): DataBlockModel {

@@ -8,6 +8,7 @@ export type BlockModelPropsConfig = {
   type?: BlockPropsConfigTypes,
   hidden?: boolean,
   displaySection?: BlockPropsDisplaySections,
+  custom?: boolean,
 };
 
 export type BlockPropsConfigModel = {
@@ -23,6 +24,7 @@ export type BlockModel = {
   },
   propsConfig: BlockPropsConfigModel,
   childrenAllowed: boolean,
+  propsEnabled: boolean,
   stylesEnabled: boolean,
   htmlEnabled: boolean,
   dataBlock: ({ [string]: any }) => DataBlockModel,

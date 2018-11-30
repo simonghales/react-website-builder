@@ -14,6 +14,7 @@ const elementBlock: BlockModel = {
   defaultProps: elementDefaultProps,
   propsConfig: elementPropsConfig,
   childrenAllowed: true,
+  propsEnabled: false,
   stylesEnabled: true,
   htmlEnabled: true,
   dataBlock,

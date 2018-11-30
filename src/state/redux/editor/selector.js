@@ -13,7 +13,7 @@ import {
   getSelectedBlockKeyFromModule,
 } from '../../../data/modules/state';
 import type { SitePageDataBlocks } from '../../../data/blocks/models';
-import { getBlockFromDataBlock } from '../../../blocks/blocks';
+import { getBlockFromDataBlock, getDataBlockModuleProps } from '../../../blocks/blocks';
 import { getBlockChildrenKeys } from '../../../data/blocks/state';
 
 export type BlocksKeys = {
@@ -111,5 +111,13 @@ export const getSelectedBlockBlock = createSelector(
   (module: DataModule) => {
     const dataBlock = getSelectedBlockFromModule(module);
     return getBlockFromDataBlock(dataBlock);
+  }
+);
+
+export const getSelectedBlockModulePropsConfig = createSelector(
+  [getModule, getModules],
+  (module: DataModule, modules: DataModules) => {
+    const dataBlock = getSelectedBlockFromModule(module);
+    return getDataBlockModuleProps(dataBlock, modules);
   }
 );

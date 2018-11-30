@@ -14,6 +14,7 @@ const headingBlock: BlockModel = {
   defaultProps: headingDefaultProps,
   propsConfig: headingPropsConfig,
   childrenAllowed: false,
+  propsEnabled: false,
   stylesEnabled: true,
   htmlEnabled: true,
   dataBlock,
