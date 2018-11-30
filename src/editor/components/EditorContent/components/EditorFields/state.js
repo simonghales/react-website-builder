@@ -198,18 +198,30 @@ export function getHtmlPropsFields(
   return htmlPropsKeys.map(propKey => mapHtmlPropField(propKey, block, dataBlock, updateValue));
 }
 
+export function getDataBlockPropsKeys(dataBlock: DataBlockModel): Array<string> {
+  const propsConfig = getDataBlockPropsConfig(dataBlock);
+  return Object.keys(propsConfig);
+}
+
+export function combinePropsKeys(propKeysArray: Array<Array<string>>): Array<string> {
+  const combinedPropsKeys = {};
+  propKeysArray.forEach((propsKeys: Array<string>) => {
+    propsKeys.forEach(propKey => {
+      combinedPropsKeys[propKey] = true;
+    });
+  });
+  return Object.keys(combinedPropsKeys);
+}
+
 export function getContentPropsFields(
   block: BlockModel,
   dataBlock: DataBlockModel,
   updateValue: (propKey: string, value: string) => void
 ): Array<EditorFieldModel> {
-  const propsKeys = getBlockContentPropsKeys(block);
+  const dataBlockPropsKeys = getDataBlockPropsKeys(dataBlock);
+  const blockPropsKeys = getBlockContentPropsKeys(block);
+  const propsKeys = combinePropsKeys([dataBlockPropsKeys, blockPropsKeys]);
   return propsKeys.map(propKey => mapHtmlPropField(propKey, block, dataBlock, updateValue));
-}
-
-export function getDataBlockPropsKeys(dataBlock: DataBlockModel): Array<string> {
-  const propsConfig = getDataBlockPropsConfig(dataBlock);
-  return Object.keys(propsConfig);
 }
 
 export function getModuleImportContentPropsFields(

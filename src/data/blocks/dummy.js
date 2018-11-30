@@ -142,6 +142,7 @@ export const DUMMY_BLOCK_PAGE_INTRO_MODULE: DataBlockModel = {
   label: 'Site Intro',
   props: {
     children: null,
+    title: 'Hello World!',
   },
   propsConfig: {},
   blockChildrenKeys: [],
