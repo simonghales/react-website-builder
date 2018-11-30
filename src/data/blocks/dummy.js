@@ -18,12 +18,12 @@ const DUMMY_BLOCK_HEADING: DataBlockModel = {
   blockType: blockTypes.module,
   label: 'Site Title',
   props: {
-    text: 'Simon Hales',
+    text: 'title',
   },
   propsConfig: {
     text: {
       label: 'Text',
-      type: 'string',
+      type: blockPropsConfigTypes.propReference,
     },
   },
   blockChildrenKeys: [],

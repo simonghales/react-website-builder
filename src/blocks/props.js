@@ -6,6 +6,7 @@ export const blockPropsConfigTypes = {
   module: 'module',
   blocks: 'blocks',
   htmlAttribute: 'htmlAttribute',
+  propReference: 'propReference',
 };
 
 export type BlockPropsConfigTypes = $Keys<typeof blockPropsConfigTypes>;

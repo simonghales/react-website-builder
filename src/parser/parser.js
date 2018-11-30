@@ -1,26 +1,56 @@
 // @flow
 import React from 'react';
 import h from 'react-hyperscript';
-import type { MappedDataBlockModel, MappedDataBlocks } from '../data/blocks/models';
+import type {
+  DataBlockPropsModel,
+  MappedDataBlockModel,
+  MappedDataBlocks,
+} from '../data/blocks/models';
 import { getBlock, getBlockGroup } from '../blocks/blocks';
 import type { BlockModel } from '../blocks/models';
 import { parsePropValue } from './props';
 import type { MappedDataModule } from '../data/modules/models';
-import { isBlockModuleBlock } from '../blocks/state';
+import { isBlockModuleBlock, isBlockModuleImportBlock } from '../blocks/state';
+import { blockPropsConfigTypes } from '../blocks/props';
 
-function getProps(
+export function geSplitPropsKeys(
+  props: DataBlockPropsModel,
+  block: BlockModel,
+  blockData: MappedDataBlockModel
+): [Array<string>, Array<string>] {
+  const nonChildPropKeys = [];
+  const childPropKeys = [];
+  Object.keys(props).forEach(propKey => {
+    const sourcePropConfig = block.propsConfig[propKey] ? block.propsConfig[propKey] : {};
+    const dataPropConfig = blockData.propsConfig[propKey] ? blockData.propsConfig[propKey] : {};
+    const propConfig = {
+      ...sourcePropConfig,
+      ...dataPropConfig,
+    };
+    if (
+      (propConfig.type && propConfig.type === blockPropsConfigTypes.blocks) ||
+      (propConfig.type && propConfig.type === blockPropsConfigTypes.module)
+    ) {
+      childPropKeys.push(propKey);
+    } else {
+      nonChildPropKeys.push(propKey);
+    }
+  });
+  return [nonChildPropKeys, childPropKeys];
+}
+
+function getParsedProps(
   block: BlockModel,
   blockData: MappedDataBlockModel,
-  hoveredBlockKey: string
+  hoveredBlockKey: string,
+  propKeys: Array<string>,
+  props: DataBlockPropsModel,
+  passedProps: DataBlockPropsModel = {}
 ): {
   [string]: any,
 } {
-  const props = {
-    ...block.defaultProps,
-    ...blockData.props,
-  };
   const parsedProps = {};
-  Object.keys(props).forEach(propKey => {
+  propKeys.forEach(propKey => {
     const sourcePropConfig = block.propsConfig[propKey] ? block.propsConfig[propKey] : {};
     const dataPropConfig = blockData.propsConfig[propKey] ? blockData.propsConfig[propKey] : {};
     const combinedPropConfig = {
@@ -32,15 +62,74 @@ function getProps(
       propKey,
       props[propKey],
       combinedPropConfig,
-      hoveredBlockKey
+      hoveredBlockKey,
+      passedProps
     );
   });
+  return parsedProps;
+}
+
+function getProps(
+  block: BlockModel,
+  blockData: MappedDataBlockModel,
+  hoveredBlockKey: string,
+  moduleProps: DataBlockPropsModel = {}
+): {
+  [string]: any,
+} {
+  const props = {
+    ...block.defaultProps,
+    ...blockData.props,
+  };
+  const [nonChildPropsKeys, childPropsKeys] = geSplitPropsKeys(props, block, blockData);
+
+  const isModule = isBlockModuleBlock(block);
+  const isModuleImport = isBlockModuleImportBlock(block);
+  const moduleImportProps = isModuleImport ? props : {};
+
+  let nonChildProps;
+
+  if (isModule) {
+    nonChildProps = getParsedProps(block, blockData, hoveredBlockKey, nonChildPropsKeys, props, {});
+  } else {
+    nonChildProps = getParsedProps(
+      block,
+      blockData,
+      hoveredBlockKey,
+      nonChildPropsKeys,
+      props,
+      moduleProps
+    );
+  }
+  const passedProps = isModule ? nonChildProps : moduleProps;
+
+  const childProps = getParsedProps(
+    block,
+    blockData,
+    hoveredBlockKey,
+    childPropsKeys,
+    props,
+    passedProps
+  );
+
+  const parsedProps = {
+    ...nonChildProps,
+    ...childProps,
+  };
+
+  console.log('passedProps', passedProps);
+  console.log('parsedProps', parsedProps);
+
   const customStyles = blockData.styles ? blockData.styles : {};
   parsedProps.customStyles = customStyles;
   return parsedProps;
 }
 
-function renderBlock(blockData: MappedDataBlockModel, hoveredBlockKey: string) {
+function renderBlock(
+  blockData: MappedDataBlockModel,
+  hoveredBlockKey: string,
+  passedProps?: DataBlockPropsModel
+) {
   const blockGroup = getBlockGroup(blockData.groupKey);
   if (!blockGroup) {
     console.warn(`Unable to match block groupKey "${blockData.groupKey}"`);
@@ -51,7 +140,7 @@ function renderBlock(blockData: MappedDataBlockModel, hoveredBlockKey: string) {
     console.warn(`Unable to match block blockKey "${blockData.blockKey}"`);
     return null;
   }
-  const props = getProps(block, blockData, hoveredBlockKey);
+  const props = getProps(block, blockData, hoveredBlockKey, passedProps);
   // return h(block.component, {
   //   ...props,
   //   blockHighlighterKey: blockData.key,
@@ -74,11 +163,19 @@ function renderBlock(blockData: MappedDataBlockModel, hoveredBlockKey: string) {
   );
 }
 
-export function previewBlocksParser(blocks: MappedDataBlocks, hoveredBlockKey: string) {
-  return blocks.map(block => renderBlock(block, hoveredBlockKey));
+export function previewBlocksParser(
+  blocks: MappedDataBlocks,
+  hoveredBlockKey: string,
+  passedProps?: DataBlockPropsModel
+) {
+  return blocks.map(block => renderBlock(block, hoveredBlockKey, passedProps));
 }
 
-export function previewModuleParser(module: MappedDataModule, hoveredBlockKey: string) {
+export function previewModuleParser(
+  module: MappedDataModule,
+  hoveredBlockKey: string,
+  passedProps?: DataBlockPropsModel
+) {
   const { blocks } = module;
-  return previewBlocksParser(blocks, hoveredBlockKey);
+  return previewBlocksParser(blocks, hoveredBlockKey, passedProps);
 }

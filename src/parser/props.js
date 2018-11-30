@@ -1,25 +1,39 @@
 // @flow
 
-import type { MappedDataBlockModel } from '../data/blocks/models';
+import type { DataBlockPropsModel, MappedDataBlockModel } from '../data/blocks/models';
 import { blockPropsConfigTypes } from '../blocks/props';
 import { previewBlocksParser, previewModuleParser } from './parser';
 import type { BlockModelPropsConfig } from '../blocks/models';
+
+export function getPropReferenceValue(propKey: string, passedProps: DataBlockPropsModel): string {
+  const propValue = passedProps[propKey];
+  if (typeof propValue !== 'undefined') {
+    return propValue;
+  }
+  console.warn(`propKey "${propKey}" not found within passedProps`);
+  return '';
+}
 
 export function parsePropValue(
   blockData: MappedDataBlockModel,
   propKey: string,
   propValue: any,
   propConfig: BlockModelPropsConfig,
-  hoveredBlockKey: string
+  hoveredBlockKey: string,
+  passedProps: DataBlockPropsModel
 ) {
+  if (propConfig.type && propConfig.type === blockPropsConfigTypes.propReference) {
+    return getPropReferenceValue(propValue, passedProps);
+  }
   if (propConfig.type && propConfig.type === blockPropsConfigTypes.blocks) {
     const blockChildren = blockData.blockChildren ? blockData.blockChildren : [];
-    return previewBlocksParser(blockChildren, hoveredBlockKey);
+    return previewBlocksParser(blockChildren, hoveredBlockKey, passedProps);
   }
   if (propConfig.type && propConfig.type === blockPropsConfigTypes.module) {
     const { module } = blockData;
     if (module) {
-      return previewModuleParser(module);
+      console.log('passedProps', passedProps);
+      return previewModuleParser(module, hoveredBlockKey, passedProps);
     }
     console.warn(
       `module data is missing for ${blockData.key} + ${

@@ -133,6 +133,7 @@ const mappedPropTypeToInputType = {
   [blockPropsConfigTypes.module]: editorInputTypes.string,
   [blockPropsConfigTypes.blocks]: editorInputTypes.string,
   [blockPropsConfigTypes.htmlAttribute]: editorInputTypes.string,
+  [blockPropsConfigTypes.propReference]: editorInputTypes.string,
 };
 
 export function getFieldInputTypeFromPropType(propType: BlockPropsConfigTypes): EditorInputTypes {
