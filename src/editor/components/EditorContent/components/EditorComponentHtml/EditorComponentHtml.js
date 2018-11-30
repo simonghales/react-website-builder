@@ -4,22 +4,22 @@ import { connect } from 'react-redux';
 import EditorLayout from '../EditorLayout/EditorLayout';
 import EditorLayoutColumn from '../EditorLayout/components/EditorLayoutColumn';
 import type { ReduxState } from '../../../../../state/redux/store';
-import EditorHtmlSelector from './component/EditorHtmlSelector/EditorHtmlSelector';
 import { getSelectedBlockBlock } from '../../../../../state/redux/editor/selector';
 import type { BlockModel } from '../../../../../blocks/models';
-import type { EditorFieldModel } from '../EditorFields/model';
 import { getHtmlPropsFields } from '../EditorFields/state';
 import type { DataBlockModel } from '../../../../../data/blocks/models';
 import EditorFieldGroupFields from '../EditorFields/components/EditorFieldGroupFields/EditorFieldGroupFields';
 import EditorFieldGroup from '../EditorFields/components/EditorFieldGroup/EditorFieldGroup';
 import EditorHtmlAttributes from './component/EditorHtmlAttributes/EditorHtmlAttributes';
 import { setBlockPropValue } from '../../../../../state/redux/editor/reducer';
+import DisabledMessage from '../DisabledMessage/DisabledMessage';
 
 type Props = {
   block: BlockModel,
   // eslint-disable-next-line react/no-unused-prop-types
   dataBlock: DataBlockModel,
   updateProp: (blockKey: string, propKey: string, value: string) => void,
+  disabled: boolean,
 };
 
 class EditorComponentHtml extends Component<Props> {
@@ -35,7 +35,10 @@ class EditorComponentHtml extends Component<Props> {
   }
 
   render() {
-    const { block } = this.props;
+    const { block, disabled } = this.props;
+    if (disabled) {
+      return <DisabledMessage message="HTML cannot be modified for this block." />;
+    }
     const htmlPropsFields = this.getHtmlPropsFields();
     return (
       <EditorLayout>

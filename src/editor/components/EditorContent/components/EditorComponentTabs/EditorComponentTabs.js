@@ -5,7 +5,7 @@ import { cx } from 'emotion';
 import styles from './styles';
 
 export const editorComponentTabs = {
-  Props: 'Props',
+  Content: 'Content',
   Styles: 'Styles',
   HTML: 'HTML',
 };
@@ -21,12 +21,12 @@ const EditorComponentTabs = ({ selectedTab, selectTab }: Props) => (
   <nav className={styles.containerClass}>
     <div
       className={cx(styles.tabClass, {
-        [styles.activeTabClass]: selectedTab === editorComponentTabs.Props,
+        [styles.activeTabClass]: selectedTab === editorComponentTabs.Content,
       })}
-      onClick={() => selectTab(editorComponentTabs.Props)}
+      onClick={() => selectTab(editorComponentTabs.Content)}
     >
       <MdFormatListBulleted />
-      <span>{editorComponentTabs.Props}</span>
+      <span>{editorComponentTabs.Content}</span>
     </div>
     <div
       className={cx(styles.tabClass, {

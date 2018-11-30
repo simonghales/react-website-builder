@@ -7,6 +7,7 @@ import type {
   BlockGroupModel,
   BlockModel,
   BlockModelPropsConfig,
+  BlockPropsConfigModel,
 } from './models';
 import { addableBlocks, getBlock, getBlockGroup } from './blocks';
 import type { DataModule } from '../data/modules/models';
@@ -135,18 +136,31 @@ export function getBlockFromModule(
   };
 }
 
+export function isBlockPropDisplayedUnderHtml(
+  propKey: string,
+  propsConfig: BlockPropsConfigModel
+): boolean {
+  const propConfig: BlockModelPropsConfig = propsConfig[propKey];
+  return propConfig.displaySection && propConfig.displaySection === blockPropsDisplaySections.html;
+}
+
+export function isBlockPropHidden(propKey: string, propsConfig: BlockPropsConfigModel): boolean {
+  const propConfig: BlockModelPropsConfig = propsConfig[propKey];
+  return !!propConfig.hidden;
+}
+
 export function getBlockHtmlPropsKeys(block: BlockModel): Array<string> {
-  const htmlProps = [];
-
   const { propsConfig = {} } = block;
-  Object.keys(propsConfig).forEach(propKey => {
-    const propConfig: BlockModelPropsConfig = propsConfig[propKey];
-    if (propConfig.displaySection && propConfig.displaySection === blockPropsDisplaySections.html) {
-      htmlProps.push(propKey);
-    }
-  });
+  return Object.keys(propsConfig)
+    .filter(propKey => isBlockPropDisplayedUnderHtml(propKey, propsConfig))
+    .filter(propKey => !isBlockPropHidden(propKey, propsConfig));
+}
 
-  return htmlProps;
+export function getBlockContentPropsKeys(block: BlockModel): Array<string> {
+  const { propsConfig = {} } = block;
+  return Object.keys(propsConfig)
+    .filter(propKey => !isBlockPropDisplayedUnderHtml(propKey, propsConfig))
+    .filter(propKey => !isBlockPropHidden(propKey, propsConfig));
 }
 
 export function isBlockModuleBlock(block: BlockModel): boolean {

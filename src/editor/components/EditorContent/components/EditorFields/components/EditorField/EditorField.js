@@ -23,6 +23,8 @@ export const editorInputTypes = {
   fontStyle: 'fontStyle',
 };
 
+export type EditorInputTypes = $Keys<typeof editorInputTypes>;
+
 export type FieldProps = {
   value: string,
   inheritedValue: string,

@@ -20,6 +20,11 @@ export function doesBlockAllowStyles(dataBlock: DataBlockModel): boolean {
   return block.stylesEnabled;
 }
 
+export function doesBlockAllowHtml(dataBlock: DataBlockModel): boolean {
+  const block = getBlockFromDataBlock(dataBlock);
+  return block.htmlEnabled;
+}
+
 export function getBlockLabel(
   dataBlock: DataBlockModel,
   modules: DataModules,

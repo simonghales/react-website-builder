@@ -7,7 +7,7 @@ import EditorComponentTabs, {
 import EditorComponentProps from './components/EditorComponentProps/EditorComponentProps';
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { EditorComponentTabsOptions } from './components/EditorComponentTabs/EditorComponentTabs';
-import { doesBlockAllowStyles } from '../../../data/blocks/state';
+import { doesBlockAllowHtml, doesBlockAllowStyles } from '../../../data/blocks/state';
 import EditorComponentStyles from './components/EditorComponentStyles/EditorComponentStyles';
 import EditorComponentHtml from './components/EditorComponentHtml/EditorComponentHtml';
 
@@ -23,7 +23,7 @@ class EditorContent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selectedTab: editorComponentTabs.HTML,
+      selectedTab: editorComponentTabs.Content,
     };
   }
 
@@ -36,8 +36,14 @@ class EditorContent extends Component<Props, State> {
   renderMainContent() {
     const { selectedTab } = this.state;
     const { selectedBlock } = this.props;
-    if (selectedTab === editorComponentTabs.Props) {
-      return <EditorComponentProps selectedBlock={selectedBlock} key={selectedBlock.key} />;
+    if (selectedTab === editorComponentTabs.Content) {
+      return (
+        <EditorComponentProps
+          key={selectedBlock.key}
+          blockKey={selectedBlock.key}
+          dataBlock={selectedBlock}
+        />
+      );
     }
     if (selectedTab === editorComponentTabs.Styles) {
       return (
@@ -48,7 +54,14 @@ class EditorContent extends Component<Props, State> {
         />
       );
     }
-    return <EditorComponentHtml key={selectedBlock.key} blockKey={selectedBlock.key} dataBlock={selectedBlock} />;
+    return (
+      <EditorComponentHtml
+        key={selectedBlock.key}
+        blockKey={selectedBlock.key}
+        dataBlock={selectedBlock}
+        disabled={!doesBlockAllowHtml(selectedBlock)}
+      />
+    );
   }
 
   render() {

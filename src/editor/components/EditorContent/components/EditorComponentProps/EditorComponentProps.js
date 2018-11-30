@@ -1,118 +1,64 @@
 // @flow
-import React from 'react';
-import { MdAdd } from 'react-icons/md';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import BlockProp from '../../../../../components/BlockProp/BlockProp';
-import styles from './styles';
+import EditorLayout from '../EditorLayout/EditorLayout';
+import EditorLayoutColumn from '../EditorLayout/components/EditorLayoutColumn';
+import type { ReduxState } from '../../../../../state/redux/store';
+import { getSelectedBlockBlock } from '../../../../../state/redux/editor/selector';
+import type { BlockModel } from '../../../../../blocks/models';
+import { getContentPropsFields, getHtmlPropsFields } from '../EditorFields/state';
 import type { DataBlockModel } from '../../../../../data/blocks/models';
-import { getBlockPropLabel, getBlockPropType } from '../../../../../data/blocks/models';
+import EditorFieldGroupFields from '../EditorFields/components/EditorFieldGroupFields/EditorFieldGroupFields';
+import EditorFieldGroup from '../EditorFields/components/EditorFieldGroup/EditorFieldGroup';
 import { setBlockPropValue } from '../../../../../state/redux/editor/reducer';
-import { getBlock, getBlockGroup } from '../../../../../blocks/blocks';
-import type { BlockModel, BlockModelPropsConfig } from '../../../../../blocks/models';
-import Button, { buttonTypes } from '../../../../../components/Button/Button';
-
-type PropFieldProps = {
-  blockKey: string,
-  propKey: string,
-  label: string,
-  value: string,
-  propType: string,
-  updateProp: (blockKey: string, propKey: string, value: any) => void,
-};
-
-const PropField = ({ label, value, blockKey, propKey, updateProp, propType }: PropFieldProps) => (
-  <div className={styles.fieldClass}>
-    <BlockProp
-      label={label}
-      value={value}
-      propType={propType}
-      onUpdate={(newValue: any) => updateProp(blockKey, propKey, newValue)}
-    />
-  </div>
-);
-
-function getMergedPropConfig(
-  blockData: DataBlockModel,
-  block: BlockModel,
-  propKey: string
-): BlockModelPropsConfig {
-  const blockPropConfig = block.propsConfig[propKey] ? block.propsConfig[propKey] : {};
-  const blockDataPropConfig = blockData.propsConfig[propKey] ? blockData.propsConfig[propKey] : {};
-  return {
-    ...blockPropConfig,
-    ...blockDataPropConfig,
-  };
-}
-
-function filterVisiblePropsFields(blockData: DataBlockModel, block: BlockModel): Array<string> {
-  const allBlockPropKeys = {};
-  Object.keys(blockData.props).forEach(propKey => {
-    allBlockPropKeys[propKey] = true;
-  });
-  Object.keys(block.propsConfig).forEach(propKey => {
-    allBlockPropKeys[propKey] = true;
-  });
-  return Object.keys(allBlockPropKeys).filter(propKey => {
-    const propConfig = getMergedPropConfig(blockData, block, propKey);
-    console.log('propConfig', propConfig);
-    return !propConfig.hidden;
-  });
-}
 
 type Props = {
-  selectedBlock: DataBlockModel,
-  updateProp: (blockKey: string, propKey: string, value: any) => void,
+  block: BlockModel,
+  // eslint-disable-next-line react/no-unused-prop-types
+  dataBlock: DataBlockModel,
+  updateProp: (blockKey: string, propKey: string, value: string) => void,
 };
 
-const EditorComponentProps = ({ selectedBlock, updateProp }: Props) => {
-  const blockGroup = getBlockGroup(selectedBlock.groupKey);
-  if (!blockGroup) {
-    throw new Error(`Couldn't find blockGroup for "${selectedBlock.groupKey}"`);
+class EditorComponentProps extends Component<Props> {
+  updateProp = (propKey: string, value: string) => {
+    const { dataBlock } = this.props;
+    const { updateProp } = this.props;
+    return updateProp(dataBlock.key, propKey, value);
+  };
+
+  getContentPropsFields() {
+    const { block, dataBlock } = this.props;
+    return getContentPropsFields(block, dataBlock, this.updateProp);
   }
-  const block = getBlock(blockGroup, selectedBlock.blockKey);
-  if (!block) {
-    throw new Error(`Couldn't find block for "${selectedBlock.blockKey}"`);
+
+  render() {
+    const { block } = this.props;
+    const contentPropsFields = this.getContentPropsFields();
+    return (
+      <EditorLayout>
+        <EditorLayoutColumn columns={14}>
+          <EditorFieldGroup>
+            <EditorFieldGroupFields fields={contentPropsFields} block={block} />
+          </EditorFieldGroup>
+        </EditorLayoutColumn>
+      </EditorLayout>
+    );
   }
-  return (
-    <div className={styles.containerClass}>
-      <div className={styles.addPropClass}>
-        <Button type={buttonTypes.slimIcon}>
-          <MdAdd/>
-          <span>
-            Add Prop
-          </span>
-        </Button>
-      </div>
-      <div>
-        {filterVisiblePropsFields(selectedBlock, block).map(propKey => {
-          const value = selectedBlock.props[propKey];
-          const propConfig = getMergedPropConfig(selectedBlock, block, propKey);
-          const label = getBlockPropLabel(propKey, propConfig);
-          const propType = getBlockPropType(propConfig);
-          const blockKey = selectedBlock.key;
-          return (
-            <PropField
-              key={`${blockKey}:${propKey}`}
-              blockKey={blockKey}
-              propKey={propKey}
-              value={value}
-              label={label}
-              propType={propType}
-              updateProp={updateProp}
-            />
-          );
-        })}
-      </div>
-    </div>
-  );
+}
+
+const mapStateToProps = (state: ReduxState) => {
+  const block = getSelectedBlockBlock(state);
+  return {
+    block,
+  };
 };
 
 const mapDispatchToProps = {
-  updateProp: (blockKey: string, propKey: string, value: any) =>
+  updateProp: (blockKey: string, propKey: string, value: string) =>
     setBlockPropValue(blockKey, propKey, value),
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(EditorComponentProps);
