@@ -164,9 +164,13 @@ export const DUMMY_BLOCK_PAGE_PARAGRAPH: DataBlockModel = {
   label: 'Site Description',
   props: {
     element: 'p',
-    content: 'Testing',
+    content: 'testing',
   },
-  propsConfig: {},
+  propsConfig: {
+    content: {
+      propReference: true,
+    },
+  },
   blockChildrenKeys: [],
   isParentModule: false,
   rawStyles: DUMMY_STYLE_EMPTY, // DUMMY_STYLE_TEST

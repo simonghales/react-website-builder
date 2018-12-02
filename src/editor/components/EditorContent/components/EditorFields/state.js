@@ -12,7 +12,7 @@ import { editorInputTypes } from './components/EditorField/EditorField';
 import { blockPropsConfigTypes } from '../../../../../blocks/props';
 import type { BlockPropsConfigTypes } from '../../../../../blocks/props';
 import type { EditorInputTypes } from './components/EditorField/EditorField';
-import type { DataBlockPropsDetails } from '../../../../../data/blocks/state';
+import { getBlockFromDataBlock } from '../../../../../blocks/blocks';
 
 export function getDataBlockPropsConfig(dataBlock: DataBlockModel): DataBlockPropsConfigModel {
   const { propsConfig = {} } = dataBlock;
@@ -22,6 +22,47 @@ export function getDataBlockPropsConfig(dataBlock: DataBlockModel): DataBlockPro
 export function getBlockPropsConfig(block: BlockModel): BlockPropsConfigModel {
   const { propsConfig = {} } = block;
   return propsConfig;
+}
+
+export function getBlockProps(block: BlockModel): DataBlockPropsModel {
+  const { props = {} } = block;
+  return props;
+}
+
+export function getDataBlockCombinedPropsConfig(
+  dataBlock: DataBlockModel
+): DataBlockPropsConfigModel {
+  const dataBlockPropsConfig = getDataBlockPropsConfig(dataBlock);
+  const block = getBlockFromDataBlock(dataBlock);
+  const blockPropsConfig = getBlockPropsConfig(block);
+  const combinedPropsConfig = {
+    ...blockPropsConfig,
+  };
+  Object.keys(dataBlockPropsConfig).forEach(propKey => {
+    if (combinedPropsConfig[propKey]) {
+      combinedPropsConfig[propKey] = {
+        ...combinedPropsConfig[propKey],
+        ...dataBlockPropsConfig[propKey],
+      };
+    }
+  });
+  return combinedPropsConfig;
+}
+
+export function getDataBlockProps(dataBlock: DataBlockModel): DataBlockPropsModel {
+  const { props = {} } = dataBlock;
+  return props;
+}
+
+export function getDataBlockCombinedProps(dataBlock: DataBlockModel): DataBlockPropsModel {
+  const dataBlockProps = getDataBlockProps(dataBlock);
+  const block = getBlockFromDataBlock(dataBlock);
+  const blockProps = getBlockProps(block);
+  const combinedProps = {
+    ...blockProps,
+    ...dataBlockProps,
+  };
+  return combinedProps;
 }
 
 export function getDataBlockPropLabel(propKey: string, dataBlock: DataBlockModel): string {
@@ -144,11 +185,6 @@ export function getPropFieldType(
     return blockType;
   }
   return blockPropsConfigTypes.string;
-}
-
-export function getDataBlockProps(dataBlock: DataBlockModel): DataBlockPropsModel {
-  const { props = {} } = dataBlock;
-  return props;
 }
 
 export function getDataBlockPropValue(propKey: string, dataBlock: DataBlockModel): string {

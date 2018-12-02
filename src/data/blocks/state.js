@@ -14,7 +14,10 @@ import { getModuleFromModules } from '../modules/state';
 import type { MixinModel, MixinsModel } from '../mixins/models';
 import { getMixinFromMixins } from '../mixins/state';
 import { blockGroups, blockTypes } from '../../blocks/config';
-import { getDataBlockPropsConfig } from '../../editor/components/EditorContent/components/EditorFields/state';
+import {
+  getDataBlockCombinedProps,
+  getDataBlockPropsConfig,
+} from '../../editor/components/EditorContent/components/EditorFields/state';
 import { blockPropsConfigTypes } from '../../blocks/props';
 
 export function doesBlockAllowStyles(dataBlock: DataBlockModel): boolean {
@@ -146,6 +149,7 @@ export type DataBlockPropDetail = {
   key: string,
   label: string,
   type: string,
+  value: string,
 };
 
 export type DataBlockPropsDetails = {
@@ -154,6 +158,7 @@ export type DataBlockPropsDetails = {
 
 export function getDataBlockPropsDetails(dataBlock: DataBlockModel): DataBlockPropsDetails {
   const propsDetails = {};
+  const combinedProps = getDataBlockCombinedProps(dataBlock);
   const dataBlockPropsConfig = getDataBlockPropsConfig(dataBlock);
   Object.keys(dataBlockPropsConfig).forEach(propKey => {
     const key = propKey;
@@ -171,6 +176,7 @@ export function getDataBlockPropsDetails(dataBlock: DataBlockModel): DataBlockPr
       key,
       label,
       type,
+      value: combinedProps[propKey],
     };
   });
   return propsDetails;

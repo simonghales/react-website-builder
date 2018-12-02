@@ -29,15 +29,21 @@ import type { MixinsModel } from '../../../data/mixins/models';
 import {
   getBlockFromModuleBlocks,
   getModuleBlocks,
+  getModuleRootBlock,
   getModuleRootBlockKey,
   getSelectedBlockFromModule,
 } from '../../../data/modules/state';
 import { getBlockDefaultDataBlock, getBlockFromModule } from '../../../blocks/state';
 import { getModuleTemplateFromModuleTemplates } from '../../../data/moduleTemplates/state';
-import { getBlockBlocks, getBlockParentKey } from '../../../data/blocks/state';
+import {
+  getBlockBlocks,
+  getBlockParentKey,
+  getDataBlockPropsDetails,
+} from '../../../data/blocks/state';
 import { generateNewModule } from '../../../data/modules/generator';
 import { generateNewModuleTemplate } from '../../../data/moduleTemplates/generator';
 import { generateNewModuleTemplateBlock } from '../../../data/blocks/generator';
+import { getModuleBlockPropsDetails } from './selector';
 
 export type EditorReduxState = {
   modules: DataModules,
@@ -720,9 +726,15 @@ function handleCreateNewModuleFromSelectedBlock(state: EditorReduxState): Editor
   const selectedBlock = getSelectedBlockFromModule(selectedModule);
   const blocks = getModuleBlocks(selectedModule);
   const newModuleBlocks = getBlockBlocks(selectedBlock.key, blocks);
-  const newModule = generateNewModule(newModuleBlocks, selectedBlock.key, selectedBlock.label);
-  const newModuleTemplate = generateNewModuleTemplate(newModule.key);
-  const newBlock = generateNewModuleTemplateBlock(newModuleTemplate.key, selectedBlock.label);
+  const selectedModulePropsDetails = getDataBlockPropsDetails(getModuleRootBlock(selectedModule));
+  const newModule = generateNewModule(
+    newModuleBlocks,
+    selectedBlock.key,
+    selectedBlock.label,
+    selectedBlock,
+    selectedModulePropsDetails
+  );
+  const newBlock = generateNewModuleTemplateBlock(newModule.key, selectedBlock.label);
   return {
     ...state,
     modules: {
@@ -733,10 +745,6 @@ function handleCreateNewModuleFromSelectedBlock(state: EditorReduxState): Editor
         selectedBlock: newBlock.key,
       },
       [newModule.key]: newModule,
-    },
-    moduleTemplates: {
-      ...state.moduleTemplates,
-      [newModuleTemplate.key]: newModuleTemplate,
     },
   };
 }
