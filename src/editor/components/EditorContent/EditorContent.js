@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import ReactTooltip from 'react-tooltip';
 import styles from './styles';
 import EditorComponentTabs, {
   editorComponentTabs,
@@ -28,9 +29,14 @@ class EditorContent extends Component<Props, State> {
   }
 
   handleSelectTab = (tab: EditorComponentTabsOptions) => {
-    this.setState({
-      selectedTab: tab,
-    });
+    this.setState(
+      {
+        selectedTab: tab,
+      },
+      () => {
+        ReactTooltip.rebuild();
+      }
+    );
   };
 
   renderMainContent() {

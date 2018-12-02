@@ -34,6 +34,7 @@ class EditorComponentProps extends Component<Props> {
 
   getContentPropsFields() {
     const { block, dataBlock, isModuleImportBlock, moduleBlockPropsConfig } = this.props;
+
     if (isModuleImportBlock) {
       return getModuleImportContentPropsFields(moduleBlockPropsConfig, dataBlock, this.updateProp);
     }

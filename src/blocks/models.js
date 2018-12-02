@@ -9,6 +9,7 @@ export type BlockModelPropsConfig = {
   hidden?: boolean,
   displaySection?: BlockPropsDisplaySections,
   custom?: boolean,
+  propReference?: boolean,
 };
 
 export type BlockPropsConfigModel = {

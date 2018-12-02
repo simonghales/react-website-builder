@@ -11,6 +11,9 @@ import FontFamilySelector from '../../../../../inputs/extended/FontFamilySelecto
 import FontWeightSelector from '../../../../../inputs/extended/FontWeightSelector/FontWeightSelector';
 import FontStyleSelector from '../../../../../inputs/extended/FontStyleSelector/FontStyleSelector';
 import type { BlockModel } from '../../../../../../../blocks/models';
+import LinkedHeader from './components/LinkedHeader/LinkedHeader';
+import { isBlockModuleBlock } from '../../../../../../../blocks/state';
+import PropReferenceSelector from '../../../../../inputs/extended/PropReferenceSelector/PropReferenceSelector';
 
 export const editorInputTypes = {
   string: 'string',
@@ -46,7 +49,10 @@ const mappedFieldTypes = {
   ),
 };
 
-const getInput = (inputType: string) => {
+const getInput = (inputType: string, isPropReference: boolean) => {
+  if (isPropReference) {
+    return (props: FieldProps) => <PropReferenceSelector {...props} inputType={inputType} />;
+  }
   const input = mappedFieldTypes[inputType];
   if (!input) {
     throw new Error(`Input type "${inputType}" not supported.`);
@@ -57,16 +63,29 @@ const getInput = (inputType: string) => {
 type Props = {
   label: string,
   value: string,
+
   inheritedValue: string,
   inputType: string,
   onChange: (value: string) => void,
   // eslint-disable-next-line react/no-unused-prop-types
   noLabelWrapper: boolean,
   block?: BlockModel,
+  isPropReference: boolean,
+  linkedPropKey?: string,
 };
 
-const EditorFieldInner = ({ label, inputType, value, inheritedValue, onChange, block }: Props) => {
-  const Input = getInput(inputType);
+const EditorFieldInner = ({
+  label,
+  inputType,
+  value,
+  inheritedValue,
+  onChange,
+  block,
+  isPropReference,
+  linkedPropKey,
+}: Props) => {
+  const Input = getInput(inputType, isPropReference);
+  const isModuleBlock = block ? isBlockModuleBlock(block) : false;
   return (
     <React.Fragment>
       <div
@@ -74,7 +93,10 @@ const EditorFieldInner = ({ label, inputType, value, inheritedValue, onChange, b
           [styles.labelInactiveClass]: !value,
         })}
       >
-        {label}
+        <div>{label}</div>
+        {!isModuleBlock && (
+          <LinkedHeader isLinked={isPropReference} linkedPropKey={linkedPropKey} />
+        )}
       </div>
       <div className={styles.inputContainerClass}>
         {Input(
@@ -103,7 +125,7 @@ const EditorFieldInnerSwitch = (props: Props) => {
 };
 
 const EditorField = (props: Props) => (
-  <div className={styles.containerClass}>
+  <div className={cx(styles.containerClass, styles.classNames.editorField)}>
     <EditorFieldInnerSwitch {...props} />
   </div>
 );

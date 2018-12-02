@@ -12,6 +12,7 @@ import { editorInputTypes } from './components/EditorField/EditorField';
 import { blockPropsConfigTypes } from '../../../../../blocks/props';
 import type { BlockPropsConfigTypes } from '../../../../../blocks/props';
 import type { EditorInputTypes } from './components/EditorField/EditorField';
+import type { DataBlockPropsDetails } from '../../../../../data/blocks/state';
 
 export function getDataBlockPropsConfig(dataBlock: DataBlockModel): DataBlockPropsConfigModel {
   const { propsConfig = {} } = dataBlock;
@@ -30,6 +31,15 @@ export function getDataBlockPropLabel(propKey: string, dataBlock: DataBlockModel
     return propConfig.label;
   }
   return '';
+}
+
+export function getDataBlockPropReference(propKey: string, dataBlock: DataBlockModel): boolean {
+  const propsConfig = getDataBlockPropsConfig(dataBlock);
+  const propConfig = propsConfig[propKey];
+  if (propConfig && propConfig.propReference) {
+    return true;
+  }
+  return false;
 }
 
 export function getDataBlockPropType(
@@ -51,6 +61,15 @@ export function getBlockPropLabel(propKey: string, block: BlockModel): string {
     return propConfig.label;
   }
   return '';
+}
+
+export function getBlockPropReference(propKey: string, block: BlockModel): string {
+  const propsConfig = getBlockPropsConfig(block);
+  const propConfig = propsConfig[propKey];
+  if (propConfig && propConfig.propReference) {
+    return true;
+  }
+  return false;
 }
 
 export function getBlockPropType(propKey: string, block: BlockModel): BlockPropsConfigTypes {
@@ -76,6 +95,22 @@ export function getPropFieldLabel(
     return blockLabel;
   }
   return propKey;
+}
+
+export function isFieldPropReference(
+  propKey: string,
+  block: BlockModel,
+  dataBlock: DataBlockModel
+): boolean {
+  const dataBlockPropReference = getDataBlockPropReference(propKey, dataBlock);
+  if (dataBlockPropReference) {
+    return true;
+  }
+  const blockPropReference = getBlockPropReference(propKey, block);
+  if (blockPropReference) {
+    return true;
+  }
+  return false;
 }
 
 export function getModulePropFieldLabel(
@@ -133,7 +168,6 @@ const mappedPropTypeToInputType = {
   [blockPropsConfigTypes.module]: editorInputTypes.string,
   [blockPropsConfigTypes.blocks]: editorInputTypes.string,
   [blockPropsConfigTypes.htmlAttribute]: editorInputTypes.string,
-  [blockPropsConfigTypes.propReference]: editorInputTypes.string,
 };
 
 export function getFieldInputTypeFromPropType(propType: BlockPropsConfigTypes): EditorInputTypes {
@@ -154,6 +188,8 @@ export function mapHtmlPropField(
   const value = getDataBlockPropValue(propKey, dataBlock);
   const type = getPropFieldType(propKey, block, dataBlock);
   const inputType = getFieldInputTypeFromPropType(type);
+  const isPropReference = isFieldPropReference(propKey, block, dataBlock);
+  const linkedPropKey = isPropReference ? value : '';
   return {
     key: propKey,
     label,
@@ -164,6 +200,8 @@ export function mapHtmlPropField(
     onChange: (newValue: string) => updateValue(propKey, newValue),
     noLabelWrapper: false,
     columns: 0,
+    isPropReference,
+    linkedPropKey,
   };
 }
 
@@ -177,6 +215,8 @@ export function mapModuleHtmlPropField(
   const value = getDataBlockPropValue(propKey, dataBlock);
   const type = getModulePropFieldType(propKey, propsConfig);
   const inputType = getFieldInputTypeFromPropType(type);
+  const isPropReference = getDataBlockPropReference(propKey, dataBlock);
+  const linkedPropKey = isPropReference ? value : '';
   return {
     key: propKey,
     label,
@@ -187,6 +227,8 @@ export function mapModuleHtmlPropField(
     onChange: (newValue: string) => updateValue(propKey, newValue),
     noLabelWrapper: false,
     columns: 0,
+    isPropReference,
+    linkedPropKey,
   };
 }
 

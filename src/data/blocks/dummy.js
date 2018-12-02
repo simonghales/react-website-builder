@@ -11,7 +11,7 @@ import type { DataBlockModel } from './models';
 import { DUMMY_INTRO_MODULE } from '../modules/dummy';
 import { blockPropsConfigTypes } from '../../blocks/props';
 
-const DUMMY_BLOCK_HEADING: DataBlockModel = {
+export const DUMMY_BLOCK_HEADING: DataBlockModel = {
   key: 'N7vqq3r2ykL',
   groupKey: blockGroups.Basic,
   blockKey: Heading.key,
@@ -23,7 +23,8 @@ const DUMMY_BLOCK_HEADING: DataBlockModel = {
   propsConfig: {
     text: {
       label: 'Text',
-      type: blockPropsConfigTypes.propReference,
+      type: blockPropsConfigTypes.string,
+      propReference: true,
     },
   },
   blockChildrenKeys: [],
@@ -43,7 +44,7 @@ const DUMMY_BLOCK_SUBHEADING: DataBlockModel = {
   propsConfig: {
     text: {
       label: 'Text',
-      type: 'string',
+      type: blockPropsConfigTypes.string,
     },
   },
   blockChildrenKeys: [],
@@ -142,9 +143,13 @@ export const DUMMY_BLOCK_PAGE_INTRO_MODULE: DataBlockModel = {
   label: 'Site Intro',
   props: {
     children: null,
-    title: 'Hello World!',
+    title: 'testing',
   },
-  propsConfig: {},
+  propsConfig: {
+    title: {
+      propReference: true,
+    },
+  },
   blockChildrenKeys: [],
   moduleKey: 'DUMMY_INTRO_MODULE',
   isParentModule: false,
@@ -184,12 +189,22 @@ export const DUMMY_BLOCK_PAGE_MODULE: DataBlockModel = {
   blockType: blockTypes.module,
   label: 'Home Page',
   props: {
-    children: null,
+    testing: 'hello world',
+    testing2: 'second test',
+    testing3: '',
   },
   propsConfig: {
-    children: {
-      label: 'Content',
-      type: 'blocks',
+    testing: {
+      label: 'Testing',
+      type: blockPropsConfigTypes.string,
+    },
+    testing2: {
+      label: 'Testing 2',
+      type: blockPropsConfigTypes.string,
+    },
+    testing3: {
+      label: 'HTML',
+      type: blockPropsConfigTypes.html,
     },
   },
   blockChildrenKeys: [DUMMY_BLOCK_PAGE_INTRO_MODULE.key, DUMMY_BLOCK_PAGE_PARAGRAPH.key],
@@ -209,7 +224,7 @@ export const DUMMY_BLOCK_SUB_MODULE: DataBlockModel = {
   propsConfig: {
     children: {
       label: 'Content',
-      type: 'blocks',
+      type: blockPropsConfigTypes.blocks,
     },
   },
   blockChildrenKeys: [],

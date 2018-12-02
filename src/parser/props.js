@@ -14,15 +14,23 @@ export function getPropReferenceValue(propKey: string, passedProps: DataBlockPro
   return '';
 }
 
+export function isValidPropValue(value?: string) {
+  return typeof value !== 'undefined' && value !== '';
+}
+
 export function parsePropValue(
   blockData: MappedDataBlockModel,
   propKey: string,
   propValue: any,
   propConfig: BlockModelPropsConfig,
   hoveredBlockKey: string,
-  passedProps: DataBlockPropsModel
+  passedProps: DataBlockPropsModel,
+  isModule: boolean
 ) {
-  if (propConfig.type && propConfig.type === blockPropsConfigTypes.propReference) {
+  if (isModule && isValidPropValue(passedProps[propKey])) {
+    return passedProps[propKey];
+  }
+  if (propConfig.propReference) {
     return getPropReferenceValue(propValue, passedProps);
   }
   if (propConfig.type && propConfig.type === blockPropsConfigTypes.blocks) {

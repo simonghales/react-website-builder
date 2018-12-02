@@ -9,12 +9,14 @@ import {
   getModuleFromModules,
   getModuleKeyFromModule,
   getModuleParentModules,
+  getModuleRootBlock,
   getSelectedBlockFromModule,
   getSelectedBlockKeyFromModule,
 } from '../../../data/modules/state';
 import type { SitePageDataBlocks } from '../../../data/blocks/models';
 import { getBlockFromDataBlock, getDataBlockModuleProps } from '../../../blocks/blocks';
-import { getBlockChildrenKeys } from '../../../data/blocks/state';
+import { getBlockChildrenKeys, getDataBlockPropsDetails } from '../../../data/blocks/state';
+import { getDataBlockPropsKeys } from '../../../editor/components/EditorContent/components/EditorFields/state';
 
 export type BlocksKeys = {
   key: string,
@@ -119,5 +121,21 @@ export const getSelectedBlockModulePropsConfig = createSelector(
   (module: DataModule, modules: DataModules) => {
     const dataBlock = getSelectedBlockFromModule(module);
     return getDataBlockModuleProps(dataBlock, modules);
+  }
+);
+
+export const getModuleBlockPropsKeys = createSelector(
+  [getModule],
+  (module: DataModule) => {
+    const dataBlock = getModuleRootBlock(module);
+    return getDataBlockPropsKeys(dataBlock);
+  }
+);
+
+export const getModuleBlockPropsDetails = createSelector(
+  [getModule],
+  (module: DataModule) => {
+    const dataBlock = getModuleRootBlock(module);
+    return getDataBlockPropsDetails(dataBlock);
   }
 );

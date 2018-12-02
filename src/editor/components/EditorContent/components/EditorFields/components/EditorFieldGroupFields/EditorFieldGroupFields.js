@@ -27,6 +27,8 @@ const EditorFieldGroupFields = ({ fields, block }: Props) => (
           inputType={field.inputType}
           noLabelWrapper={field.noLabelWrapper}
           block={block}
+          isPropReference={field.isPropReference}
+          linkedPropKey={field.linkedPropKey}
         />
       </div>
     ))}

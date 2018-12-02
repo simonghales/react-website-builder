@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import h from 'react-hyperscript';
 import type {
   DataBlockPropsModel,
   MappedDataBlockModel,
@@ -45,7 +44,8 @@ function getParsedProps(
   hoveredBlockKey: string,
   propKeys: Array<string>,
   props: DataBlockPropsModel,
-  passedProps: DataBlockPropsModel = {}
+  passedProps: DataBlockPropsModel = {},
+  isModule?: boolean = false
 ): {
   [string]: any,
 } {
@@ -63,7 +63,8 @@ function getParsedProps(
       props[propKey],
       combinedPropConfig,
       hoveredBlockKey,
-      passedProps
+      passedProps,
+      isModule
     );
   });
   return parsedProps;
@@ -85,23 +86,18 @@ function getProps(
 
   const isModule = isBlockModuleBlock(block);
   const isModuleImport = isBlockModuleImportBlock(block);
-  const moduleImportProps = isModuleImport ? props : {};
 
-  let nonChildProps;
+  const nonChildProps = getParsedProps(
+    block,
+    blockData,
+    hoveredBlockKey,
+    nonChildPropsKeys,
+    props,
+    moduleProps,
+    isModule
+  );
 
-  if (isModule) {
-    nonChildProps = getParsedProps(block, blockData, hoveredBlockKey, nonChildPropsKeys, props, {});
-  } else {
-    nonChildProps = getParsedProps(
-      block,
-      blockData,
-      hoveredBlockKey,
-      nonChildPropsKeys,
-      props,
-      moduleProps
-    );
-  }
-  const passedProps = isModule ? nonChildProps : moduleProps;
+  const passedProps = isModule || isModuleImport ? nonChildProps : moduleProps;
 
   const childProps = getParsedProps(
     block,
@@ -116,9 +112,6 @@ function getProps(
     ...nonChildProps,
     ...childProps,
   };
-
-  console.log('passedProps', passedProps);
-  console.log('parsedProps', parsedProps);
 
   const customStyles = blockData.styles ? blockData.styles : {};
   parsedProps.customStyles = customStyles;

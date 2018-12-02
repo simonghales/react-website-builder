@@ -8,7 +8,7 @@ import {
   DUMMY_BLOCK_PAGE_PARAGRAPH,
   DUMMY_BLOCK_PAGE_MODULE,
   DUMMY_BLOCK_SUB_MODULE,
-  DUMMY_BLOCK_PARAGRAPH,
+  DUMMY_BLOCK_HEADING,
 } from '../blocks/dummy';
 
 export const DUMMY_INTRO_MODULE: DataModule = {
@@ -18,7 +18,7 @@ export const DUMMY_INTRO_MODULE: DataModule = {
   moduleTemplateKey: 'DUMMY_MODULE_TEMPLATE_INTRO',
   blocks: DUMMY_BLOCKS,
   rootBlock: DUMMY_BLOCK_MODULE.key,
-  selectedBlock: DUMMY_BLOCK_PARAGRAPH.key,
+  selectedBlock: DUMMY_BLOCK_HEADING.key,
   isTemplate: true,
 };
 

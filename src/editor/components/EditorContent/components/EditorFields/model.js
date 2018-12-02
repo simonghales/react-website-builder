@@ -10,6 +10,8 @@ export type EditorFieldModel = {
   onChange: (value: string) => void,
   noLabelWrapper: boolean,
   columns: number,
+  isPropReference: boolean,
+  linkedPropKey: string,
 };
 
 export type EditorFieldGroupModel = {

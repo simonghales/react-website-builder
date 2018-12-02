@@ -14,6 +14,8 @@ import { getModuleFromModules } from '../modules/state';
 import type { MixinModel, MixinsModel } from '../mixins/models';
 import { getMixinFromMixins } from '../mixins/state';
 import { blockGroups, blockTypes } from '../../blocks/config';
+import { getDataBlockPropsConfig } from '../../editor/components/EditorContent/components/EditorFields/state';
+import { blockPropsConfigTypes } from '../../blocks/props';
 
 export function doesBlockAllowStyles(dataBlock: DataBlockModel): boolean {
   const block = getBlockFromDataBlock(dataBlock);
@@ -138,4 +140,49 @@ export function isDataBlockAModuleTemplate(dataBlock: DataBlockModel): boolean {
     (Object.prototype.hasOwnProperty.call(dataBlock, 'linkedModuleKey') ||
       Object.prototype.hasOwnProperty.call(dataBlock, 'moduleKey'))
   );
+}
+
+export type DataBlockPropDetail = {
+  key: string,
+  label: string,
+  type: string,
+};
+
+export type DataBlockPropsDetails = {
+  [string]: DataBlockPropDetail,
+};
+
+export function getDataBlockPropsDetails(dataBlock: DataBlockModel): DataBlockPropsDetails {
+  const propsDetails = {};
+  const dataBlockPropsConfig = getDataBlockPropsConfig(dataBlock);
+  Object.keys(dataBlockPropsConfig).forEach(propKey => {
+    const key = propKey;
+    const label = dataBlockPropsConfig[propKey].label
+      ? dataBlockPropsConfig[propKey].label
+      : propKey;
+    let type = blockPropsConfigTypes.string;
+    if (dataBlockPropsConfig[propKey].type) {
+      // eslint-disable-next-line prefer-destructuring
+      type = dataBlockPropsConfig[propKey].type;
+    } else {
+      console.warn(`No type found within propsConfig for ${propKey}`);
+    }
+    propsDetails[propKey] = {
+      key,
+      label,
+      type,
+    };
+  });
+  return propsDetails;
+}
+
+export function getPropLabelFromDataBlocksPropsDetails(
+  propKey: string,
+  propsDetails: DataBlockPropsDetails
+): string {
+  if (propsDetails[propKey]) {
+    return propsDetails[propKey].label;
+  }
+  console.warn(`Couldn't match "${propKey}" within data block's props details.`);
+  return propKey;
 }
