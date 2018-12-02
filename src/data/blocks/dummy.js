@@ -60,7 +60,7 @@ export const DUMMY_BLOCK_PARAGRAPH: DataBlockModel = {
   label: 'Site Description',
   props: {
     element: 'p',
-    content: 'Hello Chiao',
+    content: 'Hello Luke',
   },
   propsConfig: {},
   blockChildrenKeys: [],
