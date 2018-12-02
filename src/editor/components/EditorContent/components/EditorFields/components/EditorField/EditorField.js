@@ -61,6 +61,7 @@ const getInput = (inputType: string, isPropReference: boolean) => {
 };
 
 type Props = {
+  propKey: string,
   label: string,
   value: string,
 
@@ -71,10 +72,12 @@ type Props = {
   noLabelWrapper: boolean,
   block?: BlockModel,
   isPropReference: boolean,
+  linkedPropEnabled: boolean,
   linkedPropKey?: string,
 };
 
 const EditorFieldInner = ({
+  propKey,
   label,
   inputType,
   value,
@@ -82,6 +85,7 @@ const EditorFieldInner = ({
   onChange,
   block,
   isPropReference,
+  linkedPropEnabled,
   linkedPropKey,
 }: Props) => {
   const Input = getInput(inputType, isPropReference);
@@ -94,8 +98,12 @@ const EditorFieldInner = ({
         })}
       >
         <div>{label}</div>
-        {!isModuleBlock && (
-          <LinkedHeader isLinked={isPropReference} linkedPropKey={linkedPropKey} />
+        {!isModuleBlock && linkedPropEnabled && (
+          <LinkedHeader
+            propKey={propKey}
+            isLinked={isPropReference}
+            linkedPropKey={linkedPropKey}
+          />
         )}
       </div>
       <div className={styles.inputContainerClass}>

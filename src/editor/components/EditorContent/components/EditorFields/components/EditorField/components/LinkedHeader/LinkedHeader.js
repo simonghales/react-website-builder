@@ -7,11 +7,14 @@ import styles from '../../styles';
 import type { ReduxState } from '../../../../../../../../../state/redux/store';
 import { getModuleBlockPropsDetails } from '../../../../../../../../../state/redux/editor/selector';
 import { getPropLabelFromDataBlocksPropsDetails } from '../../../../../../../../../data/blocks/state';
+import { setPropLinkedReference } from '../../../../../../../../../state/redux/editor/reducer';
 
 type Props = {
+  propKey: string,
   isLinked: boolean,
   linkedPropKey?: string,
   linkedPropLabel: string,
+  setLinked: (propKey: string, isLinked: boolean) => void,
 };
 
 class LinkedHeader extends Component<Props> {
@@ -23,11 +26,11 @@ class LinkedHeader extends Component<Props> {
   };
 
   handleToggleLinked = () => {
-    const { isLinked } = this.props;
+    const { propKey, isLinked, setLinked } = this.props;
     if (isLinked) {
-      console.log('unlink!');
+      setLinked(propKey, false);
     } else {
-      console.log('show linked options');
+      setLinked(propKey, true);
     }
   };
 
@@ -66,4 +69,11 @@ const mapStateToProps = (state: ReduxState, { linkedPropKey }: Props) => {
   };
 };
 
-export default connect(mapStateToProps)(LinkedHeader);
+const mapDispatchToProps = {
+  setLinked: (propKey: string, isLinked: boolean) => setPropLinkedReference(propKey, isLinked),
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LinkedHeader);

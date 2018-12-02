@@ -9,7 +9,7 @@ import { getModuleBlockPropsDetails } from '../../../../../state/redux/editor/se
 import type { DataBlockPropsDetails } from '../../../../../data/blocks/state';
 
 const getDisplayValue = (propsDetails: DataBlockPropsDetails, propKey: string): string =>
-  propsDetails[propKey].label;
+  propsDetails[propKey] ? propsDetails[propKey].label : '';
 
 const getOptions = (propsDetails: DataBlockPropsDetails, inputType: string): Array<SelectOption> =>
   Object.keys(propsDetails)

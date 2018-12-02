@@ -8,9 +8,10 @@ import type { BlockModel } from '../../../../../../../blocks/models';
 type Props = {
   fields: Array<EditorFieldModel>,
   block?: BlockModel,
+  isContent?: boolean,
 };
 
-const EditorFieldGroupFields = ({ fields, block }: Props) => (
+const EditorFieldGroupFields = ({ fields, block, isContent }: Props) => (
   <React.Fragment>
     {fields.map((field: EditorFieldModel) => (
       <div
@@ -19,6 +20,7 @@ const EditorFieldGroupFields = ({ fields, block }: Props) => (
         style={{ gridColumnEnd: `span ${field.columns}` }}
       >
         <EditorField
+          propKey={field.key}
           key={field.key}
           label={field.label}
           value={field.value}
@@ -27,6 +29,7 @@ const EditorFieldGroupFields = ({ fields, block }: Props) => (
           inputType={field.inputType}
           noLabelWrapper={field.noLabelWrapper}
           block={block}
+          linkedPropEnabled={isContent}
           isPropReference={field.isPropReference}
           linkedPropKey={field.linkedPropKey}
         />
@@ -34,5 +37,9 @@ const EditorFieldGroupFields = ({ fields, block }: Props) => (
     ))}
   </React.Fragment>
 );
+
+EditorFieldGroupFields.defaultProps = {
+  isContent: false,
+};
 
 export default EditorFieldGroupFields;

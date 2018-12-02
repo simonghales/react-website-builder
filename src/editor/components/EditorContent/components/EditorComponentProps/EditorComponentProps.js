@@ -49,7 +49,7 @@ class EditorComponentProps extends Component<Props> {
       <EditorLayout>
         <EditorLayoutColumn columns={14}>
           <EditorFieldGroup>
-            <EditorFieldGroupFields fields={contentPropsFields} block={block} />
+            <EditorFieldGroupFields fields={contentPropsFields} block={block} isContent={true} />
           </EditorFieldGroup>
         </EditorLayoutColumn>
       </EditorLayout>

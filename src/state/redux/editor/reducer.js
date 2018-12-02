@@ -2,9 +2,12 @@
 
 import { DUMMY_PAGE_DATA } from '../../../data/redux';
 import {
+  getBlockFromSelectedModule,
   getModuleFromState,
   getModulesFromState,
   getModuleTemplatesFromState,
+  getSelectedBlockKeyFromState,
+  getSelectedModule,
   getSelectedModuleKey,
 } from './state';
 import {
@@ -15,6 +18,7 @@ import {
   replaceBlocksWithBlock,
   updateAllBlocksOrder,
   updateBlockProp,
+  updateBlockPropIsLinked,
   updateBlockStyle,
   updateBlockStylesMixinsOrderByKeys,
 } from './modifiers';
@@ -44,6 +48,56 @@ export type EditorReduxState = {
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
+
+const SET_PROP_LINKED_REFERENCE = 'SET_PROP_LINKED_REFERENCE';
+
+type SetPropLinkedReferencePayload = {
+  blockKey?: string,
+  propKey: string,
+  isLinked: boolean,
+};
+
+type SetPropLinkedReferenceAction = {
+  type: string,
+  payload: SetPropLinkedReferencePayload,
+};
+
+export function setPropLinkedReference(
+  propKey: string,
+  isLinked: boolean,
+  blockKey?: string
+): SetPropLinkedReferenceAction {
+  return {
+    type: SET_PROP_LINKED_REFERENCE,
+    payload: {
+      propKey,
+      isLinked,
+      blockKey,
+    },
+  };
+}
+
+function handleSetPropLinkedReference(
+  state: EditorReduxState,
+  { propKey, isLinked, blockKey }: SetPropLinkedReferencePayload
+): EditorReduxState {
+  blockKey = blockKey || getSelectedBlockKeyFromState(state);
+  const module = getSelectedModule(state);
+  const block = getBlockFromSelectedModule(state, blockKey);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [module.key]: {
+        ...module,
+        blocks: {
+          ...module.blocks,
+          [blockKey]: updateBlockPropIsLinked(block, propKey, '', isLinked),
+        },
+      },
+    },
+  };
+}
 
 const SET_INITIAL_MODULE_HISTORY = 'SET_INITIAL_MODULE_HISTORY';
 
@@ -699,6 +753,7 @@ type Actions =
   | CreateNewModuleFromSelectedBlockAction;
 
 const ACTION_HANDLERS = {
+  [SET_PROP_LINKED_REFERENCE]: handleSetPropLinkedReference,
   [SET_INITIAL_MODULE_HISTORY]: handleSetInitialModuleHistory,
   [ADD_MIXIN_TO_BLOCK]: handleAddMixinToBlock,
   [UPDATE_BLOCK_STYLES_MIXINS_ORDER]: handleUpdateBlockStylesMixinsOrder,

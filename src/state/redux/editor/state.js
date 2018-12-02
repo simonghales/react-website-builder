@@ -192,3 +192,8 @@ export function getDataBlockPreviewProps(
     moduleKey: mapDataBlockModuleKey(dataBlock, modules, moduleTemplates),
   };
 }
+
+export function getSelectedBlockKeyFromState(state: EditorReduxState): string {
+  const module = getSelectedModule(state);
+  return getSelectedBlockKeyFromModule(module);
+}

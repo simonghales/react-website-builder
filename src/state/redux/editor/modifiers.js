@@ -30,6 +30,31 @@ export function updateBlockProp(
   return updatedBlock;
 }
 
+export function updateBlockPropIsLinked(
+  block: DataBlockModel,
+  propKey: string,
+  value: any,
+  isLinked: boolean
+): DataBlockModel {
+  const { propsConfig = {} } = block;
+  const propConfig = propsConfig[propKey] ? propsConfig[propKey] : {};
+  const updatedBlock = {
+    ...block,
+    props: {
+      ...block.props,
+      [propKey]: value,
+    },
+    propsConfig: {
+      ...propsConfig,
+      [propKey]: {
+        ...propConfig,
+        propReference: isLinked,
+      },
+    },
+  };
+  return updatedBlock;
+}
+
 export function updateBlockStylesMixinsOrderByKeys(
   dataBlock: DataBlockModel,
   mixinKeys: Array<string>
