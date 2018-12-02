@@ -1,16 +1,40 @@
 // @flow
 
 import type { BlockModelPropsConfig } from '../../blocks/models';
-import { blockTypes } from '../../blocks/blocks';
+import { getBlockFromDataBlock } from '../../blocks/blocks';
 import type { BlockStyles, MappedStyleModel } from '../styles/models';
 import { getMappedBlockStyles } from '../styles/state';
+import { getMappedDataModule } from '../modules/state';
+import type { DataModules, MappedDataModule } from '../modules/models';
+import { getMappedDataLinkedModule, getMappedLinkedModuleKey } from '../moduleTemplates/state';
+import type { ModuleTemplates } from '../moduleTemplates/models';
+import { getBlockLabel } from './state';
+import type { MixinsModel } from '../mixins/models';
+import { blockTypes } from '../../blocks/config';
+import { blockPropsConfigTypes } from '../../blocks/props';
 
-export const blockPropsConfigTypes = {
-  blocks: 'blocks',
-  string: 'string',
+export type DataBlockMixinModel = {
+  key: string,
+  disabledModifiers: {},
 };
 
-export type BlockPropsConfigTypes = $Keys<typeof blockPropsConfigTypes>;
+export type DataBlockMixinStylesModel = Array<DataBlockMixinModel>;
+
+export type DataBlockMappedMixinModel = {
+  key: string,
+  groupKey: string,
+  name: string,
+};
+
+export type DataBlockMappedMixinsModel = Array<DataBlockMappedMixinModel>;
+
+export type DataBlockPropsConfigModel = {
+  [string]: BlockModelPropsConfig,
+};
+
+export type DataBlockPropsModel = {
+  [string]: string,
+};
 
 export type DataBlockModel = {
   key: string,
@@ -18,32 +42,30 @@ export type DataBlockModel = {
   blockKey: string,
   blockType: string,
   label: string,
-  props: {
-    [string]: any,
-  },
-  propsConfig: {
-    [string]: BlockModelPropsConfig,
-  },
+  props: DataBlockPropsModel,
+  propsConfig: DataBlockPropsConfigModel,
   blockChildrenKeys: Array<string>,
   isParentModule: boolean,
+  moduleKey?: string,
+  linkedModuleKey?: string,
   styleKey?: string,
   rawStyles: BlockStyles,
+  mixinStyles?: DataBlockMixinStylesModel,
 };
 
-export type DataBlockModelMapped = DataBlockModel & {
-  blockChildren?: Array<DataBlockModelMapped>,
+export type MappedDataBlockModel = DataBlockModel & {
+  blockChildren?: Array<MappedDataBlockModel>,
+  module?: MappedDataModule,
+  moduleKey?: string,
+  blockLabel: string,
   styles: MappedStyleModel,
+  childrenAllowed: boolean,
 };
 
-export type MappedDataBlocks = Array<DataBlockModelMapped>;
+export type MappedDataBlocks = Array<MappedDataBlockModel>;
 
 export type SitePageDataBlocks = {
   [string]: DataBlockModel,
-};
-
-export type SitePageDataModel = {
-  blocks: SitePageDataBlocks,
-  rootBlocks: Array<string>,
 };
 
 export function getBlockFromBlocks(blocks: SitePageDataBlocks, key: string): DataBlockModel {
@@ -54,22 +76,67 @@ export function getBlockFromBlocks(blocks: SitePageDataBlocks, key: string): Dat
   return block;
 }
 
-function mapDataBlock(blockKey: string, blocks: SitePageDataBlocks): DataBlockModelMapped {
-  const block = getBlockFromBlocks(blocks, blockKey);
+function mapDataBlockModule(
+  dataBlock: DataBlockModel,
+  modules: DataModules,
+  moduleTemplates: ModuleTemplates,
+  mixins: MixinsModel
+) {
+  if (dataBlock.linkedModuleKey) {
+    return getMappedDataLinkedModule(dataBlock.linkedModuleKey, modules, moduleTemplates, mixins);
+  }
+  if (dataBlock.moduleKey) {
+    return getMappedDataModule(dataBlock.moduleKey, modules, moduleTemplates, mixins);
+  }
+  return undefined;
+}
+
+export function mapDataBlockModuleKey(
+  dataBlock: DataBlockModel,
+  modules: DataModules,
+  moduleTemplates: ModuleTemplates
+): string {
+  if (dataBlock.linkedModuleKey) {
+    return getMappedLinkedModuleKey(dataBlock.linkedModuleKey, modules, moduleTemplates);
+  }
+  if (dataBlock.moduleKey) {
+    return dataBlock.moduleKey;
+  }
+  return '';
+}
+
+export function mapDataBlock(
+  blockKey: string,
+  blocks: SitePageDataBlocks,
+  mapModule: boolean,
+  modules: DataModules,
+  moduleTemplates: ModuleTemplates,
+  mixins: MixinsModel
+): MappedDataBlockModel {
+  const dataBlock = getBlockFromBlocks(blocks, blockKey);
+  const block = getBlockFromDataBlock(dataBlock);
   return {
-    ...block,
-    blockChildren: block.blockChildrenKeys.map((childBlockKey: string) =>
-      mapDataBlock(childBlockKey, blocks)
+    ...dataBlock,
+    blockChildren: dataBlock.blockChildrenKeys.map((childBlockKey: string) =>
+      mapDataBlock(childBlockKey, blocks, mapModule, modules, moduleTemplates, mixins)
     ),
-    styles: getMappedBlockStyles(block),
+    module: mapModule ? mapDataBlockModule(dataBlock, modules, moduleTemplates, mixins) : undefined,
+    moduleKey: mapDataBlockModuleKey(dataBlock, modules, moduleTemplates),
+    styles: getMappedBlockStyles(dataBlock, mixins),
+    childrenAllowed: block.childrenAllowed,
+    blockLabel: getBlockLabel(dataBlock, modules, moduleTemplates),
   };
 }
 
 export function getMappedDataBlocks(
-  rootBlocks: Array<string>,
-  blocks: SitePageDataBlocks
+  rootBlock: string,
+  blocks: SitePageDataBlocks,
+  mapModule: boolean,
+  modules: DataModules,
+  moduleTemplates: ModuleTemplates,
+  mixins: MixinsModel
 ): MappedDataBlocks {
-  return rootBlocks.map(blockKey => mapDataBlock(blockKey, blocks));
+  return [mapDataBlock(rootBlock, blocks, mapModule, modules, moduleTemplates, mixins)];
 }
 
 export function getDataBlockGroupKey(data: DataBlockModel): string {
@@ -95,4 +162,8 @@ export function getDataBlockLabel(data: DataBlockModel): string {
 
 export function getBlockPropLabel(propKey: string, propConfig: BlockModelPropsConfig): string {
   return propConfig && propConfig.label ? propConfig.label : propKey;
+}
+
+export function getBlockPropType(propConfig: BlockModelPropsConfig): string {
+  return propConfig && propConfig.type ? propConfig.type : blockPropsConfigTypes.string;
 }

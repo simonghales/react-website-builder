@@ -16,6 +16,10 @@ const labelTextClass = css`
   padding-left: 3px;
 `;
 
+const inactiveLabelTextClass = css`
+  opacity: 0.35;
+`;
+
 const inputContainerClass = css`
   margin-top: 5px;
 `;
@@ -24,5 +28,6 @@ export default {
   containerClass,
   labelClass,
   labelTextClass,
+  inactiveLabelTextClass,
   inputContainerClass,
 };

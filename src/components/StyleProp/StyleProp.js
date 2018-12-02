@@ -1,6 +1,11 @@
 // @flow
 import React from 'react';
-import type { BlockStyles, StylePropModel } from '../../data/styles/models';
+import { cx } from 'emotion';
+import type {
+  BlockStyles,
+  EditorMappedStylesContainer,
+  StylePropModel,
+} from '../../data/styles/models';
 import styles from './styles';
 import { styleInputTypes } from '../../data/styles/styleProps';
 import FontFamilyInput from './components/FontFamilyInput';
@@ -32,19 +37,28 @@ type Props = {
   columns: number,
   styleProp: StylePropModel,
   blockStyles: BlockStyles,
+  editorMappedStyles: EditorMappedStylesContainer,
   updateStyle: (cssKey: string, value: string) => void,
 };
 
-const StyleProp = ({ columns, styleProp, blockStyles, updateStyle }: Props) => {
+const StyleProp = ({ columns, styleProp, blockStyles, editorMappedStyles, updateStyle }: Props) => {
   const inputComponent = getStyleInputComponent(styleProp.type);
-  const styleValue = getStyleValue(styleProp.cssKey, blockStyles);
+  const styleValue = getStyleValue(styleProp.cssKey, editorMappedStyles);
+  const { setInBlock = false } = styleValue;
   return (
     <div className={styles.containerClass} style={{ gridColumnEnd: `span ${columns}` }}>
       <label className={styles.labelClass}>
-        <div className={styles.labelTextClass}>{styleProp.label}</div>
+        <div
+          className={cx(styles.labelTextClass, {
+            [styles.inactiveLabelTextClass]: !setInBlock,
+          })}
+        >
+          {styleProp.label}
+        </div>
         <div className={styles.inputContainerClass}>
           {inputComponent({
-            styleValue,
+            styleValue: styleValue.value,
+            inheritedValue: styleValue.inheritedValue,
             updateStyle: (value: string) => updateStyle(styleProp.cssKey, value),
           })}
         </div>

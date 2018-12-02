@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import SelectInput from './SelectInput/SelectInput';
+import SelectInput from './SelectInput/OLDSelectInput';
 import type { StylePropInputProps } from './models';
 
 const options = [
@@ -14,12 +14,13 @@ const options = [
   },
 ];
 
-const FontStyleInput = ({ styleValue, updateStyle }: StylePropInputProps) => (
+const FontStyleInput = ({ styleValue, inheritedValue, updateStyle }: StylePropInputProps) => (
   <SelectInput
     isMulti={false}
     isCreatable
     options={options}
     styleValue={styleValue}
+    inheritedValue={inheritedValue}
     updateStyle={updateStyle}
   />
 );

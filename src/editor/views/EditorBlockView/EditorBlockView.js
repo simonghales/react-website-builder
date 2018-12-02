@@ -1,6 +1,8 @@
 // @flow
-import React from 'react';
-import connect from 'react-redux/es/connect/connect';
+import React, { Component } from 'react';
+import ReactTooltip from 'react-tooltip';
+import { MdDelete, MdCreateNewFolder } from 'react-icons/md';
+import { connect } from 'react-redux';
 import EditorPreviewIframe from '../../components/EditorPreviewIframe/EditorPreviewIframe';
 import styles from './styles';
 import EditorContent from '../../components/EditorContent/EditorContent';
@@ -13,36 +15,77 @@ import {
 } from '../../../data/blocks/models';
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { ReduxState } from '../../../state/redux/store';
-import { getSelectedBlock, getSelectedBlockStyle } from '../../../state/redux/editor/state';
-import type { BlockStyles } from '../../../data/styles/models';
+import { getSelectedModuleSelectedBlock } from '../../../state/redux/editor/state';
+import {
+  createNewModuleFromSelectedBlock,
+  removeBlockFromModule,
+} from '../../../state/redux/editor/reducer';
+import IconButton from '../../../components/IconButton/IconButton';
 
 type Props = {
   selectedBlock: DataBlockModel,
-  selectedBlockStyle: BlockStyles,
+  createModule: () => void,
+  removeBlock: (blockKey: string) => void,
 };
 
-const EditorBlockView = ({ selectedBlock, selectedBlockStyle }: Props) => (
-  <div className={styles.containerClass}>
-    <header className={styles.headerClass}>
-      <SmallHeading>{`${getDataBlockGroupKey(selectedBlock)}.${getDataBlockBlockKey(
-        selectedBlock
-      )}`}</SmallHeading>
-      <MediumLargeHeading>{`${getDataBlockLabel(selectedBlock)}`}</MediumLargeHeading>
-    </header>
-    <div className={styles.mainClass}>
-      <div className={styles.editorClass}>
-        <EditorContent selectedBlock={selectedBlock} selectedBlockStyle={selectedBlockStyle} />
+class EditorBlockView extends Component<Props> {
+  componentDidUpdate() {
+    ReactTooltip.rebuild();
+  }
+
+  render() {
+    const { createModule, selectedBlock, removeBlock } = this.props;
+    return (
+      <div className={styles.containerClass}>
+        <header className={styles.headerClass}>
+          <div className={styles.titleWrapperClass}>
+            <MediumLargeHeading>{`${getDataBlockLabel(selectedBlock)}`}</MediumLargeHeading>
+          </div>
+          <div className={styles.detailsClass}>
+            {!selectedBlock.isParentModule && (
+              <IconButton
+                className={styles.buttonClass}
+                tooltip="Delete block"
+                icon={<MdDelete size={17} />}
+                onClick={() => removeBlock(selectedBlock.key)}
+              />
+            )}
+            {!selectedBlock.isParentModule && (
+              <IconButton
+                className={styles.buttonClass}
+                tooltip="Save as module"
+                icon={<MdCreateNewFolder size={17} />}
+                onClick={createModule}
+              />
+            )}
+            <SmallHeading>{`${getDataBlockGroupKey(selectedBlock)}.${getDataBlockBlockKey(
+              selectedBlock
+            )}`}</SmallHeading>
+          </div>
+        </header>
+        <div className={styles.mainClass}>
+          <div className={styles.editorClass}>
+            <EditorContent selectedBlock={selectedBlock} />
+          </div>
+          <div className={styles.previewClass}>
+            <EditorPreviewIframe />
+          </div>
+        </div>
       </div>
-      <div className={styles.previewClass}>
-        <EditorPreviewIframe />
-      </div>
-    </div>
-  </div>
-);
+    );
+  }
+}
 
 const mapStateToProps = (state: ReduxState) => ({
-  selectedBlock: getSelectedBlock(state.editor),
-  selectedBlockStyle: getSelectedBlockStyle(state.editor),
+  selectedBlock: getSelectedModuleSelectedBlock(state.editor),
 });
 
-export default connect(mapStateToProps)(EditorBlockView);
+const mapDispatchToProps = {
+  createModule: () => createNewModuleFromSelectedBlock(),
+  removeBlock: (blockKey: string) => removeBlockFromModule(blockKey),
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditorBlockView);

@@ -2,13 +2,19 @@
 import React, { Component } from 'react';
 import PreviewPage from '../../components/PreviewPage/PreviewPage';
 import { PREVIEW_IFRAME_BROADCAST_INIT } from '../../constants';
-import { PREVIEW_CONTENT_UPDATE_EVENT } from '../../event';
+import {
+  PREVIEW_CONTENT_UPDATE_EVENT,
+  PREVIEW_HOVERED_BLOCK_UPDATE_EVENT,
+  PREVIEW_TAB_POLL_EVENT,
+  PREVIEW_TAB_POLL_RECEIVED_EVENT,
+} from '../../event';
 import type { MappedDataBlocks } from '../../../data/blocks/models';
 
 type Props = {};
 
 type State = {
   data: MappedDataBlocks | null,
+  hoveredBlockKey: string,
 };
 
 class PreviewView extends Component<Props, State> {
@@ -16,21 +22,54 @@ class PreviewView extends Component<Props, State> {
     super(props);
     this.state = {
       data: null,
+      hoveredBlockKey: '',
     };
   }
 
   componentDidMount() {
+    this.listenForMessages();
     this.listenForContentUpdateEvents();
     this.updateParentWindow();
   }
 
   componentWillUnmount() {
     window.removeEventListener(PREVIEW_CONTENT_UPDATE_EVENT, this.handleContentUpdateEvent);
+    window.removeEventListener(
+      PREVIEW_HOVERED_BLOCK_UPDATE_EVENT,
+      this.handleHoveredBlockUpdateEvent
+    );
   }
+
+  listenForMessages() {
+    window.addEventListener('message', this.handleReceivedMessage, false);
+  }
+
+  handleReceivedMessage = (event: any) => {
+    const { data } = event;
+    if (data === PREVIEW_TAB_POLL_EVENT) {
+      this.handlePreviewTabPollEvent(event);
+    }
+  };
 
   listenForContentUpdateEvents() {
     window.addEventListener(PREVIEW_CONTENT_UPDATE_EVENT, this.handleContentUpdateEvent);
+    window.addEventListener(PREVIEW_HOVERED_BLOCK_UPDATE_EVENT, this.handleHoveredBlockUpdateEvent);
   }
+
+  handlePreviewTabPollEvent = (event: any) => {
+    event.source.postMessage(PREVIEW_TAB_POLL_RECEIVED_EVENT, '*');
+  };
+
+  handleHoveredBlockUpdateEvent = (event: any) => {
+    const { detail } = event;
+    if (!detail && detail !== '') {
+      console.warn(`No detail provided`);
+      return;
+    }
+    this.setState({
+      hoveredBlockKey: detail,
+    });
+  };
 
   handleContentUpdateEvent = (event: any) => {
     const { detail } = event;
@@ -44,13 +83,13 @@ class PreviewView extends Component<Props, State> {
   };
 
   updateParentWindow() {
-    window.parent.postMessage(PREVIEW_IFRAME_BROADCAST_INIT);
+    window.parent.postMessage(PREVIEW_IFRAME_BROADCAST_INIT, '*');
   }
 
   render() {
-    const { data } = this.state;
+    const { data, hoveredBlockKey } = this.state;
     if (!data) return null;
-    return <PreviewPage data={data} />;
+    return <PreviewPage data={data} hoveredBlockKey={hoveredBlockKey} />;
   }
 }
 

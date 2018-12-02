@@ -5,6 +5,7 @@ import styles from './styles';
 
 export const buttonTypes = {
   slim: 'slim',
+  slimIcon: 'slimIcon',
 };
 
 type ButtonTypes = $Keys<typeof buttonTypes>;
@@ -18,6 +19,7 @@ const Button = ({ children, type }: Props) => (
   <button
     className={cx(styles.buttonClass, {
       [styles.buttonSlimClass]: type === buttonTypes.slim,
+      [styles.buttonSlimIconClass]: type === buttonTypes.slimIcon,
     })}
   >
     {children}
