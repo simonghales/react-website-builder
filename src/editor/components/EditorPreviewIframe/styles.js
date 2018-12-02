@@ -24,8 +24,18 @@ const iframeClass = css`
   bottom: 0;
 `;
 
+const openInTabClass = css`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  font-size: 1rem;
+  margin-top: 8px;
+`;
+
 export default {
   containerClass,
   iframeWrapperClass,
   iframeClass,
+  openInTabClass,
 };

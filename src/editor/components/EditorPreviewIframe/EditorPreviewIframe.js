@@ -1,15 +1,19 @@
 // @flow
 import React, { Component } from 'react';
+import { MdOpenInNew } from 'react-icons/md';
 import { connect } from 'react-redux';
 import { PREVIEW_IFRAME_BROADCAST_INIT } from '../../../preview/constants';
 import {
   PREVIEW_CONTENT_UPDATE_EVENT,
   PREVIEW_HOVERED_BLOCK_UPDATE_EVENT,
+  PREVIEW_TAB_POLL_EVENT,
+  PREVIEW_TAB_POLL_RECEIVED_EVENT,
 } from '../../../preview/event';
 import styles from './styles';
 import type { ReduxState } from '../../../state/redux/store';
 import { getPreviewMappedBlocks } from '../../../state/redux/editor/state';
 import type { MappedDataBlocks } from '../../../data/blocks/models';
+import IconButton from '../../../components/IconButton/IconButton';
 
 type Props = {
   blocks: MappedDataBlocks,
@@ -18,6 +22,7 @@ type Props = {
 
 type State = {
   iframeInit: boolean,
+  openedPreviewInTab: boolean,
 };
 
 class EditorPreviewIframe extends Component<Props, State> {
@@ -25,10 +30,15 @@ class EditorPreviewIframe extends Component<Props, State> {
     current: null | HTMLIFrameElement,
   };
 
+  previewTabPollInterval: IntervalID;
+
+  previewTabReference;
+
   constructor(props: Props) {
     super(props);
     this.state = {
       iframeInit: false,
+      openedPreviewInTab: false,
     };
     this.iframeRef = React.createRef();
   }
@@ -57,6 +67,10 @@ class EditorPreviewIframe extends Component<Props, State> {
       this.setState({
         iframeInit: true,
       });
+      this.updateIframeData();
+      console.log('handlePreviewIframeBroadcast');
+    } else if (data === PREVIEW_TAB_POLL_RECEIVED_EVENT) {
+      this.handlePreviewTabPollReceivedEvent();
     }
   };
 
@@ -91,12 +105,43 @@ class EditorPreviewIframe extends Component<Props, State> {
     const iframe = this.getIframe();
     if (!iframe) return;
     const { blocks } = this.props;
-    iframe.contentWindow.dispatchEvent(
-      new CustomEvent(PREVIEW_CONTENT_UPDATE_EVENT, {
-        detail: blocks,
-      })
-    );
+    const dispatchEvent = new CustomEvent(PREVIEW_CONTENT_UPDATE_EVENT, {
+      detail: blocks,
+    });
+    iframe.contentWindow.dispatchEvent(dispatchEvent);
+    if (this.previewTabReference) {
+      this.previewTabReference.dispatchEvent(dispatchEvent);
+    }
   }
+
+  getPreviewUrl = (): string => `${window.location.origin}/preview`;
+
+  handleOpenPreviewInNewTab = () => {
+    const url = this.getPreviewUrl();
+    this.previewTabReference = window.open(url, `Preview Tab`);
+    this.setState({
+      openedPreviewInTab: true,
+    });
+    setTimeout(() => {
+      this.pollNewPreviewTab();
+      this.previewTabPollInterval = setInterval(this.pollNewPreviewTab, 1000);
+    });
+  };
+
+  handlePreviewTabPollReceivedEvent = () => {
+    console.log('handlePreviewTabPollReceivedEvent');
+    clearInterval(this.previewTabPollInterval);
+    this.updateIframeData();
+  };
+
+  pollNewPreviewTab = () => {
+    try {
+      this.previewTabReference.postMessage(PREVIEW_TAB_POLL_EVENT, '*');
+    } catch (e) {
+      console.error(e);
+      clearInterval(this.previewTabPollInterval);
+    }
+  };
 
   render() {
     return (
@@ -105,9 +150,18 @@ class EditorPreviewIframe extends Component<Props, State> {
           <iframe
             className={styles.iframeClass}
             ref={this.iframeRef}
-            src={`${window.location.origin}/preview`}
+            src={this.getPreviewUrl()}
             title="Preview"
           />
+          <div className={styles.openInTabClass}>
+            <div>
+              <IconButton
+                onClick={this.handleOpenPreviewInNewTab}
+                icon={<MdOpenInNew />}
+                tooltip="Open preview in new tab"
+              />
+            </div>
+          </div>
         </div>
       </div>
     );

@@ -2,7 +2,12 @@
 import React, { Component } from 'react';
 import PreviewPage from '../../components/PreviewPage/PreviewPage';
 import { PREVIEW_IFRAME_BROADCAST_INIT } from '../../constants';
-import { PREVIEW_CONTENT_UPDATE_EVENT, PREVIEW_HOVERED_BLOCK_UPDATE_EVENT } from '../../event';
+import {
+  PREVIEW_CONTENT_UPDATE_EVENT,
+  PREVIEW_HOVERED_BLOCK_UPDATE_EVENT,
+  PREVIEW_TAB_POLL_EVENT,
+  PREVIEW_TAB_POLL_RECEIVED_EVENT,
+} from '../../event';
 import type { MappedDataBlocks } from '../../../data/blocks/models';
 
 type Props = {};
@@ -22,6 +27,7 @@ class PreviewView extends Component<Props, State> {
   }
 
   componentDidMount() {
+    this.listenForMessages();
     this.listenForContentUpdateEvents();
     this.updateParentWindow();
   }
@@ -34,10 +40,25 @@ class PreviewView extends Component<Props, State> {
     );
   }
 
+  listenForMessages() {
+    window.addEventListener('message', this.handleReceivedMessage, false);
+  }
+
+  handleReceivedMessage = (event: any) => {
+    const { data } = event;
+    if (data === PREVIEW_TAB_POLL_EVENT) {
+      this.handlePreviewTabPollEvent(event);
+    }
+  };
+
   listenForContentUpdateEvents() {
     window.addEventListener(PREVIEW_CONTENT_UPDATE_EVENT, this.handleContentUpdateEvent);
     window.addEventListener(PREVIEW_HOVERED_BLOCK_UPDATE_EVENT, this.handleHoveredBlockUpdateEvent);
   }
+
+  handlePreviewTabPollEvent = (event: any) => {
+    event.source.postMessage(PREVIEW_TAB_POLL_RECEIVED_EVENT, '*');
+  };
 
   handleHoveredBlockUpdateEvent = (event: any) => {
     const { detail } = event;
@@ -62,7 +83,7 @@ class PreviewView extends Component<Props, State> {
   };
 
   updateParentWindow() {
-    window.parent.postMessage(PREVIEW_IFRAME_BROADCAST_INIT, "*");
+    window.parent.postMessage(PREVIEW_IFRAME_BROADCAST_INIT, '*');
   }
 
   render() {
