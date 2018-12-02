@@ -5,7 +5,17 @@ import { blockGroups, blockTypes } from '../../../config';
 import { EMPTY_BLOCK_STYLES } from '../../../../data/styles/defaults';
 import config from './config';
 
-const dataBlock = ({ moduleKey, label }: { moduleKey: string, label: string }) => ({
+const dataBlock = ({
+  moduleKey,
+  label,
+  props,
+  propsConfig,
+}: {
+  moduleKey: string,
+  label: string,
+  props: {},
+  propsConfig: {},
+}) => ({
   key: getBlockUniqueId(),
   groupKey: blockGroups.Module,
   blockKey: config.key,
@@ -13,8 +23,11 @@ const dataBlock = ({ moduleKey, label }: { moduleKey: string, label: string }) =
   label,
   props: {
     children: null,
+    ...props,
   },
-  propsConfig: {},
+  propsConfig: {
+    ...propsConfig,
+  },
   blockChildrenKeys: [],
   moduleKey,
   isParentModule: false,

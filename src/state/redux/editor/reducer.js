@@ -734,7 +734,12 @@ function handleCreateNewModuleFromSelectedBlock(state: EditorReduxState): Editor
     selectedBlock,
     selectedModulePropsDetails
   );
-  const newBlock = generateNewModuleTemplateBlock(newModule.key, selectedBlock.label);
+  const newBlock = generateNewModuleTemplateBlock(
+    newModule.key,
+    selectedBlock.label,
+    selectedBlock,
+    selectedModulePropsDetails
+  );
   return {
     ...state,
     modules: {
