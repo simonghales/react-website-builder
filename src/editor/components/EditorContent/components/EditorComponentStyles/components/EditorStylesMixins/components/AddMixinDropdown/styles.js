@@ -18,9 +18,9 @@ const containerClass = css`
 
 const contentClass = css`
   ${layout};
-  background-color: ${colors.blackBlue};
+  background-color: ${colors.blackInactiveBlue};
   overflow-y: auto;
-  border-radius: 0 0 3px 3px;
+  border-radius: 5px;
 `;
 
 export default {

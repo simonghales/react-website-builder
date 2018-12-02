@@ -4,6 +4,12 @@ import { css } from 'emotion';
 import colors from 'styles/config/colors';
 import { mediumLargeHeading, sectionHeading } from '../../../../../styles/typography';
 import fontWeights from '../../../../../styles/config/fontWeights';
+import {
+  addlistBlockClass,
+  addListClassNames,
+  addListIconClass,
+  addListLabelClass,
+} from '../../../../../styles/shared/addList';
 
 const containerClass = css`
   height: 100%;
@@ -38,18 +44,11 @@ const groupHeadingClass = css`
 const groupBlocksClass = css``;
 
 const classNames = {
-  addBlockBlock: 'addBlockBlock',
+  addBlockBlock: addListClassNames.addListBlock,
 };
 
 const blockClass = css`
-  padding: 5px 10px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${colors.brightBlue};
-  }
+  ${addlistBlockClass};
 `;
 
 const disabledBlockClass = css`
@@ -58,31 +57,11 @@ const disabledBlockClass = css`
 `;
 
 const blockIconClass = css`
-  width: 24px;
-  height: 24px;
-  background-color: ${colors.lightFaintest};
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 5px;
-  color: ${colors.lightMid};
-
-  .${classNames.addBlockBlock}:hover & {
-    color: ${colors.white};
-    background-color: #136ada;
-  }
+  ${addListIconClass};
 `;
 
 const blockLabelClass = css`
-  flex: 1;
-  color: ${colors.lightSlight};
-  font-size: 14px;
-  font-weight: ${fontWeights.medium};
-
-  .${classNames.addBlockBlock}:hover & {
-    color: ${colors.white};
-  }
+  ${addListLabelClass};
 `;
 
 export default {

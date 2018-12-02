@@ -29,9 +29,15 @@ class ColorSelector extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      color: props.value ? props.value : props.inheritedValue,
+      color: props.value ? props.value : '',
       selectingColor: false,
     };
+  }
+
+  getDisplayColor() {
+    const { color } = this.state;
+    const { inheritedValue } = this.props;
+    return color || inheritedValue;
   }
 
   handleColorChange = update => {
@@ -64,7 +70,7 @@ class ColorSelector extends Component<Props, State> {
   };
 
   render() {
-    const { color, selectingColor } = this.state;
+    const { selectingColor } = this.state;
     return (
       <div className={styles.wrapperClass}>
         <div
@@ -72,14 +78,14 @@ class ColorSelector extends Component<Props, State> {
             [styles.containerFocusedClass]: selectingColor,
           })}
           style={{
-            backgroundColor: color,
+            backgroundColor: this.getDisplayColor(),
           }}
           onClick={this.handleStartSelectingColor}
         />
         <div className={styles.menuClass}>
           {selectingColor && (
             <ColorMenu
-              color={color}
+              color={this.getDisplayColor()}
               onChange={this.handleColorChange}
               close={this.handleCloseColorMenu}
             />
