@@ -40,7 +40,6 @@ export function parsePropValue(
   if (propConfig.type && propConfig.type === blockPropsConfigTypes.module) {
     const { module } = blockData;
     if (module) {
-      console.log('passedProps', passedProps);
       return previewModuleParser(module, hoveredBlockKey, passedProps);
     }
     console.warn(

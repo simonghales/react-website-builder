@@ -141,9 +141,8 @@ function renderBlock(
   //   key: blockData.key,
   // });
 
-  if (!isBlockModuleBlock(block)) {
-    console.log('dont return a component');
-  }
+  // if (!isBlockModuleBlock(block)) {
+  // }
 
   const BlockComponent = block.component;
   return (

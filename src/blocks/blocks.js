@@ -75,6 +75,7 @@ export function getBlockFromDataBlock(dataBlock: DataBlockModel): BlockModel {
 }
 
 export function getDataBlockModuleKey(dataBlock: DataBlockModel): string {
+  console.log('dataBlock', dataBlock);
   const { moduleKey } = dataBlock;
   if (!moduleKey) {
     throw new Error(`No moduleKey found within provided dataBlock.`);
