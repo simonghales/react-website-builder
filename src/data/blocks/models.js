@@ -6,8 +6,6 @@ import type { BlockStyles, MappedStyleModel } from '../styles/models';
 import { getMappedBlockStyles } from '../styles/state';
 import { getMappedDataModule } from '../modules/state';
 import type { DataModules, MappedDataModule } from '../modules/models';
-import { getMappedDataLinkedModule } from '../moduleTemplates/state';
-import type { ModuleTemplates } from '../moduleTemplates/models';
 import { getBlockLabel } from './state';
 import type { MixinsModel } from '../mixins/models';
 import { blockTypes } from '../../blocks/config';

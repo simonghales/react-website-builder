@@ -16,7 +16,6 @@ import { getBlockUniqueId } from './utils';
 import { blockGroups, blockTypes } from './config';
 import Module from './groups/module/Module/Module';
 import ModuleImport from './groups/module/ModuleImport/ModuleImport';
-import type { ModuleTemplate } from '../data/moduleTemplates/models';
 import { EMPTY_BLOCK_STYLES } from '../data/styles/defaults';
 import { blockPropsDisplaySections } from './props';
 

@@ -3,14 +3,8 @@
 import type { DataModule, DataModules, MappedDataModule } from './models';
 import type { DataBlockModel, SitePageDataBlocks } from '../blocks/models';
 import { getBlockFromBlocks, getMappedDataBlocks } from '../blocks/models';
-import type { ModuleTemplates } from '../moduleTemplates/models';
 import type { MixinsModel } from '../mixins/models';
-import { blockGroups, blockTypes } from '../../blocks/config';
 import { isDataBlockAModuleTemplate } from '../blocks/state';
-import {
-  getModuleTemplateFromModuleTemplates,
-  getModuleTemplateModuleKey,
-} from '../moduleTemplates/state';
 
 export function getModuleRootBlockKey(module: DataModule): string {
   const { rootBlock } = module;
@@ -90,11 +84,7 @@ function addModuleKeyToKeys(
   return updatedModuleKeys;
 }
 
-export function recursivelyGetAllModuleChildModules(
-  module: DataModule,
-  modules: DataModules,
-  moduleTemplates: ModuleTemplates
-) {
+export function recursivelyGetAllModuleChildModules(module: DataModule, modules: DataModules) {
   let childModulesKeys = {};
 
   const rootBlockKey = getModuleRootBlockKey(module);
@@ -109,22 +99,12 @@ export function recursivelyGetAllModuleChildModules(
       if (block.moduleKey) {
         // eslint-disable-next-line prefer-destructuring
         moduleKey = block.moduleKey;
-      } else if (block.linkedModuleKey) {
-        const moduleTemplate = getModuleTemplateFromModuleTemplates(
-          block.linkedModuleKey,
-          moduleTemplates
-        );
-        moduleKey = getModuleTemplateModuleKey(moduleTemplate);
       } else {
-        throw new Error(`Block is missing both moduleKey and linkedModuleKey`);
+        throw new Error(`Block is missing moduleKey.`);
       }
       childModulesKeys = addModuleKeyToKeys(moduleKey, childModulesKeys, 1);
       const blockModule = getModuleFromModules(moduleKey, modules);
-      const blockModuleChildModuleKeys = recursivelyGetAllModuleChildModules(
-        blockModule,
-        modules,
-        moduleTemplates
-      );
+      const blockModuleChildModuleKeys = recursivelyGetAllModuleChildModules(blockModule, modules);
       Object.keys(blockModuleChildModuleKeys).forEach(childModuleKey => {
         childModulesKeys = addModuleKeyToKeys(
           childModuleKey,
@@ -141,10 +121,9 @@ export function recursivelyGetAllModuleChildModules(
 export function doesModuleChildrenContainModule(
   moduleKeyToCheck: string,
   module: DataModule,
-  modules: DataModules,
-  moduleTemplates: ModuleTemplates
+  modules: DataModules
 ): boolean {
-  const allChildModules = recursivelyGetAllModuleChildModules(module, modules, moduleTemplates);
+  const allChildModules = recursivelyGetAllModuleChildModules(module, modules);
   return !!allChildModules[moduleKeyToCheck];
 }
 

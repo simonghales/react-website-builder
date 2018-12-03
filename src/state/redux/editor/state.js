@@ -17,12 +17,10 @@ import { getBlockStyles } from '../../../data/styles/state';
 import type { DataModule, DataModules } from '../../../data/modules/models';
 import {
   getBlockFromModuleBlocks,
-  getModuleFromModules,
   getSelectedBlockFromModule,
   getSelectedBlockKeyFromModule,
 } from '../../../data/modules/state';
 import {
-  getBlockChildrenKeys,
   getBlockLabel,
   getDataBlockMappedMixins,
   getDataBlockMixins,
@@ -30,10 +28,6 @@ import {
 } from '../../../data/blocks/state';
 import type { MixinModel, MixinsModel } from '../../../data/mixins/models';
 import { getBlockMixinsStyles } from '../../../data/mixins/state';
-import type { ModuleTemplates } from '../../../data/moduleTemplates/models';
-import { getModuleTemplateModuleKey } from '../../../data/moduleTemplates/state';
-import type { ReduxState } from '../store';
-import { getBlockFromDataBlock } from '../../../blocks/blocks';
 
 export function getModuleFromState(state: EditorReduxState, moduleKey: string): DataModule {
   const { modules } = state;
@@ -118,10 +112,6 @@ export function getSelectedModuleSelectedBlockMixins(state: EditorReduxState): A
   const selectedModule = getSelectedModule(state);
   const selectedBlock = getSelectedBlockFromModule(selectedModule);
   return getDataBlockMixins(selectedBlock, mixinStyles);
-}
-
-export function getModuleTemplatesFromState(state: EditorReduxState): ModuleTemplates {
-  return state.moduleTemplates;
 }
 
 export function getModulesFromState(state: EditorReduxState): DataModules {
