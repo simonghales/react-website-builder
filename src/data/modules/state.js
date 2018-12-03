@@ -62,7 +62,6 @@ export function getModuleFromModules(moduleKey: string, modules: DataModules): D
 export function getMappedDataModule(
   moduleKey: string,
   modules: DataModules,
-  moduleTemplates: ModuleTemplates,
   mixins: MixinsModel
 ): MappedDataModule {
   const module = getModuleFromModules(moduleKey, modules);
@@ -71,7 +70,7 @@ export function getMappedDataModule(
   return {
     key: module.key,
     rootBlock: rootBlockKey,
-    blocks: getMappedDataBlocks(rootBlockKey, blocks, true, modules, moduleTemplates, mixins),
+    blocks: getMappedDataBlocks(rootBlockKey, blocks, true, modules, mixins),
   };
 }
 

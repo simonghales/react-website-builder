@@ -30,21 +30,17 @@ export function doesBlockAllowHtml(dataBlock: DataBlockModel): boolean {
   return block.htmlEnabled;
 }
 
-export function getBlockLabel(
-  dataBlock: DataBlockModel,
-  modules: DataModules,
-  moduleTemplates: ModuleTemplates
-): string {
+export function getBlockLabel(dataBlock: DataBlockModel, modules: DataModules): string {
   if (dataBlock.groupKey === blockGroups.Module && dataBlock.blockKey === ModuleImport.key) {
-    if (dataBlock.linkedModuleKey) {
-      const moduleTemplate = getModuleTemplateFromModuleTemplates(
-        dataBlock.linkedModuleKey,
-        moduleTemplates
-      );
-      const moduleKey = getModuleTemplateModuleKey(moduleTemplate);
-      const module = getModuleFromModules(moduleKey, modules);
-      return `${module.groupKey}.${module.name}`;
-    }
+    // if (dataBlock.linkedModuleKey) {
+    //   const moduleTemplate = getModuleTemplateFromModuleTemplates(
+    //     dataBlock.linkedModuleKey,
+    //     moduleTemplates
+    //   );
+    //   const moduleKey = getModuleTemplateModuleKey(moduleTemplate);
+    //   const module = getModuleFromModules(moduleKey, modules);
+    //   return `${module.groupKey}.${module.name}`;
+    // }
     return `Custom Module`;
   }
   return getDataBlockType(dataBlock);

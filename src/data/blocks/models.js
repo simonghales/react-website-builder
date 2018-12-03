@@ -6,7 +6,7 @@ import type { BlockStyles, MappedStyleModel } from '../styles/models';
 import { getMappedBlockStyles } from '../styles/state';
 import { getMappedDataModule } from '../modules/state';
 import type { DataModules, MappedDataModule } from '../modules/models';
-import { getMappedDataLinkedModule, getMappedLinkedModuleKey } from '../moduleTemplates/state';
+import { getMappedDataLinkedModule } from '../moduleTemplates/state';
 import type { ModuleTemplates } from '../moduleTemplates/models';
 import { getBlockLabel } from './state';
 import type { MixinsModel } from '../mixins/models';
@@ -76,29 +76,14 @@ export function getBlockFromBlocks(blocks: SitePageDataBlocks, key: string): Dat
   return block;
 }
 
-function mapDataBlockModule(
-  dataBlock: DataBlockModel,
-  modules: DataModules,
-  moduleTemplates: ModuleTemplates,
-  mixins: MixinsModel
-) {
-  if (dataBlock.linkedModuleKey) {
-    return getMappedDataLinkedModule(dataBlock.linkedModuleKey, modules, moduleTemplates, mixins);
-  }
+function mapDataBlockModule(dataBlock: DataBlockModel, modules: DataModules, mixins: MixinsModel) {
   if (dataBlock.moduleKey) {
-    return getMappedDataModule(dataBlock.moduleKey, modules, moduleTemplates, mixins);
+    return getMappedDataModule(dataBlock.moduleKey, modules, mixins);
   }
   return undefined;
 }
 
-export function mapDataBlockModuleKey(
-  dataBlock: DataBlockModel,
-  modules: DataModules,
-  moduleTemplates: ModuleTemplates
-): string {
-  if (dataBlock.linkedModuleKey) {
-    return getMappedLinkedModuleKey(dataBlock.linkedModuleKey, modules, moduleTemplates);
-  }
+export function mapDataBlockModuleKey(dataBlock: DataBlockModel): string {
   if (dataBlock.moduleKey) {
     return dataBlock.moduleKey;
   }
@@ -110,7 +95,6 @@ export function mapDataBlock(
   blocks: SitePageDataBlocks,
   mapModule: boolean,
   modules: DataModules,
-  moduleTemplates: ModuleTemplates,
   mixins: MixinsModel
 ): MappedDataBlockModel {
   const dataBlock = getBlockFromBlocks(blocks, blockKey);
@@ -118,13 +102,13 @@ export function mapDataBlock(
   return {
     ...dataBlock,
     blockChildren: dataBlock.blockChildrenKeys.map((childBlockKey: string) =>
-      mapDataBlock(childBlockKey, blocks, mapModule, modules, moduleTemplates, mixins)
+      mapDataBlock(childBlockKey, blocks, mapModule, modules, mixins)
     ),
-    module: mapModule ? mapDataBlockModule(dataBlock, modules, moduleTemplates, mixins) : undefined,
-    moduleKey: mapDataBlockModuleKey(dataBlock, modules, moduleTemplates),
+    module: mapModule ? mapDataBlockModule(dataBlock, modules, mixins) : undefined,
+    moduleKey: mapDataBlockModuleKey(dataBlock),
     styles: getMappedBlockStyles(dataBlock, mixins),
     childrenAllowed: block.childrenAllowed,
-    blockLabel: getBlockLabel(dataBlock, modules, moduleTemplates),
+    blockLabel: getBlockLabel(dataBlock, modules),
   };
 }
 
@@ -133,10 +117,9 @@ export function getMappedDataBlocks(
   blocks: SitePageDataBlocks,
   mapModule: boolean,
   modules: DataModules,
-  moduleTemplates: ModuleTemplates,
   mixins: MixinsModel
 ): MappedDataBlocks {
-  return [mapDataBlock(rootBlock, blocks, mapModule, modules, moduleTemplates, mixins)];
+  return [mapDataBlock(rootBlock, blocks, mapModule, modules, mixins)];
 }
 
 export function getDataBlockGroupKey(data: DataBlockModel): string {

@@ -633,14 +633,8 @@ function handleAddNewModule(
   { newModuleKey, moduleKey }: AddNewModulePayload
 ): EditorReduxState {
   const module = getModuleFromState(state, moduleKey);
-  const moduleTemplates = getModuleTemplatesFromState(state);
   const newModule = getModuleFromState(state, newModuleKey);
-  const { moduleTemplateKey } = newModule;
-  if (!moduleTemplateKey) {
-    throw new Error(`This module ${newModuleKey} does not have an associated template.`);
-  }
-  const moduleTemplate = getModuleTemplateFromModuleTemplates(moduleTemplateKey, moduleTemplates);
-  const dataBlock = getBlockFromModule(moduleTemplate, newModule);
+  const dataBlock = getBlockFromModule(newModule);
   const rootBlockKey = getModuleRootBlockKey(module);
   const selectedBlock = getSelectedBlockFromModule(module);
   console.log('adding new module', module);

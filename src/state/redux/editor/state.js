@@ -83,33 +83,26 @@ export function getSelectedBlockMixinsStyles(state: EditorReduxState): Array<Mix
   return getBlockMixinsStyles(mixinStyles, mixins);
 }
 
-export function getEditorMappedBlocks(state: EditorReduxState): MappedDataBlocks {
-  const { modules, moduleTemplates, mixinStyles } = state;
-  const selectedModule = getSelectedModule(state);
-  const { blocks, rootBlock } = selectedModule;
-  const mappedBlocks = getMappedDataBlocks(
-    rootBlock,
-    blocks,
-    false,
-    modules,
-    moduleTemplates,
-    mixinStyles
-  );
-  return mappedBlocks;
-}
+// export function getEditorMappedBlocks(state: EditorReduxState): MappedDataBlocks {
+//   const { modules, moduleTemplates, mixinStyles } = state;
+//   const selectedModule = getSelectedModule(state);
+//   const { blocks, rootBlock } = selectedModule;
+//   const mappedBlocks = getMappedDataBlocks(
+//     rootBlock,
+//     blocks,
+//     false,
+//     modules,
+//     moduleTemplates,
+//     mixinStyles
+//   );
+//   return mappedBlocks;
+// }
 
 export function getPreviewMappedBlocks(state: EditorReduxState): MappedDataBlocks {
-  const { modules, moduleTemplates, mixinStyles } = state;
+  const { modules, mixinStyles } = state;
   const selectedModule = getSelectedModule(state);
   const { blocks, rootBlock } = selectedModule;
-  const mappedBlocks = getMappedDataBlocks(
-    rootBlock,
-    blocks,
-    true,
-    modules,
-    moduleTemplates,
-    mixinStyles
-  );
+  const mappedBlocks = getMappedDataBlocks(rootBlock, blocks, true, modules, mixinStyles);
   return mappedBlocks;
 }
 
@@ -135,18 +128,18 @@ export function getModulesFromState(state: EditorReduxState): DataModules {
   return state.modules;
 }
 
-export function getAddableModuleTemplates(state: EditorReduxState): Array<DataModule> {
-  const moduleTemplates = getModuleTemplatesFromState(state);
-  const modules = getModulesFromState(state);
-  const addableModules: Array<DataModule> = [];
-  Object.keys(moduleTemplates).forEach(moduleTemplateKey => {
-    const moduleTemplate = moduleTemplates[moduleTemplateKey];
-    const moduleKey = getModuleTemplateModuleKey(moduleTemplate);
-    const module = getModuleFromModules(moduleKey, modules);
-    addableModules.push(module);
-  });
-  return addableModules;
-}
+// export function getAddableModuleTemplates(state: EditorReduxState): Array<DataModule> {
+//   const moduleTemplates = getModuleTemplatesFromState(state);
+//   const modules = getModulesFromState(state);
+//   const addableModules: Array<DataModule> = [];
+//   Object.keys(moduleTemplates).forEach(moduleTemplateKey => {
+//     const moduleTemplate = moduleTemplates[moduleTemplateKey];
+//     const moduleKey = getModuleTemplateModuleKey(moduleTemplate);
+//     const module = getModuleFromModules(moduleKey, modules);
+//     addableModules.push(module);
+//   });
+//   return addableModules;
+// }
 
 export function getPreviousModule(state: EditorReduxState): DataModule | null {
   const { selectedModulesHistory } = state;
@@ -182,14 +175,13 @@ export function getDataBlockPreviewProps(
   blockKey: string
 ): DataBlockPreviewProps {
   const modules = getModulesFromState(state);
-  const moduleTemplates = getModuleTemplatesFromState(state);
   const dataBlock = getBlockFromSelectedModule(state, blockKey);
   return {
-    type: getBlockLabel(dataBlock, modules, moduleTemplates),
+    type: getBlockLabel(dataBlock, modules),
     label: getDataBlockLabel(dataBlock),
     isRootBlock: dataBlock.isParentModule,
     isModule: isBlockModuleBlock(dataBlock),
-    moduleKey: mapDataBlockModuleKey(dataBlock, modules, moduleTemplates),
+    moduleKey: mapDataBlockModuleKey(dataBlock),
   };
 }
 

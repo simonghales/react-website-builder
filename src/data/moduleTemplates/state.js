@@ -30,13 +30,3 @@ export function getMappedDataLinkedModule(
   const moduleKey = getModuleTemplateModuleKey(moduleTemplate);
   return getMappedDataModule(moduleKey, modules, moduleTemplates, mixins);
 }
-
-export function getMappedLinkedModuleKey(
-  linkedModuleKey: string,
-  modules: DataModules,
-  moduleTemplates: ModuleTemplates
-): string {
-  const moduleTemplate = getModuleTemplateFromModuleTemplates(linkedModuleKey, moduleTemplates);
-  const moduleKey = getModuleTemplateModuleKey(moduleTemplate);
-  return moduleKey;
-}

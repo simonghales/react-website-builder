@@ -113,10 +113,7 @@ export function getBlockDefaultDataBlock(groupKey: string, blockKey: string): Da
   return dataBlock({});
 }
 
-export function getBlockFromModule(
-  moduleTemplate: ModuleTemplate,
-  module: DataModule
-): DataBlockModel {
+export function getBlockFromModule(module: DataModule): DataBlockModel {
   return {
     key: getBlockUniqueId(),
     groupKey: blockGroups.Module,
@@ -128,7 +125,7 @@ export function getBlockFromModule(
     },
     propsConfig: {},
     blockChildrenKeys: [],
-    linkedModuleKey: moduleTemplate.key,
+    moduleKey: module.key,
     isParentModule: false,
     rawStyles: {
       ...EMPTY_BLOCK_STYLES,
