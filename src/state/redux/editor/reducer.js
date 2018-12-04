@@ -5,7 +5,6 @@ import {
   getBlockFromSelectedModule,
   getModuleFromState,
   getModulesFromState,
-  getModuleTemplatesFromState,
   getSelectedBlockKeyFromState,
   getSelectedModule,
   getSelectedModuleKey,
@@ -23,7 +22,6 @@ import {
   updateBlockStylesMixinsOrderByKeys,
 } from './modifiers';
 import type { BlocksOrder } from './modifiers';
-import type { ModuleTemplates } from '../../../data/moduleTemplates/models';
 import type { DataModules } from '../../../data/modules/models';
 import type { MixinsModel } from '../../../data/mixins/models';
 import {
@@ -34,20 +32,16 @@ import {
   getSelectedBlockFromModule,
 } from '../../../data/modules/state';
 import { getBlockDefaultDataBlock, getBlockFromModule } from '../../../blocks/state';
-import { getModuleTemplateFromModuleTemplates } from '../../../data/moduleTemplates/state';
 import {
   getBlockBlocks,
   getBlockParentKey,
   getDataBlockPropsDetails,
 } from '../../../data/blocks/state';
 import { generateNewModule } from '../../../data/modules/generator';
-import { generateNewModuleTemplate } from '../../../data/moduleTemplates/generator';
 import { generateNewModuleTemplateBlock } from '../../../data/blocks/generator';
-import { getModuleBlockPropsDetails } from './selector';
 
 export type EditorReduxState = {
   modules: DataModules,
-  moduleTemplates: ModuleTemplates,
   selectedModule: string,
   selectedModulesHistory: Array<string>,
   mixinStyles: MixinsModel,
@@ -633,14 +627,8 @@ function handleAddNewModule(
   { newModuleKey, moduleKey }: AddNewModulePayload
 ): EditorReduxState {
   const module = getModuleFromState(state, moduleKey);
-  const moduleTemplates = getModuleTemplatesFromState(state);
   const newModule = getModuleFromState(state, newModuleKey);
-  const { moduleTemplateKey } = newModule;
-  if (!moduleTemplateKey) {
-    throw new Error(`This module ${newModuleKey} does not have an associated template.`);
-  }
-  const moduleTemplate = getModuleTemplateFromModuleTemplates(moduleTemplateKey, moduleTemplates);
-  const dataBlock = getBlockFromModule(moduleTemplate, newModule);
+  const dataBlock = getBlockFromModule(newModule);
   const rootBlockKey = getModuleRootBlockKey(module);
   const selectedBlock = getSelectedBlockFromModule(module);
   console.log('adding new module', module);

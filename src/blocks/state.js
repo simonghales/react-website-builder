@@ -16,7 +16,6 @@ import { getBlockUniqueId } from './utils';
 import { blockGroups, blockTypes } from './config';
 import Module from './groups/module/Module/Module';
 import ModuleImport from './groups/module/ModuleImport/ModuleImport';
-import type { ModuleTemplate } from '../data/moduleTemplates/models';
 import { EMPTY_BLOCK_STYLES } from '../data/styles/defaults';
 import { blockPropsDisplaySections } from './props';
 
@@ -113,10 +112,7 @@ export function getBlockDefaultDataBlock(groupKey: string, blockKey: string): Da
   return dataBlock({});
 }
 
-export function getBlockFromModule(
-  moduleTemplate: ModuleTemplate,
-  module: DataModule
-): DataBlockModel {
+export function getBlockFromModule(module: DataModule): DataBlockModel {
   return {
     key: getBlockUniqueId(),
     groupKey: blockGroups.Module,
@@ -128,7 +124,7 @@ export function getBlockFromModule(
     },
     propsConfig: {},
     blockChildrenKeys: [],
-    linkedModuleKey: moduleTemplate.key,
+    moduleKey: module.key,
     isParentModule: false,
     rawStyles: {
       ...EMPTY_BLOCK_STYLES,

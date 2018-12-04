@@ -222,15 +222,8 @@ export const DUMMY_BLOCK_SUB_MODULE: DataBlockModel = {
   blockKey: Module.key,
   blockType: blockTypes.module,
   label: 'Sub Module',
-  props: {
-    children: null,
-  },
-  propsConfig: {
-    children: {
-      label: 'Content',
-      type: blockPropsConfigTypes.blocks,
-    },
-  },
+  props: {},
+  propsConfig: {},
   blockChildrenKeys: [],
   isParentModule: true,
   rawStyles: DUMMY_STYLE_EMPTY,

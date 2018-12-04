@@ -5,7 +5,6 @@ import type { MappedDataBlocks, SitePageDataBlocks } from '../blocks/models';
 export type DataModule = {
   key: string,
   groupKey: string,
-  moduleTemplateKey?: string,
   name: string,
   blocks: SitePageDataBlocks,
   rootBlock: string,
