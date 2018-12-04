@@ -64,7 +64,7 @@ type Props = {
   propKey: string,
   label: string,
   value: string,
-
+  blockKey: string,
   inheritedValue: string,
   inputType: string,
   onChange: (value: string) => void,
@@ -81,6 +81,7 @@ const EditorFieldInner = ({
   label,
   inputType,
   value,
+  blockKey,
   inheritedValue,
   onChange,
   block,
@@ -100,6 +101,7 @@ const EditorFieldInner = ({
         <div>{label}</div>
         {!isModuleBlock && linkedPropEnabled && (
           <LinkedHeader
+            blockKey={blockKey}
             propKey={propKey}
             isLinked={isPropReference}
             linkedPropKey={linkedPropKey}

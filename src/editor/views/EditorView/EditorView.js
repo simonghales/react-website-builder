@@ -8,9 +8,12 @@ import EditorSidebar from '../../components/EditorSidebar/EditorSidebar';
 import EditorBlockView from '../EditorBlockView/EditorBlockView';
 import type { ReduxState } from '../../../state/redux/store';
 import { getAddingBlock } from '../../../state/redux/ui/state';
-import { setAddingBlock } from '../../../state/redux/ui/reducer';
+import {
+  setAddingBlock,
+  setInitialSelectedModuleHistory,
+  setSelectedModuleKey,
+} from '../../../state/redux/ui/reducer';
 import Tooltip from '../../../components/Tooltip/Tooltip';
-import { setInitialModuleHistory, setSelectedModule } from '../../../state/redux/editor/reducer';
 
 type Props = {
   addingBlock: boolean,
@@ -75,26 +78,26 @@ class EditorView extends Component<Props> {
     return (
       <React.Fragment>
         <Tooltip />
-      <div className={styles.containerClass}>
-        <header className={styles.headerClass}>header..</header>
-        <main className={styles.mainClass}>
-          <div className={styles.editorClass}>
-            <EditorSidebar />
-          </div>
-          <div className={styles.previewClass}>
-            <div
-              className={cx(styles.previewContentClass, {
-                [styles.previewContentDisabledClass]: addingBlock,
-              })}
-            >
-              <EditorBlockView />
+        <div className={styles.containerClass}>
+          <header className={styles.headerClass}>header..</header>
+          <main className={styles.mainClass}>
+            <div className={styles.editorClass}>
+              <EditorSidebar />
             </div>
-            {addingBlock && (
-              <div className={styles.previewBlockerClass} onClick={completeAddingBlock} />
-            )}
-          </div>
-        </main>
-      </div>
+            <div className={styles.previewClass}>
+              <div
+                className={cx(styles.previewContentClass, {
+                  [styles.previewContentDisabledClass]: addingBlock,
+                })}
+              >
+                <EditorBlockView />
+              </div>
+              {addingBlock && (
+                <div className={styles.previewBlockerClass} onClick={completeAddingBlock} />
+              )}
+            </div>
+          </main>
+        </div>
       </React.Fragment>
     );
   }
@@ -106,10 +109,10 @@ const mapStateToProps = (state: ReduxState) => ({
 
 const mapDispatchToProps = {
   setInitialHistory: (moduleKey: string, previousModuleKey: string) =>
-    setInitialModuleHistory(moduleKey, previousModuleKey),
+    setInitialSelectedModuleHistory(moduleKey, previousModuleKey), // todo - verify moduleKey is valid
   completeAddingBlock: () => setAddingBlock(false),
   setModule: (moduleKey: string, previousModuleKey: string) =>
-    setSelectedModule(moduleKey, previousModuleKey),
+    setSelectedModuleKey(moduleKey, previousModuleKey),
 };
 
 export default withRouter(

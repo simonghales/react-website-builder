@@ -15,12 +15,12 @@ import {
 } from '../../../data/blocks/models';
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { ReduxState } from '../../../state/redux/store';
-import { getSelectedModuleSelectedBlock } from '../../../state/redux/editor/state';
 import {
   createNewModuleFromSelectedBlock,
   removeBlockFromModule,
 } from '../../../state/redux/editor/reducer';
 import IconButton from '../../../components/IconButton/IconButton';
+import { getSelectedBlock } from '../../../state/redux/editor/selector';
 
 type Props = {
   selectedBlock: DataBlockModel,
@@ -77,7 +77,7 @@ class EditorBlockView extends Component<Props> {
 }
 
 const mapStateToProps = (state: ReduxState) => ({
-  selectedBlock: getSelectedModuleSelectedBlock(state.editor),
+  selectedBlock: getSelectedBlock(state),
 });
 
 const mapDispatchToProps = {

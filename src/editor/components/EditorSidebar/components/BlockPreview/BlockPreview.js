@@ -6,8 +6,13 @@ import { cx } from 'emotion';
 import styles from '../BlocksManager/styles';
 import type { ReduxState } from '../../../../../state/redux/store';
 import { getDataBlockPreviewProps } from '../../../../../state/redux/editor/state';
-import { setHoveredBlockKey } from '../../../../../state/redux/ui/reducer';
-import { setSelectedBlock, setSelectedModule } from '../../../../../state/redux/editor/reducer';
+import {
+  setHoveredBlockKey,
+  setModuleSelectedBlockKey,
+} from '../../../../../state/redux/ui/reducer';
+import { setSelectedBlock } from '../../../../../state/redux/editor/reducer';
+import { dispatchSelectBlock } from '../../../../../state/redux/shared/dispatch';
+import { getCurrentModuleKey } from '../../../../../state/redux/editor/selector';
 
 type Props = {
   type: string,
@@ -16,7 +21,6 @@ type Props = {
   blockKey: string,
   moduleKey: string,
   selectBlock: (blockKey: string) => void,
-  selectModule: (moduleKey: string) => void,
   setHoveredBlock: (blockKey: string) => void,
   navigateToModule: (moduleKey: string) => void,
   isRootBlock?: boolean,
@@ -31,7 +35,6 @@ const BlockPreview = ({
   blockKey,
   moduleKey,
   selectBlock,
-  selectModule,
   navigateToModule,
   setHoveredBlock,
   isRootBlock,
@@ -96,16 +99,26 @@ const mapStateToProps = (state: ReduxState, { blockKey }: { blockKey: string }) 
     isRootBlock: blockPreviewProps.isRootBlock,
     isModule: blockPreviewProps.isModule,
     moduleKey: blockPreviewProps.moduleKey,
+    parentModuleKey: getCurrentModuleKey(state),
   };
 };
 
 const mapDispatchToProps = {
   setHoveredBlock: (blockKey: string) => setHoveredBlockKey(blockKey),
-  selectBlock: (blockKey: string) => setSelectedBlock(blockKey),
-  selectModule: (moduleKey: string) => setSelectedModule(moduleKey),
+  dispatchSelectBlock: (moduleKey: string, blockKey: string) =>
+    setModuleSelectedBlockKey(moduleKey, blockKey),
 };
+
+const mergeProps = (stateProps, propsFromDispatch, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...propsFromDispatch,
+  selectBlock: (blockKey: string) =>
+    propsFromDispatch.dispatchSelectBlock(stateProps.parentModuleKey, blockKey),
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(BlockPreview);

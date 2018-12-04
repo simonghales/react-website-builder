@@ -242,7 +242,7 @@ class EditorComponentStyles extends Component<Props> {
     return (
       <EditorLayout>
         <EditorLayoutColumn columns={8}>
-          <EditorFields fieldGroups={this.getMainFieldGroups()} />
+          <EditorFields fieldGroups={this.getMainFieldGroups()} blockKey={blockKey} />
         </EditorLayoutColumn>
         <EditorLayoutColumn columns={1} />
         <EditorLayoutColumn columns={5}>

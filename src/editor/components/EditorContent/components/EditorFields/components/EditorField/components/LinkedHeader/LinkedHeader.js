@@ -5,12 +5,16 @@ import { MdLink } from 'react-icons/md';
 import { connect } from 'react-redux';
 import styles from '../../styles';
 import type { ReduxState } from '../../../../../../../../../state/redux/store';
-import { getModuleBlockPropsDetails } from '../../../../../../../../../state/redux/editor/selector';
+import {
+  getCurrentModuleKey,
+  getModuleBlockPropsDetails,
+} from '../../../../../../../../../state/redux/editor/selector';
 import { getPropLabelFromDataBlocksPropsDetails } from '../../../../../../../../../data/blocks/state';
 import { setPropLinkedReference } from '../../../../../../../../../state/redux/editor/reducer';
 
 type Props = {
   propKey: string,
+  blockKey: string,
   isLinked: boolean,
   linkedPropKey?: string,
   linkedPropLabel: string,
@@ -65,15 +69,26 @@ LinkedHeader.defaultProps = {
 const mapStateToProps = (state: ReduxState, { linkedPropKey }: Props) => {
   const rootBlockPropsList = getModuleBlockPropsDetails(state);
   return {
+    moduleKey: getCurrentModuleKey(state),
     linkedPropLabel: getPropLabelFromDataBlocksPropsDetails(linkedPropKey, rootBlockPropsList),
   };
 };
 
 const mapDispatchToProps = {
-  setLinked: (propKey: string, isLinked: boolean) => setPropLinkedReference(propKey, isLinked),
+  dispatchSetLinked: (propKey: string, isLinked: boolean, blockKey: string, moduleKey: string) =>
+    setPropLinkedReference(propKey, isLinked, blockKey, moduleKey),
 };
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  setLinked: (propKey: string, isLinked: boolean) =>
+    dispatchProps.dispatchSetLinked(propKey, isLinked, ownProps.blockKey, stateProps.moduleKey),
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(LinkedHeader);

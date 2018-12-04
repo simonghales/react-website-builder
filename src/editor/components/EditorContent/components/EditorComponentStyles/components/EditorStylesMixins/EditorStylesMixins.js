@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { MdAdd, MdClose } from 'react-icons/md';
-import StyleSection from '../StyleSection/StyleSection';
 import type { ReduxState } from '../../../../../../../state/redux/store';
 import { getSelectedModuleSelectedBlockMappedMixins } from '../../../../../../../state/redux/editor/state';
 import type { DataBlockMappedMixinsModel } from '../../../../../../../data/blocks/models';
@@ -12,9 +11,9 @@ import {
 } from '../../../../../../../state/redux/editor/reducer';
 import MixinList from './components/MixinList/MixinList';
 import AddMixinDropdown from './components/AddMixinDropdown/AddMixinDropdown';
-import styles from './styles';
 import EditorFieldGroup from '../../../EditorFields/components/EditorFieldGroup/EditorFieldGroup';
 import IconButton from '../../../../../../../components/IconButton/IconButton';
+import { getCurrentModuleKey } from '../../../../../../../state/redux/editor/selector';
 
 type Props = {
   blockKey: string,
@@ -94,15 +93,28 @@ class EditorStylesMixins extends Component<Props, State> {
 
 const mapStateToProps = (state: ReduxState) => ({
   mixins: getSelectedModuleSelectedBlockMappedMixins(state.editor),
+  moduleKey: getCurrentModuleKey(state),
 });
 
 const mapDispatchToProps = {
-  updateMixinsOrder: (blockKey: string, mixinKeys: Array<string>) =>
-    updateBlockStylesMixinsOrder(blockKey, mixinKeys),
-  removeMixin: (blockKey: string, mixinKey: string) => removeBlockStylesMixin(blockKey, mixinKey),
+  dispatchUpdateMixinsOrder: (blockKey: string, mixinKeys: Array<string>, moduleKey: string) =>
+    updateBlockStylesMixinsOrder(blockKey, mixinKeys, moduleKey),
+  dispatchRemoveMixin: (blockKey: string, mixinKey: string, moduleKey: string) =>
+    removeBlockStylesMixin(blockKey, mixinKey, moduleKey),
 };
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  updateMixinsOrder: (blockKey: string, mixinKeys: Array<string>) =>
+    dispatchProps.dispatchUpdateMixinsOrder(blockKey, mixinKeys, stateProps.moduleKey),
+  removeMixin: (blockKey: string, mixinKey: string) =>
+    dispatchProps.dispatchRemoveMixin(blockKey, mixinKey, stateProps.moduleKey),
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(EditorStylesMixins);

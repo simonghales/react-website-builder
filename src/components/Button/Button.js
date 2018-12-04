@@ -26,4 +26,8 @@ const Button = ({ children, type }: Props) => (
   </button>
 );
 
+Button.defaultProps = {
+  type: buttonTypes.slim,
+};
+
 export default Button;

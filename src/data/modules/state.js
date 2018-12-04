@@ -155,3 +155,16 @@ export function getModuleParentModules(
   });
   return parentModules;
 }
+
+export function getDataBlocksFromModule(module: DataModule): SitePageDataBlocks {
+  return module.blocks;
+}
+
+export function getDataBlockFromModule(module: DataModule, blockKey: string): DataBlockModel {
+  const blocks = getDataBlocksFromModule(module);
+  const block = blocks[blockKey];
+  if (!block) {
+    throw new Error(`Block "${blockKey}" not found within module blocks.`);
+  }
+  return block;
+}

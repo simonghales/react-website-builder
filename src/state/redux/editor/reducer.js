@@ -5,8 +5,6 @@ import {
   getBlockFromSelectedModule,
   getModuleFromState,
   getModulesFromState,
-  getSelectedBlockKeyFromState,
-  getSelectedModule,
   getSelectedModuleKey,
 } from './state';
 import {
@@ -52,7 +50,8 @@ export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
 const SET_PROP_LINKED_REFERENCE = 'SET_PROP_LINKED_REFERENCE';
 
 type SetPropLinkedReferencePayload = {
-  blockKey?: string,
+  blockKey: string,
+  moduleKey: string,
   propKey: string,
   isLinked: boolean,
 };
@@ -65,7 +64,8 @@ type SetPropLinkedReferenceAction = {
 export function setPropLinkedReference(
   propKey: string,
   isLinked: boolean,
-  blockKey?: string
+  blockKey: string,
+  moduleKey: string
 ): SetPropLinkedReferenceAction {
   return {
     type: SET_PROP_LINKED_REFERENCE,
@@ -73,16 +73,16 @@ export function setPropLinkedReference(
       propKey,
       isLinked,
       blockKey,
+      moduleKey,
     },
   };
 }
 
 function handleSetPropLinkedReference(
   state: EditorReduxState,
-  { propKey, isLinked, blockKey }: SetPropLinkedReferencePayload
+  { propKey, isLinked, blockKey, moduleKey }: SetPropLinkedReferencePayload
 ): EditorReduxState {
-  blockKey = blockKey || getSelectedBlockKeyFromState(state);
-  const module = getSelectedModule(state);
+  const module = getModuleFromState(state, moduleKey);
   const block = getBlockFromSelectedModule(state, blockKey);
   return {
     ...state,
@@ -143,6 +143,7 @@ const ADD_MIXIN_TO_BLOCK = 'ADD_MIXIN_TO_BLOCK';
 type AddMixinToBlockPayload = {
   blockKey: string,
   mixinKey: string,
+  moduleKey: string,
 };
 
 type AddMixinToBlockAction = {
@@ -150,28 +151,32 @@ type AddMixinToBlockAction = {
   payload: AddMixinToBlockPayload,
 };
 
-export function addMixinToBlock(blockKey: string, mixinKey: string): AddMixinToBlockAction {
+export function addMixinToBlock(
+  blockKey: string,
+  mixinKey: string,
+  moduleKey: string
+): AddMixinToBlockAction {
   return {
     type: ADD_MIXIN_TO_BLOCK,
     payload: {
       blockKey,
       mixinKey,
+      moduleKey,
     },
   };
 }
 
 function handleAddMixinToBlock(
   state: EditorReduxState,
-  { blockKey, mixinKey }: AddMixinToBlockPayload
+  { blockKey, mixinKey, moduleKey }: AddMixinToBlockPayload
 ): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedModule = getModuleFromState(state, moduleKey);
   const block = getBlockFromModuleBlocks(blockKey, selectedModule);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: {
           ...selectedModule.blocks,
@@ -190,6 +195,7 @@ const UPDATE_BLOCK_STYLES_MIXINS_ORDER = 'UPDATE_BLOCK_STYLES_MIXINS_ORDER';
 type UpdateBlockStylesMixinsOrderPayload = {
   blockKey: string,
   mixinKeys: Array<string>,
+  moduleKey: string,
 };
 
 type UpdateBlockStylesMixinsOrderAction = {
@@ -199,29 +205,30 @@ type UpdateBlockStylesMixinsOrderAction = {
 
 export function updateBlockStylesMixinsOrder(
   blockKey: string,
-  mixinKeys: Array<string>
+  mixinKeys: Array<string>,
+  moduleKey: string
 ): UpdateBlockStylesMixinsOrderAction {
   return {
     type: UPDATE_BLOCK_STYLES_MIXINS_ORDER,
     payload: {
       blockKey,
       mixinKeys,
+      moduleKey,
     },
   };
 }
 
 function handleUpdateBlockStylesMixinsOrder(
   state: EditorReduxState,
-  { blockKey, mixinKeys }: UpdateBlockStylesMixinsOrderPayload
+  { blockKey, mixinKeys, moduleKey }: UpdateBlockStylesMixinsOrderPayload
 ): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedModule = getModuleFromState(state, moduleKey);
   const block = getBlockFromModuleBlocks(blockKey, selectedModule);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: {
           ...selectedModule.blocks,
@@ -240,6 +247,7 @@ const REMOVE_BLOCK_STYLES_MIXIN = 'REMOVE_BLOCK_STYLES_MIXIN';
 type RemoveBlockStylesMixinPayload = {
   blockKey: string,
   mixinKey: string,
+  moduleKey: string,
 };
 
 type RemoveBlockStylesMixinAction = {
@@ -249,29 +257,30 @@ type RemoveBlockStylesMixinAction = {
 
 export function removeBlockStylesMixin(
   blockKey: string,
-  mixinKey: string
+  mixinKey: string,
+  moduleKey: string
 ): RemoveBlockStylesMixinAction {
   return {
     type: REMOVE_BLOCK_STYLES_MIXIN,
     payload: {
       blockKey,
       mixinKey,
+      moduleKey,
     },
   };
 }
 
 function handleRemoveBlockStylesMixin(
   state: EditorReduxState,
-  { blockKey, mixinKey }: RemoveBlockStylesMixinPayload
+  { blockKey, mixinKey, moduleKey }: RemoveBlockStylesMixinPayload
 ): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedModule = getModuleFromState(state, moduleKey);
   const block = getBlockFromModuleBlocks(blockKey, selectedModule);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: {
           ...selectedModule.blocks,

@@ -1,13 +1,8 @@
 // @flow
 
-import type {
-  DataBlockModel,
-  MappedDataBlocks,
-  SitePageDataBlocks,
-} from '../../../data/blocks/models';
+import type { DataBlockModel, MappedDataBlocks } from '../../../data/blocks/models';
 import type { EditorReduxState } from './reducer';
 import {
-  getBlockFromBlocks,
   getDataBlockLabel,
   getMappedDataBlocks,
   mapDataBlockModuleKey,
@@ -48,12 +43,6 @@ export function getSelectedModuleKey(state: EditorReduxState): string {
   return selectedModule;
 }
 
-export function getSelectedModuleSelectedBlockKey(state: EditorReduxState): string {
-  const selectedModule = getSelectedModule(state);
-  const selectedBlock = getSelectedBlockKeyFromModule(selectedModule);
-  return selectedBlock;
-}
-
 export function getSelectedModuleSelectedBlock(state: EditorReduxState): DataBlockModel {
   const selectedModule = getSelectedModule(state);
   const selectedBlock = getSelectedBlockKeyFromModule(selectedModule);
@@ -76,21 +65,6 @@ export function getSelectedBlockMixinsStyles(state: EditorReduxState): Array<Mix
   const { mixinStyles = [] } = selectedBlock;
   return getBlockMixinsStyles(mixinStyles, mixins);
 }
-
-// export function getEditorMappedBlocks(state: EditorReduxState): MappedDataBlocks {
-//   const { modules, moduleTemplates, mixinStyles } = state;
-//   const selectedModule = getSelectedModule(state);
-//   const { blocks, rootBlock } = selectedModule;
-//   const mappedBlocks = getMappedDataBlocks(
-//     rootBlock,
-//     blocks,
-//     false,
-//     modules,
-//     moduleTemplates,
-//     mixinStyles
-//   );
-//   return mappedBlocks;
-// }
 
 export function getPreviewMappedBlocks(state: EditorReduxState): MappedDataBlocks {
   const { modules, mixinStyles } = state;
@@ -117,19 +91,6 @@ export function getSelectedModuleSelectedBlockMixins(state: EditorReduxState): A
 export function getModulesFromState(state: EditorReduxState): DataModules {
   return state.modules;
 }
-
-// export function getAddableModuleTemplates(state: EditorReduxState): Array<DataModule> {
-//   const moduleTemplates = getModuleTemplatesFromState(state);
-//   const modules = getModulesFromState(state);
-//   const addableModules: Array<DataModule> = [];
-//   Object.keys(moduleTemplates).forEach(moduleTemplateKey => {
-//     const moduleTemplate = moduleTemplates[moduleTemplateKey];
-//     const moduleKey = getModuleTemplateModuleKey(moduleTemplate);
-//     const module = getModuleFromModules(moduleKey, modules);
-//     addableModules.push(module);
-//   });
-//   return addableModules;
-// }
 
 export function getPreviousModule(state: EditorReduxState): DataModule | null {
   const { selectedModulesHistory } = state;

@@ -1,14 +1,150 @@
 // @flow
 
+import { getModulesFromState, getSelectedModuleKey } from '../editor/state';
+import { getSelectedModuleKeyFromUIState } from './state';
+
+export type ModulesSelectedBlockKeys = {
+  [string]: string,
+};
+
 export type UiReduxState = {
   addingBlock: boolean,
   hoveredBlockKey: string,
+  selectedModuleKey: string,
+  selectedModulesHistory: Array<string>,
+  modulesSelectedBlockKeys: ModulesSelectedBlockKeys,
 };
 
 export const initialUiReduxState: UiReduxState = {
   addingBlock: false,
   hoveredBlockKey: '',
+  selectedModuleKey: '',
+  selectedModulesHistory: [],
+  modulesSelectedBlockKeys: {},
 };
+
+const SET_INITIAL_SELECTED_MODULE_HISTORY = 'SET_INITIAL_SELECTED_MODULE_HISTORY';
+
+type SetInitialSelectedModuleHistoryPayload = {
+  moduleKey: string,
+  previousModuleKey: string,
+};
+
+type SetInitialSelectedModuleHistoryAction = {
+  type: string,
+  payload: SetInitialSelectedModuleHistoryPayload,
+};
+
+export function setInitialSelectedModuleHistory(
+  moduleKey: string,
+  previousModuleKey: string
+): SetInitialSelectedModuleHistoryAction {
+  return {
+    type: SET_INITIAL_SELECTED_MODULE_HISTORY,
+    payload: {
+      moduleKey,
+      previousModuleKey,
+    },
+  };
+}
+
+function handleSetInitialSelectedModuleHistory(
+  state: UiReduxState,
+  { moduleKey, previousModuleKey }: SetInitialSelectedModuleHistoryPayload
+): UiReduxState {
+  const selectedModulesHistory = previousModuleKey ? [previousModuleKey] : [];
+  return {
+    ...state,
+    selectedModuleKey: moduleKey,
+    selectedModulesHistory,
+  };
+}
+
+const SET_SELECTED_MODULE_KEY = 'SET_SELECTED_MODULE_KEY';
+
+type SetSelectedModuleKeyPayload = {
+  moduleKey: string,
+  previousModuleKey: string,
+};
+
+type SetSelectedModuleKeyAction = {
+  type: string,
+  payload: SetSelectedModuleKeyPayload,
+};
+
+export function setSelectedModuleKey(
+  moduleKey: string,
+  previousModuleKey: string
+): SetSelectedModuleKeyAction {
+  return {
+    type: SET_SELECTED_MODULE_KEY,
+    payload: {
+      moduleKey,
+      previousModuleKey,
+    },
+  };
+}
+function handleSetSelectedModuleKey(
+  state: UiReduxState,
+  { moduleKey, previousModuleKey }: SetSelectedModuleKeyPayload
+): UiReduxState {
+  const currentSelectedModuleKey = getSelectedModuleKeyFromUIState(state);
+  const currentPreviousModuleKey =
+    state.selectedModulesHistory.length > 0
+      ? state.selectedModulesHistory[state.selectedModulesHistory.length - 1]
+      : '';
+  let updatedSelectedModulesHistory = state.selectedModulesHistory.slice();
+  if (moduleKey === currentPreviousModuleKey) {
+    updatedSelectedModulesHistory.pop();
+  } else if (previousModuleKey) {
+    updatedSelectedModulesHistory = updatedSelectedModulesHistory.concat([
+      currentSelectedModuleKey,
+    ]);
+  }
+  return {
+    ...state,
+    selectedModuleKey: moduleKey,
+    selectedModulesHistory: updatedSelectedModulesHistory,
+  };
+}
+
+const SET_MODULE_SELECTED_BLOCK_KEY = 'SET_MODULE_SELECTED_BLOCK_KEY';
+
+type SetModuleSelectedBlockKeyPayload = {
+  moduleKey: string,
+  blockKey: string,
+};
+
+type SetModuleSelectedBlockKeyAction = {
+  type: string,
+  payload: SetModuleSelectedBlockKeyPayload,
+};
+
+export function setModuleSelectedBlockKey(
+  moduleKey: string,
+  blockKey: string
+): SetModuleSelectedBlockKeyAction {
+  return {
+    type: SET_MODULE_SELECTED_BLOCK_KEY,
+    payload: {
+      moduleKey,
+      blockKey,
+    },
+  };
+}
+
+function handleSetModuleSelectedBlockKey(
+  state: UiReduxState,
+  { moduleKey, blockKey }: SetModuleSelectedBlockKeyPayload
+): UiReduxState {
+  return {
+    ...state,
+    modulesSelectedBlockKeys: {
+      ...state.modulesSelectedBlockKeys,
+      [moduleKey]: blockKey,
+    },
+  };
+}
 
 const SET_HOVERED_BLOCK_KEY = 'SET_HOVERED_BLOCK_KEY';
 
@@ -73,6 +209,9 @@ function handleSetAddingBlock(
 type Actions = SetAddingBlockAction;
 
 const ACTION_HANDLERS = {
+  [SET_INITIAL_SELECTED_MODULE_HISTORY]: handleSetInitialSelectedModuleHistory,
+  [SET_SELECTED_MODULE_KEY]: handleSetSelectedModuleKey,
+  [SET_MODULE_SELECTED_BLOCK_KEY]: handleSetModuleSelectedBlockKey,
   [SET_HOVERED_BLOCK_KEY]: handleSetHoveredBlockKey,
   [SET_ADDING_BLOCK]: handleSetAddingBlock,
 };

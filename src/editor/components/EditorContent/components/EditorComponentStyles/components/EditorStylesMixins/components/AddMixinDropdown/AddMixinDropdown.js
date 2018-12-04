@@ -9,11 +9,14 @@ import { getAddMixinGroups } from '../../../../../../../../../data/mixins/models
 import {
   getCurrentBlockAddedMixins,
   getMixinsFromState,
-  getSelectedModuleSelectedBlockKey,
 } from '../../../../../../../../../state/redux/editor/state';
 import type { AddMixinGroupsModel } from '../../../../../../../../../data/mixins/models';
 import type { SelectListGroupModel } from '../../../../../../../SelectList/models';
 import { addMixinToBlock } from '../../../../../../../../../state/redux/editor/reducer';
+import {
+  getCurrentModuleKey,
+  getSelectedBlockKey,
+} from '../../../../../../../../../state/redux/editor/selector';
 
 type Props = {
   addMixinGroups: AddMixinGroupsModel,
@@ -73,18 +76,29 @@ const mapStateToProps = (state: ReduxState) => {
   const mixins = getMixinsFromState(state.editor);
   const addedMixins = getCurrentBlockAddedMixins(state.editor);
   const addMixinGroups = getAddMixinGroups(mixins, addedMixins);
-  const blockKey = getSelectedModuleSelectedBlockKey(state.editor);
+  const blockKey = getSelectedBlockKey(state);
   return {
     addMixinGroups,
     blockKey,
+    moduleKey: getCurrentModuleKey(state),
   };
 };
 
 const mapDispatchToProps = {
-  addMixin: (blockKey: string, mixinKey: string) => addMixinToBlock(blockKey, mixinKey),
+  dispatchAddMixin: (blockKey: string, mixinKey: string, moduleKey: string) =>
+    addMixinToBlock(blockKey, mixinKey, moduleKey),
 };
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  addMixin: (blockKey: string, mixinKey: string) =>
+    dispatchProps.dispatchAddMixin(blockKey, mixinKey, stateProps.moduleKey),
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(enhanceWithClickOutside(AddMixinDropdown));

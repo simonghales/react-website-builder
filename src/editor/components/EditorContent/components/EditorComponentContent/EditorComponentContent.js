@@ -15,6 +15,8 @@ import EditorFieldGroupFields from '../EditorFields/components/EditorFieldGroupF
 import EditorFieldGroup from '../EditorFields/components/EditorFieldGroup/EditorFieldGroup';
 import { setBlockPropValue } from '../../../../../state/redux/editor/reducer';
 import { isBlockModuleImportBlock } from '../../../../../blocks/state';
+import Button from '../../../../../components/Button/Button';
+import styles from './styles';
 
 type Props = {
   block: BlockModel,
@@ -25,7 +27,7 @@ type Props = {
   updateProp: (blockKey: string, propKey: string, value: string) => void,
 };
 
-class EditorComponentProps extends Component<Props> {
+class EditorComponentContent extends Component<Props> {
   updateProp = (propKey: string, value: string) => {
     const { dataBlock } = this.props;
     const { updateProp } = this.props;
@@ -43,16 +45,23 @@ class EditorComponentProps extends Component<Props> {
   }
 
   render() {
-    const { block } = this.props;
+    const { block, dataBlock } = this.props;
     const contentPropsFields = this.getContentPropsFields();
     return (
-      <EditorLayout>
-        <EditorLayoutColumn columns={14}>
-          <EditorFieldGroup>
-            <EditorFieldGroupFields fields={contentPropsFields} block={block} isContent={true} />
-          </EditorFieldGroup>
-        </EditorLayoutColumn>
-      </EditorLayout>
+      <div className={styles.containerClass}>
+        <div className={styles.addPropContainerClass}>
+          <Button>Add Prop</Button>
+        </div>
+        <div className={styles.fieldsContainerClass}>
+          <EditorLayout>
+            <EditorLayoutColumn columns={14}>
+              <EditorFieldGroup>
+                <EditorFieldGroupFields fields={contentPropsFields} block={block} blockKey={dataBlock.key} isContent />
+              </EditorFieldGroup>
+            </EditorLayoutColumn>
+          </EditorLayout>
+        </div>
+      </div>
     );
   }
 }
@@ -76,4 +85,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EditorComponentProps);
+)(EditorComponentContent);
