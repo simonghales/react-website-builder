@@ -15,7 +15,14 @@ import { addNewBlock, addNewModule } from '../../../../../state/redux/editor/red
 import { setAddingBlock } from '../../../../../state/redux/ui/reducer';
 import { getDisabledBlocks } from './state';
 import type { DisabledBlocks } from './state';
-import { getAddableModules, getCurrentModuleKey } from '../../../../../state/redux/editor/selector';
+import {
+  getAddableModules,
+  getCurrentModuleKey,
+  getModules,
+  getSelectedBlockKey,
+} from '../../../../../state/redux/editor/selector';
+import { dispatchAddNewModule } from '../../../../../state/redux/shared/dispatch';
+import type { DataModules } from '../../../../../data/modules/models';
 
 const Block = ({
   block,
@@ -132,17 +139,44 @@ const mapStateToProps = (state: ReduxState) => {
     addableBlockGroups,
     disabledBlocks,
     selectedModuleKey,
+    modules: getModules(state),
+    selectedBlockKey: getSelectedBlockKey(state),
   };
 };
 
-const mapDispatchToProps = {
+const mapDispatchToProps = (dispatch: any) => ({
+  dispatchAddBlock: (
+    blockKey: string,
+    groupKey: string,
+    moduleKey: string,
+    selectedBlockKey: string
+  ) => dispatch(addNewBlock(blockKey, groupKey, moduleKey, selectedBlockKey)),
+  dispatchAddModule: (
+    newModuleKey: string,
+    moduleKey: string,
+    modules: DataModules,
+    selectedBlockKey: string
+  ) => dispatchAddNewModule(newModuleKey, moduleKey, modules, selectedBlockKey, dispatch),
+  completeAddingBlock: () => dispatch(setAddingBlock(false)),
+});
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
   addBlock: (blockKey: string, groupKey: string, moduleKey: string) =>
-    addNewBlock(blockKey, groupKey, moduleKey),
-  addModule: (newModuleKey: string, moduleKey: string) => addNewModule(newModuleKey, moduleKey),
-  completeAddingBlock: () => setAddingBlock(false),
-};
+    dispatchProps.dispatchAddBlock(blockKey, groupKey, moduleKey, stateProps.selectedBlockKey),
+  addModule: (newModuleKey: string, moduleKey: string) =>
+    dispatchProps.dispatchAddModule(
+      newModuleKey,
+      moduleKey,
+      stateProps.modules,
+      stateProps.selectedBlockKey
+    ),
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(AddBlockSlideout);

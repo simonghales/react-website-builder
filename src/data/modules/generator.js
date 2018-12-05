@@ -75,6 +75,5 @@ export function generateNewModule(
       [moduleBlock.key]: moduleBlock,
     },
     rootBlock: moduleBlock.key,
-    selectedBlock: moduleBlock.key,
   };
 }

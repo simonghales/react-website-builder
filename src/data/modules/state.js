@@ -11,11 +11,6 @@ export function getModuleRootBlockKey(module: DataModule): string {
   return rootBlock;
 }
 
-export function getSelectedBlockKeyFromModule(module: DataModule): string {
-  const { selectedBlock } = module;
-  return selectedBlock;
-}
-
 export function getModuleBlocks(module: DataModule): SitePageDataBlocks {
   const { blocks } = module;
   return blocks;
@@ -38,11 +33,6 @@ export function getBlockFromModuleBlocks(blockKey: string, module: DataModule): 
     throw new Error(`Block ${blockKey} couldn't be matched to module's blocks.`);
   }
   return block;
-}
-
-export function getSelectedBlockFromModule(module: DataModule): DataBlockModel {
-  const { selectedBlock } = module;
-  return getBlockFromModuleBlocks(selectedBlock, module);
 }
 
 export function getModuleFromModules(moduleKey: string, modules: DataModules): DataModule {

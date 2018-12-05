@@ -15,23 +15,11 @@ import {
   updateBlockStylesMixinsOrderByKeys,
 } from './modifiers';
 import type { BlocksOrder } from './modifiers';
-import type { DataModules } from '../../../data/modules/models';
+import type { DataModule, DataModules } from '../../../data/modules/models';
 import type { MixinsModel } from '../../../data/mixins/models';
-import {
-  getBlockFromModuleBlocks,
-  getModuleBlocks,
-  getModuleRootBlock,
-  getModuleRootBlockKey,
-  getSelectedBlockFromModule,
-} from '../../../data/modules/state';
-import { getBlockDefaultDataBlock, getBlockFromModule } from '../../../blocks/state';
-import {
-  getBlockBlocks,
-  getBlockParentKey,
-  getDataBlockPropsDetails,
-} from '../../../data/blocks/state';
-import { generateNewModule } from '../../../data/modules/generator';
-import { generateNewModuleTemplateBlock } from '../../../data/blocks/generator';
+import { getBlockFromModuleBlocks, getModuleRootBlockKey } from '../../../data/modules/state';
+import { getBlockDefaultDataBlock } from '../../../blocks/state';
+import type { DataBlockModel } from '../../../data/blocks/models';
 
 export type EditorReduxState = {
   modules: DataModules,
@@ -482,7 +470,6 @@ function handleRemoveBlockFromModule(
       ...state,
     };
   }
-  const blockToRemoveParentKey = getBlockParentKey(blockKey, selectedModule.blocks);
   return {
     ...state,
     modules: {
@@ -490,7 +477,6 @@ function handleRemoveBlockFromModule(
       [selectedModule.key]: {
         ...selectedModule,
         blocks: removeBlockFromBlocks(selectedModule.blocks, blockKey, true),
-        selectedBlock: blockToRemoveParentKey,
       },
     },
   };
@@ -499,8 +485,9 @@ function handleRemoveBlockFromModule(
 const ADD_NEW_MODULE = 'ADD_NEW_MODULE';
 
 type AddNewModulePayload = {
-  newModuleKey: string,
   moduleKey: string,
+  dataBlock: DataBlockModel,
+  selectedBlockKey: string,
 };
 
 type AddNewModuleAction = {
@@ -508,26 +495,28 @@ type AddNewModuleAction = {
   payload: AddNewModulePayload,
 };
 
-export function addNewModule(newModuleKey: string, moduleKey: string): AddNewModuleAction {
+export function addNewModule(
+  moduleKey: string,
+  dataBlock: DataBlockModel,
+  selectedBlockKey: string
+): AddNewModuleAction {
   return {
     type: ADD_NEW_MODULE,
     payload: {
-      newModuleKey,
       moduleKey,
+      dataBlock,
+      selectedBlockKey,
     },
   };
 }
 
 function handleAddNewModule(
   state: EditorReduxState,
-  { newModuleKey, moduleKey }: AddNewModulePayload
+  { moduleKey, dataBlock, selectedBlockKey }: AddNewModulePayload
 ): EditorReduxState {
   const module = getModuleFromState(state, moduleKey);
-  const newModule = getModuleFromState(state, newModuleKey);
-  const dataBlock = getBlockFromModule(newModule);
   const rootBlockKey = getModuleRootBlockKey(module);
-  const selectedBlock = getSelectedBlockFromModule(module);
-  console.log('adding new module', module);
+  const selectedBlock = getBlockFromModuleBlocks(selectedBlockKey, module);
   return {
     ...state,
     modules: {
@@ -535,7 +524,6 @@ function handleAddNewModule(
       [moduleKey]: {
         ...module,
         blocks: addNewBlockToBlocks(module.blocks, rootBlockKey, dataBlock, selectedBlock),
-        selectedBlock: dataBlock.key,
       },
     },
   };
@@ -547,6 +535,7 @@ type AddNewBlockPayload = {
   blockKey: string,
   groupKey: string,
   moduleKey: string,
+  selectedBlockKey: string,
 };
 
 type AddNewBlockAction = {
@@ -557,7 +546,8 @@ type AddNewBlockAction = {
 export function addNewBlock(
   blockKey: string,
   groupKey: string,
-  moduleKey: string
+  moduleKey: string,
+  selectedBlockKey: string
 ): AddNewBlockAction {
   return {
     type: ADD_NEW_BLOCK,
@@ -565,18 +555,19 @@ export function addNewBlock(
       blockKey,
       groupKey,
       moduleKey,
+      selectedBlockKey,
     },
   };
 }
 
 function handleAddNewBlock(
   state: EditorReduxState,
-  { blockKey, groupKey, moduleKey }
+  { blockKey, groupKey, moduleKey, selectedBlockKey }
 ): EditorReduxState {
   const module = getModuleFromState(state, moduleKey);
   const dataBlock = getBlockDefaultDataBlock(groupKey, blockKey);
   const rootBlockKey = getModuleRootBlockKey(module);
-  const selectedBlock = getSelectedBlockFromModule(module);
+  const selectedBlock = getBlockFromModuleBlocks(selectedBlockKey, module);
   return {
     ...state,
     modules: {
@@ -584,7 +575,6 @@ function handleAddNewBlock(
       [moduleKey]: {
         ...module,
         blocks: addNewBlockToBlocks(module.blocks, rootBlockKey, dataBlock, selectedBlock),
-        selectedBlock: dataBlock.key,
       },
     },
   };
@@ -595,6 +585,8 @@ const CREATE_NEW_MODULE_FROM_SELECTED_BLOCK = 'CREATE_NEW_MODULE_FROM_SELECTED_B
 type CreateNewModuleFromSelectedBlockPayload = {
   moduleKey: string,
   blockKey: string,
+  newModule: DataModule,
+  newBlock: DataBlockModel,
 };
 
 type CreateNewModuleFromSelectedBlockAction = {
@@ -604,39 +596,27 @@ type CreateNewModuleFromSelectedBlockAction = {
 
 export function createNewModuleFromSelectedBlock(
   moduleKey: string,
-  blockKey: string
+  blockKey: string,
+  newModule: DataModule,
+  newBlock: DataBlockModel
 ): CreateNewModuleFromSelectedBlockAction {
   return {
     type: CREATE_NEW_MODULE_FROM_SELECTED_BLOCK,
     payload: {
       moduleKey,
       blockKey,
+      newModule,
+      newBlock,
     },
   };
 }
 
 function handleCreateNewModuleFromSelectedBlock(
   state: EditorReduxState,
-  { moduleKey, blockKey }: CreateNewModuleFromSelectedBlockPayload
+  { moduleKey, blockKey, newModule, newBlock }: CreateNewModuleFromSelectedBlockPayload
 ): EditorReduxState {
   const selectedModule = getModuleFromState(state, moduleKey);
   const selectedBlock = getBlockFromModuleBlocks(blockKey, selectedModule);
-  const blocks = getModuleBlocks(selectedModule);
-  const newModuleBlocks = getBlockBlocks(selectedBlock.key, blocks);
-  const selectedModulePropsDetails = getDataBlockPropsDetails(getModuleRootBlock(selectedModule));
-  const newModule = generateNewModule(
-    newModuleBlocks,
-    selectedBlock.key,
-    selectedBlock.label,
-    selectedBlock,
-    selectedModulePropsDetails
-  );
-  const newBlock = generateNewModuleTemplateBlock(
-    newModule.key,
-    selectedBlock.label,
-    selectedBlock,
-    selectedModulePropsDetails
-  );
   return {
     ...state,
     modules: {
@@ -644,7 +624,6 @@ function handleCreateNewModuleFromSelectedBlock(
       [selectedModule.key]: {
         ...selectedModule,
         blocks: replaceBlocksWithBlock(selectedModule.blocks, selectedBlock.key, newBlock),
-        selectedBlock: newBlock.key,
       },
       [newModule.key]: newModule,
     },

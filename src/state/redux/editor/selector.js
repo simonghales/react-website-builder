@@ -9,7 +9,6 @@ import {
   getModuleFromModules,
   getModuleKeyFromModule,
   getModuleParentModules,
-  getModuleRootBlock,
   getModuleRootBlockKey,
 } from '../../../data/modules/state';
 import type { DataBlockModel, SitePageDataBlocks } from '../../../data/blocks/models';
@@ -19,7 +18,6 @@ import {
   getDataBlockMixinStyles,
   getDataBlockPropsDetails,
 } from '../../../data/blocks/state';
-import { getDataBlockPropsKeys } from '../../../editor/components/EditorContent/components/EditorFields/state';
 import {
   getModuleSelectedBlockKeyFromModulesSelectedBlockKeys,
   getModulesSelectedBlockKeysFromUIState,
@@ -153,14 +151,6 @@ export const getSelectedBlockModulePropsConfig = createSelector(
   [getCurrentModule, getModules, getSelectedBlock],
   (module: DataModule, modules: DataModules, dataBlock: DataBlockModel) =>
     getDataBlockModuleProps(dataBlock, modules)
-);
-
-export const getModuleBlockPropsKeys = createSelector(
-  [getCurrentModule],
-  (module: DataModule) => {
-    const dataBlock = getModuleRootBlock(module);
-    return getDataBlockPropsKeys(dataBlock);
-  }
 );
 
 export const getModuleBlockPropsDetails = createSelector(

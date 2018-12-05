@@ -20,7 +20,16 @@ import {
   removeBlockFromModule,
 } from '../../../state/redux/editor/reducer';
 import IconButton from '../../../components/IconButton/IconButton';
-import { getCurrentModuleKey, getSelectedBlock } from '../../../state/redux/editor/selector';
+import {
+  getCurrentModule,
+  getCurrentModuleKey,
+  getSelectedBlock,
+} from '../../../state/redux/editor/selector';
+import type { DataModule } from '../../../data/modules/models';
+import {
+  dispatchCreateNewModuleFromSelectedBlock,
+  dispatchRemoveBlockFromModule,
+} from '../../../state/redux/shared/dispatch';
 
 type Props = {
   selectedBlock: DataBlockModel,
@@ -79,23 +88,24 @@ class EditorBlockView extends Component<Props> {
 const mapStateToProps = (state: ReduxState) => ({
   selectedBlock: getSelectedBlock(state),
   moduleKey: getCurrentModuleKey(state),
+  selectedModule: getCurrentModule(state),
 });
 
-const mapDispatchToProps = {
-  dispatchCreateModule: (blockKey: string, moduleKey: string) =>
-    createNewModuleFromSelectedBlock(moduleKey, blockKey),
-  dispatchRemoveBlock: (blockKey: string, moduleKey: string) =>
-    removeBlockFromModule(blockKey, moduleKey),
-};
+const mapDispatchToProps = (dispatch: any) => ({
+  dispatchCreateModule: (blockKey: string, moduleKey: string, selectedModule: DataModule) =>
+    dispatchCreateNewModuleFromSelectedBlock(moduleKey, blockKey, selectedModule, dispatch),
+  dispatchRemoveBlock: (blockKey: string, moduleKey: string, selectedModule: DataModule) =>
+    dispatchRemoveBlockFromModule(blockKey, moduleKey, selectedModule, dispatch),
+});
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
   ...stateProps,
   ...dispatchProps,
   createModule: (blockKey: string) =>
-    dispatchProps.dispatchCreateModule(blockKey, stateProps.moduleKey),
+    dispatchProps.dispatchCreateModule(blockKey, stateProps.moduleKey, stateProps.selectedModule),
   removeBlock: (blockKey: string) =>
-    dispatchProps.dispatchRemoveBlock(blockKey, stateProps.moduleKey),
+    dispatchProps.dispatchRemoveBlock(blockKey, stateProps.moduleKey, stateProps.selectedModule),
 });
 
 export default connect(

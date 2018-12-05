@@ -17,7 +17,6 @@ export const DUMMY_INTRO_MODULE: DataModule = {
   name: 'Intro',
   blocks: DUMMY_BLOCKS,
   rootBlock: DUMMY_BLOCK_MODULE.key,
-  selectedBlock: DUMMY_BLOCK_HEADING.key,
   isTemplate: true,
 };
 
@@ -31,7 +30,6 @@ export const DUMMY_PAGE_MODULE: DataModule = {
     [DUMMY_BLOCK_PAGE_PARAGRAPH.key]: DUMMY_BLOCK_PAGE_PARAGRAPH,
   },
   rootBlock: DUMMY_BLOCK_PAGE_MODULE.key,
-  selectedBlock: DUMMY_BLOCK_PAGE_MODULE.key,
   isTemplate: false,
 };
 
@@ -43,6 +41,5 @@ export const DUMMY_SUB_MODULE: DataModule = {
     [DUMMY_BLOCK_SUB_MODULE.key]: DUMMY_BLOCK_SUB_MODULE,
   },
   rootBlock: DUMMY_BLOCK_SUB_MODULE.key,
-  selectedBlock: DUMMY_BLOCK_SUB_MODULE.key,
   isTemplate: true,
 };

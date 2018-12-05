@@ -12,7 +12,6 @@ import {
   getBlockFromModuleBlocks,
   getModuleBlocks,
   getModuleRootBlockKey,
-  getSelectedBlockFromModule,
 } from '../../../data/modules/state';
 import {
   getBlockLabel,
@@ -22,7 +21,13 @@ import {
 } from '../../../data/blocks/state';
 import type { MixinModel, MixinsModel } from '../../../data/mixins/models';
 import type { ReduxState } from '../store';
-import { getCurrentModule, getMixins, getModules, getSelectedBlockMixinsStyles } from './selector';
+import {
+  getCurrentModule,
+  getMixins,
+  getModules,
+  getSelectedBlockKey,
+  getSelectedBlockMixinsStyles,
+} from './selector';
 
 export function getModuleFromState(state: EditorReduxState, moduleKey: string): DataModule {
   const { modules } = state;
@@ -51,14 +56,16 @@ export function getPreviewMappedBlocks(state: ReduxState): MappedDataBlocks {
 export function getSelectedModuleSelectedBlockMappedMixins(state: ReduxState) {
   const mixins = getMixins(state);
   const selectedModule = getCurrentModule(state);
-  const selectedBlock = getSelectedBlockFromModule(selectedModule);
+  const selectedBlockKey = getSelectedBlockKey(state);
+  const selectedBlock = getBlockFromModuleBlocks(selectedBlockKey, selectedModule);
   return getDataBlockMappedMixins(selectedBlock, mixins);
 }
 
 export function getSelectedModuleSelectedBlockMixins(state: ReduxState): Array<MixinModel> {
   const mixins = getMixins(state);
   const selectedModule = getCurrentModule(state);
-  const selectedBlock = getSelectedBlockFromModule(selectedModule);
+  const selectedBlockKey = getSelectedBlockKey(state);
+  const selectedBlock = getBlockFromModuleBlocks(selectedBlockKey, selectedModule);
   return getDataBlockMixins(selectedBlock, mixins);
 }
 
