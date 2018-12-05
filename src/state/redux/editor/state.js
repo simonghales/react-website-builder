@@ -23,6 +23,8 @@ import {
 } from '../../../data/blocks/state';
 import type { MixinModel, MixinsModel } from '../../../data/mixins/models';
 import { getBlockMixinsStyles } from '../../../data/mixins/state';
+import type { ReduxState } from '../store';
+import { getCurrentModule } from './selector';
 
 export function getModuleFromState(state: EditorReduxState, moduleKey: string): DataModule {
   const { modules } = state;
@@ -122,11 +124,12 @@ export type DataBlockPreviewProps = {
 };
 
 export function getDataBlockPreviewProps(
-  state: EditorReduxState,
+  state: ReduxState,
   blockKey: string
 ): DataBlockPreviewProps {
-  const modules = getModulesFromState(state);
-  const dataBlock = getBlockFromSelectedModule(state, blockKey);
+  const modules = getModulesFromState(state.editor);
+  const selectedModule = getCurrentModule(state);
+  const dataBlock = getBlockFromModuleBlocks(blockKey, selectedModule);
   return {
     type: getBlockLabel(dataBlock, modules),
     label: getDataBlockLabel(dataBlock),

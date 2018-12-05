@@ -10,8 +10,6 @@ import {
   setHoveredBlockKey,
   setModuleSelectedBlockKey,
 } from '../../../../../state/redux/ui/reducer';
-import { setSelectedBlock } from '../../../../../state/redux/editor/reducer';
-import { dispatchSelectBlock } from '../../../../../state/redux/shared/dispatch';
 import { getCurrentModuleKey } from '../../../../../state/redux/editor/selector';
 
 type Props = {
@@ -92,7 +90,7 @@ BlockPreview.defaultProps = {
 };
 
 const mapStateToProps = (state: ReduxState, { blockKey }: { blockKey: string }) => {
-  const blockPreviewProps = getDataBlockPreviewProps(state.editor, blockKey);
+  const blockPreviewProps = getDataBlockPreviewProps(state, blockKey);
   return {
     type: blockPreviewProps.type,
     label: blockPreviewProps.label,

@@ -83,7 +83,7 @@ function handleSetPropLinkedReference(
   { propKey, isLinked, blockKey, moduleKey }: SetPropLinkedReferencePayload
 ): EditorReduxState {
   const module = getModuleFromState(state, moduleKey);
-  const block = getBlockFromSelectedModule(state, blockKey);
+  const block = getBlockFromModuleBlocks(blockKey, module);
   return {
     ...state,
     modules: {
@@ -321,100 +321,12 @@ function handleReturnToPreviousSelectedModule(state: EditorReduxState): EditorRe
   };
 }
 
-const SET_SELECTED_MODULE = 'SET_SELECTED_MODULE';
-
-type SetSelectedModulePayload = {
-  moduleKey: string,
-  previousModuleKey: string,
-};
-
-type SetSelectedModuleAction = {
-  type: string,
-  payload: SetSelectedModulePayload,
-};
-
-export function setSelectedModule(
-  moduleKey: string,
-  previousModuleKey: string
-): SetSelectedModuleAction {
-  return {
-    type: SET_SELECTED_MODULE,
-    payload: {
-      moduleKey,
-      previousModuleKey,
-    },
-  };
-}
-
-function handleSetSelectedModule(
-  state: EditorReduxState,
-  { moduleKey, previousModuleKey }: SetSelectedModulePayload
-): EditorReduxState {
-  const currentSelectedModuleKey = getSelectedModuleKey(state);
-  const currentPreviousModuleKey =
-    state.selectedModulesHistory.length > 0
-      ? state.selectedModulesHistory[state.selectedModulesHistory.length - 1]
-      : '';
-  let updatedSelectedModulesHistory = state.selectedModulesHistory.slice();
-  if (moduleKey === currentPreviousModuleKey) {
-    updatedSelectedModulesHistory.pop();
-  } else if (previousModuleKey) {
-    updatedSelectedModulesHistory = updatedSelectedModulesHistory.concat([
-      currentSelectedModuleKey,
-    ]);
-  }
-  console.log('updatedSelectedModulesHistory', updatedSelectedModulesHistory, previousModuleKey);
-  return {
-    ...state,
-    selectedModule: moduleKey,
-    selectedModulesHistory: updatedSelectedModulesHistory,
-    hoveredBlockKey: '',
-  };
-}
-
-const SET_SELECTED_BLOCK = 'SET_SELECTED_BLOCK';
-
-type SetSelectedBlockPayload = {
-  blockKey: string,
-};
-
-type SetSelectedBlockAction = {
-  type: string,
-  payload: SetSelectedBlockPayload,
-};
-
-export function setSelectedBlock(blockKey: string): SetSelectedBlockAction {
-  return {
-    type: SET_SELECTED_BLOCK,
-    payload: {
-      blockKey,
-    },
-  };
-}
-
-function handleSetSelectedBlock(
-  state: EditorReduxState,
-  { blockKey }: SetSelectedBlockPayload
-): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
-  return {
-    ...state,
-    modules: {
-      ...state.modules,
-      [selectedModuleKey]: {
-        ...selectedModule,
-        selectedBlock: blockKey,
-      },
-    },
-  };
-}
-
 const SET_BLOCK_STYLE_VALUE = 'SET_BLOCK_STYLE_VALUE';
 
 type SetBlockStyleValuePayload = {
   blockKey: string,
   cssKey: string,
+  moduleKey: string,
   modifier: string,
   section: string,
   value: string,
@@ -430,7 +342,8 @@ export function setBlockStyleValue(
   cssKey: string,
   modifier: string,
   section: string,
-  value: string
+  value: string,
+  moduleKey: string
 ): SetBlockStyleValueAction {
   return {
     type: SET_BLOCK_STYLE_VALUE,
@@ -440,22 +353,22 @@ export function setBlockStyleValue(
       modifier,
       section,
       value,
+      moduleKey,
     },
   };
 }
 
 function handleSetBlockStyleValue(
   state: EditorReduxState,
-  { blockKey, cssKey, modifier, section, value }: SetBlockStyleValuePayload
+  { blockKey, cssKey, modifier, section, value, moduleKey }: SetBlockStyleValuePayload
 ): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedModule = getModuleFromState(state, moduleKey);
   const block = getBlockFromModuleBlocks(blockKey, selectedModule);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: {
           ...selectedModule.blocks,
@@ -752,11 +665,8 @@ function handleCreateNewModuleFromSelectedBlock(state: EditorReduxState): Editor
 }
 
 type Actions =
-  | SetSelectedModuleAction
-  | SetSelectedBlockAction
   | SetBlockPropValueAction
   | SetBlockStyleValueAction
-  | SetSelectedModuleAction
   | ReturnToPreviousSelectedModuleAction
   | AddNewModuleAction
   | AddNewBlockAction
@@ -769,8 +679,6 @@ const ACTION_HANDLERS = {
   [UPDATE_BLOCK_STYLES_MIXINS_ORDER]: handleUpdateBlockStylesMixinsOrder,
   [REMOVE_BLOCK_STYLES_MIXIN]: handleRemoveBlockStylesMixin,
   [RETURN_TO_PREVIOUS_SELECTED_MODULE]: handleReturnToPreviousSelectedModule,
-  [SET_SELECTED_MODULE]: handleSetSelectedModule,
-  [SET_SELECTED_BLOCK]: handleSetSelectedBlock,
   [SET_BLOCK_STYLE_VALUE]: handleSetBlockStyleValue,
   [SET_BLOCK_PROP_VALUE]: handleSetBlockPropValue,
   [SET_BLOCKS_ORDER]: handleSetBlocksOrder,

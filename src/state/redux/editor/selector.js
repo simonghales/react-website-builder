@@ -56,7 +56,7 @@ export const getCurrentModuleKey = createSelector(
   (moduleKey: string) => moduleKey
 );
 
-const getCurrentModule = createSelector(
+export const getCurrentModule = createSelector(
   [getCurrentModuleKey, getModules],
   (moduleKey: string, modules: DataModules) => getModuleFromModules(moduleKey, modules)
 );
