@@ -8,7 +8,7 @@ import NestList from '../NestList/NestList';
 import type { CondensedNestItem } from '../NestList/NestList';
 import type { BlocksOrder } from '../../../../../state/redux/editor/modifiers';
 import RootBlock from '../RootBlock/RootBlock';
-import { setHoveredBlockKey, setSelectedModuleKey } from '../../../../../state/redux/ui/reducer';
+import { setHoveredBlockKey } from '../../../../../state/redux/ui/reducer';
 import type { BlocksKeys } from '../../../../../state/redux/editor/selector';
 import {
   getCurrentModuleKey,
@@ -81,11 +81,27 @@ const mapStateToProps = (state: ReduxState) => ({
 
 const mapDispatchToProps = {
   setHoveredBlock: (blockKey: string) => setHoveredBlockKey(blockKey),
-  updateBlocksOrder: (blocksOrder: BlocksOrder, rootBlocksOrder: Array<string>) =>
-    setBlocksOrder(blocksOrder, rootBlocksOrder),
+  dispatchUpdateBlocksOrder: (
+    blocksOrder: BlocksOrder,
+    rootBlocksOrder: Array<string>,
+    moduleKey: string
+  ) => setBlocksOrder(blocksOrder, rootBlocksOrder, moduleKey),
 };
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...stateProps,
+  ...dispatchProps,
+  ...ownProps,
+  updateBlocksOrder: (blocksOrder: BlocksOrder, rootBlocksOrder: Array<string>) =>
+    dispatchProps.dispatchUpdateBlocksOrder(
+      blocksOrder,
+      rootBlocksOrder,
+      stateProps.currentModuleKey
+    ),
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(BlocksManager);

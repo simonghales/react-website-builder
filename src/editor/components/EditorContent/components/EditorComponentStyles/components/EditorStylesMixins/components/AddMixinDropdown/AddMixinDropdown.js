@@ -74,7 +74,7 @@ class AddMixinDropdown extends Component<Props> {
 
 const mapStateToProps = (state: ReduxState) => {
   const mixins = getMixinsFromState(state.editor);
-  const addedMixins = getCurrentBlockAddedMixins(state.editor);
+  const addedMixins = getCurrentBlockAddedMixins(state);
   const addMixinGroups = getAddMixinGroups(mixins, addedMixins);
   const blockKey = getSelectedBlockKey(state);
   return {

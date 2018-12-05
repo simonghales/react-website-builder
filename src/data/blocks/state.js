@@ -1,6 +1,11 @@
 // @flow
 
-import type { DataBlockMappedMixinsModel, DataBlockModel, SitePageDataBlocks } from './models';
+import type {
+  DataBlockMappedMixinsModel,
+  DataBlockMixinStylesModel,
+  DataBlockModel,
+  SitePageDataBlocks,
+} from './models';
 import { getBlockFromDataBlock } from '../../blocks/blocks';
 import { getBlockFromBlocks, getDataBlockType } from './models';
 import ModuleImport from '../../blocks/groups/module/ModuleImport/ModuleImport';
@@ -181,4 +186,9 @@ export function getPropLabelFromDataBlocksPropsDetails(
   }
   console.warn(`Couldn't match "${propKey}" within data block's props details.`);
   return propKey;
+}
+
+export function getDataBlockMixinStyles(dataBlock: DataBlockModel): DataBlockMixinStylesModel {
+  const { mixinStyles = [] } = dataBlock;
+  return mixinStyles;
 }

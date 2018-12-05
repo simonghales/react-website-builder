@@ -92,7 +92,7 @@ class EditorStylesMixins extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: ReduxState) => ({
-  mixins: getSelectedModuleSelectedBlockMappedMixins(state.editor),
+  mixins: getSelectedModuleSelectedBlockMappedMixins(state),
   moduleKey: getCurrentModuleKey(state),
 });
 

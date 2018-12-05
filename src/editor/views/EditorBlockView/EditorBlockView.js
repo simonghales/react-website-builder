@@ -20,11 +20,11 @@ import {
   removeBlockFromModule,
 } from '../../../state/redux/editor/reducer';
 import IconButton from '../../../components/IconButton/IconButton';
-import { getSelectedBlock } from '../../../state/redux/editor/selector';
+import { getCurrentModuleKey, getSelectedBlock } from '../../../state/redux/editor/selector';
 
 type Props = {
   selectedBlock: DataBlockModel,
-  createModule: () => void,
+  createModule: (blockKey: string) => void,
   removeBlock: (blockKey: string) => void,
 };
 
@@ -55,7 +55,7 @@ class EditorBlockView extends Component<Props> {
                 className={styles.buttonClass}
                 tooltip="Save as module"
                 icon={<MdCreateNewFolder size={17} />}
-                onClick={createModule}
+                onClick={() => createModule(selectedBlock.key)}
               />
             )}
             <SmallHeading>{`${getDataBlockGroupKey(selectedBlock)}.${getDataBlockBlockKey(
@@ -78,14 +78,28 @@ class EditorBlockView extends Component<Props> {
 
 const mapStateToProps = (state: ReduxState) => ({
   selectedBlock: getSelectedBlock(state),
+  moduleKey: getCurrentModuleKey(state),
 });
 
 const mapDispatchToProps = {
-  createModule: () => createNewModuleFromSelectedBlock(),
-  removeBlock: (blockKey: string) => removeBlockFromModule(blockKey),
+  dispatchCreateModule: (blockKey: string, moduleKey: string) =>
+    createNewModuleFromSelectedBlock(moduleKey, blockKey),
+  dispatchRemoveBlock: (blockKey: string, moduleKey: string) =>
+    removeBlockFromModule(blockKey, moduleKey),
 };
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  createModule: (blockKey: string) =>
+    dispatchProps.dispatchCreateModule(blockKey, stateProps.moduleKey),
+  removeBlock: (blockKey: string) =>
+    dispatchProps.dispatchRemoveBlock(blockKey, stateProps.moduleKey),
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(EditorBlockView);

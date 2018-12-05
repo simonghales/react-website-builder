@@ -5,19 +5,22 @@ import EditorFields from '../EditorFields/EditorFields';
 import { editorInputTypes } from '../EditorFields/components/EditorField/EditorField';
 import EditorLayout from '../EditorLayout/EditorLayout';
 import EditorLayoutColumn from '../EditorLayout/components/EditorLayoutColumn';
-import EditorFieldGroup from '../EditorFields/components/EditorFieldGroup/EditorFieldGroup';
 import type { EditorFieldGroupModel, EditorFieldModel } from '../EditorFields/model';
 import EditorStylesMixins from './components/EditorStylesMixins/EditorStylesMixins';
 import type { ReduxState } from '../../../../../state/redux/store';
 import {
   getMixinsFromState,
-  getSelectedBlockStyle,
   getSelectedModuleSelectedBlockMixins,
 } from '../../../../../state/redux/editor/state';
 import { getEditorMappedBlockStyles, getStyleValue } from '../../../../../data/styles/state';
 import { setBlockStyleValue } from '../../../../../state/redux/editor/reducer';
 import type { EditorMappedStylesContainer } from '../../../../../data/styles/models';
 import DisabledMessage from '../DisabledMessage/DisabledMessage';
+import {
+  getCurrentModuleKey,
+  getMixins,
+  getSelectedBlockStyle,
+} from '../../../../../state/redux/editor/selector';
 
 type CssProperty = {
   key: string,
@@ -254,26 +257,50 @@ class EditorComponentStyles extends Component<Props> {
 }
 
 const mapStateToProps = (state: ReduxState) => {
-  const mixins = getMixinsFromState(state.editor);
-  const blockStyles = getSelectedBlockStyle(state.editor);
-  const blockMixins = getSelectedModuleSelectedBlockMixins(state.editor);
+  const mixins = getMixins(state);
+  const blockStyles = getSelectedBlockStyle(state);
+  const blockMixins = getSelectedModuleSelectedBlockMixins(state);
   const editorMappedStyles = getEditorMappedBlockStyles(blockStyles.styles, blockMixins, mixins);
   return {
     editorMappedStyles,
+    moduleKey: getCurrentModuleKey(state),
   };
 };
 
 const mapDispatchToProps = {
+  dispatchUpdateStyle: (
+    blockKey: string,
+    cssKey: string,
+    modifier: string,
+    section: string,
+    value: string,
+    moduleKey: string
+  ) => setBlockStyleValue(blockKey, cssKey, modifier, section, value, moduleKey),
+};
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
   updateStyle: (
     blockKey: string,
     cssKey: string,
     modifier: string,
     section: string,
     value: string
-  ) => setBlockStyleValue(blockKey, cssKey, modifier, section, value),
-};
+  ) =>
+    dispatchProps.dispatchUpdateStyle(
+      blockKey,
+      cssKey,
+      modifier,
+      section,
+      value,
+      stateProps.moduleKey
+    ),
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(EditorComponentStyles);

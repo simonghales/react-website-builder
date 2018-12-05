@@ -5,6 +5,7 @@ import EditorLayout from '../EditorLayout/EditorLayout';
 import EditorLayoutColumn from '../EditorLayout/components/EditorLayoutColumn';
 import type { ReduxState } from '../../../../../state/redux/store';
 import {
+  getCurrentModuleKey,
   getSelectedBlockBlock,
   getSelectedBlockModulePropsConfig,
 } from '../../../../../state/redux/editor/selector';
@@ -56,7 +57,12 @@ class EditorComponentContent extends Component<Props> {
           <EditorLayout>
             <EditorLayoutColumn columns={14}>
               <EditorFieldGroup>
-                <EditorFieldGroupFields fields={contentPropsFields} block={block} blockKey={dataBlock.key} isContent />
+                <EditorFieldGroupFields
+                  fields={contentPropsFields}
+                  block={block}
+                  blockKey={dataBlock.key}
+                  isContent
+                />
               </EditorFieldGroup>
             </EditorLayoutColumn>
           </EditorLayout>
@@ -74,15 +80,25 @@ const mapStateToProps = (state: ReduxState) => {
     block,
     moduleBlockPropsConfig,
     isModuleImportBlock,
+    moduleKey: getCurrentModuleKey(state),
   };
 };
 
 const mapDispatchToProps = {
-  updateProp: (blockKey: string, propKey: string, value: string) =>
-    setBlockPropValue(blockKey, propKey, value),
+  dispatchUpdateProp: (blockKey: string, propKey: string, value: string, moduleKey: string) =>
+    setBlockPropValue(blockKey, propKey, value, moduleKey),
 };
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  updateProp: (blockKey: string, propKey: string, value: string) =>
+    dispatchProps.dispatchUpdateProp(blockKey, propKey, value, stateProps.moduleKey),
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(EditorComponentContent);

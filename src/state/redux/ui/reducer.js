@@ -1,6 +1,5 @@
 // @flow
 
-import { getModulesFromState, getSelectedModuleKey } from '../editor/state';
 import { getSelectedModuleKeyFromUIState } from './state';
 
 export type ModulesSelectedBlockKeys = {

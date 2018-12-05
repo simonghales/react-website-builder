@@ -2,7 +2,7 @@
 
 import { createSelector } from 'reselect';
 import type { ReduxState } from '../store';
-import { getModulesFromState } from './state';
+import { getMixinsFromState, getModulesFromState } from './state';
 import type { DataModule, DataModules } from '../../../data/modules/models';
 import {
   getDataBlockFromModule,
@@ -14,7 +14,11 @@ import {
 } from '../../../data/modules/state';
 import type { DataBlockModel, SitePageDataBlocks } from '../../../data/blocks/models';
 import { getBlockFromDataBlock, getDataBlockModuleProps } from '../../../blocks/blocks';
-import { getBlockChildrenKeys, getDataBlockPropsDetails } from '../../../data/blocks/state';
+import {
+  getBlockChildrenKeys,
+  getDataBlockMixinStyles,
+  getDataBlockPropsDetails,
+} from '../../../data/blocks/state';
 import { getDataBlockPropsKeys } from '../../../editor/components/EditorContent/components/EditorFields/state';
 import {
   getModuleSelectedBlockKeyFromModulesSelectedBlockKeys,
@@ -22,6 +26,9 @@ import {
   getSelectedModuleKeyFromUIState,
 } from '../ui/state';
 import type { ModulesSelectedBlockKeys } from '../ui/reducer';
+import { getBlockStyles } from '../../../data/styles/state';
+import type { MixinsModel } from '../../../data/mixins/models';
+import { getBlockMixinsStyles } from '../../../data/mixins/state';
 
 export type BlocksKeys = {
   key: string,
@@ -46,7 +53,8 @@ function getDataBlocksKeys(
   };
 }
 
-const getModules = (state: ReduxState) => getModulesFromState(state.editor);
+export const getModules = (state: ReduxState) => getModulesFromState(state.editor);
+export const getMixins = (state: ReduxState) => getMixinsFromState(state.editor);
 const getModulesSelectedBlocksKeys = (state: ReduxState) =>
   getModulesSelectedBlockKeysFromUIState(state.ui);
 const getSelectedModuleKey = (state: ReduxState) => getSelectedModuleKeyFromUIState(state.ui);
@@ -85,7 +93,7 @@ export const getEditorSidebarBlocks = createSelector(
   }
 );
 
-const getPreviousModules = (state: ReduxState) => state.editor.selectedModulesHistory;
+const getPreviousModules = (state: ReduxState) => state.ui.selectedModulesHistory;
 
 export const getPreviousModulesKeys = createSelector(
   [getPreviousModules],
@@ -158,4 +166,17 @@ export const getModuleBlockPropsKeys = createSelector(
 export const getModuleBlockPropsDetails = createSelector(
   [getCurrentModule, getCurrentModuleRootBlock],
   (module: DataModule, dataBlock: DataBlockModel) => getDataBlockPropsDetails(dataBlock)
+);
+
+export const getSelectedBlockStyle = createSelector(
+  [getSelectedBlock],
+  (dataBlock: DataBlockModel) => getBlockStyles(dataBlock)
+);
+
+export const getSelectedBlockMixinsStyles = createSelector(
+  [getSelectedBlock, getMixins],
+  (dataBlock: DataBlockModel, mixins: MixinsModel) => {
+    const mixinStyles = getDataBlockMixinStyles(dataBlock);
+    return getBlockMixinsStyles(mixinStyles, mixins);
+  }
 );
