@@ -19,6 +19,7 @@ const faintInput = transparentize(0.75, '#000626');
 const darkInput = `rgba(83, 87, 96, 0.3)`;
 const darkInputFocused = `rgba(73, 77, 87, 0.3)`;
 const brightBlue = '#2383ff';
+const warningRed = '#ff3600';
 
 // #373e4b
 
@@ -41,4 +42,5 @@ export default {
   darkInput,
   darkInputFocused,
   brightBlue,
+  warningRed,
 };

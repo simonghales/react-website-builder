@@ -79,7 +79,7 @@ class EditorView extends Component<Props> {
       <React.Fragment>
         <Tooltip />
         <div className={styles.containerClass}>
-          <header className={styles.headerClass}>header..</header>
+          <header className={styles.headerClass}>zote</header>
           <main className={styles.mainClass}>
             <div className={styles.editorClass}>
               <EditorSidebar />

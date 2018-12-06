@@ -5,6 +5,7 @@ import styles from './styles';
 type Props = {
   value: string,
   inheritedValue?: string,
+  valueControlled?: boolean,
   onChange: (value: string) => void,
 };
 
@@ -15,6 +16,7 @@ type State = {
 class TextInput extends Component<Props, State> {
   static defaultProps = {
     inheritedValue: '',
+    valueControlled: false,
   };
 
   constructor(props: Props) {
@@ -22,6 +24,18 @@ class TextInput extends Component<Props, State> {
     this.state = {
       inputValue: props.value ? props.value : '',
     };
+  }
+
+  componentWillReceiveProps(nextProps: Readonly<Props>): void {
+    const { valueControlled, value } = nextProps;
+    if (valueControlled) {
+      const { inputValue } = this.state;
+      if (value !== inputValue) {
+        this.setState({
+          inputValue: value,
+        });
+      }
+    }
   }
 
   handleInputChange = (event: SyntheticInputEvent<HTMLInputElement>) => {

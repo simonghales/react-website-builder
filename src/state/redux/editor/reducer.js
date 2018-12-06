@@ -5,6 +5,7 @@ import { getModuleFromState, getModulesFromState } from './state';
 import {
   addMixinToBlockStylesMixins,
   addNewBlockToBlocks,
+  addNewDataBlockProp,
   removeBlockFromBlocks,
   removeBlockStylesMixinViaKey,
   replaceBlocksWithBlock,
@@ -27,6 +28,61 @@ export type EditorReduxState = {
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
+
+const ADD_NEW_PROP_TO_BLOCK = 'ADD_NEW_PROP_TO_BLOCK';
+
+type AddNewPropToBlockPayload = {
+  propKey: string,
+  propLabel: string,
+  propType: string,
+  moduleKey: string,
+  blockKey: string,
+};
+
+type AddNewPropToBlockAction = {
+  type: string,
+  payload: AddNewPropToBlockPayload,
+};
+
+export function addNewPropToBlock(
+  propKey: string,
+  propLabel: string,
+  propType: string,
+  moduleKey: string,
+  blockKey: string
+): AddNewPropToBlockAction {
+  return {
+    type: ADD_NEW_PROP_TO_BLOCK,
+    payload: {
+      propKey,
+      propLabel,
+      propType,
+      moduleKey,
+      blockKey,
+    },
+  };
+}
+
+function handleAddNewPropToBlock(
+  state: EditorReduxState,
+  { propKey, propLabel, propType, moduleKey, blockKey }: AddNewPropToBlockAction
+): EditorReduxState {
+  const module = getModuleFromState(state, moduleKey);
+  const dataBlock = getBlockFromModuleBlocks(blockKey, module);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [module.key]: {
+        ...module,
+        blocks: {
+          ...module.blocks,
+          [blockKey]: addNewDataBlockProp(dataBlock, propKey, propLabel, propType),
+        },
+      },
+    },
+  };
+}
 
 const SET_PROP_LINKED_REFERENCE = 'SET_PROP_LINKED_REFERENCE';
 
@@ -638,6 +694,7 @@ type Actions =
   | CreateNewModuleFromSelectedBlockAction;
 
 const ACTION_HANDLERS = {
+  [ADD_NEW_PROP_TO_BLOCK]: handleAddNewPropToBlock,
   [SET_PROP_LINKED_REFERENCE]: handleSetPropLinkedReference,
   [SET_INITIAL_MODULE_HISTORY]: handleSetInitialModuleHistory,
   [ADD_MIXIN_TO_BLOCK]: handleAddMixinToBlock,

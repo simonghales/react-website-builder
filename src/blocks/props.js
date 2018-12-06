@@ -9,6 +9,8 @@ export const blockPropsConfigTypes = {
   propReference: 'propReference',
 };
 
+export const blockPropsCustomAllowedTypes: Array<string> = [blockPropsConfigTypes.string];
+
 export type BlockPropsConfigTypes = $Keys<typeof blockPropsConfigTypes>;
 
 export const blockPropsDisplaySections = {

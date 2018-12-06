@@ -1,6 +1,7 @@
 // @flow
 import { css } from 'emotion';
 import colors from 'styles/config/colors';
+import { fieldLabel } from '../../../../../../../styles/typography';
 
 const classNames = {
   editorField: 'editorField',
@@ -9,10 +10,7 @@ const classNames = {
 const containerClass = css``;
 
 const labelClass = css`
-  color: ${colors.light};
-  font-size: 12px;
-  padding-left: 3px;
-  margin-bottom: 5px;
+  ${fieldLabel};
   display: flex;
   align-items: center;
 `;

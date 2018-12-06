@@ -15,8 +15,8 @@ export const inputStylesConfig = {
 
 const inputClass = css`
   ${inputReset};
-  background-color: #343b48;
-  border: 2px solid #343b48;
+  background-color: ${inputStylesConfig.backgroundColor};
+  border: 2px solid ${inputStylesConfig.backgroundColor};
   border-radius: 3px;
   font-size: ${inputStylesConfig.fontSize}px;
   padding: 9px 5px;

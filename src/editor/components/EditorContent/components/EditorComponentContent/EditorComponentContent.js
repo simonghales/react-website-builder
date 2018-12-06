@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { cx } from 'emotion';
 import EditorLayout from '../EditorLayout/EditorLayout';
 import EditorLayoutColumn from '../EditorLayout/components/EditorLayoutColumn';
 import type { ReduxState } from '../../../../../state/redux/store';
@@ -15,20 +16,39 @@ import type { DataBlockModel, DataBlockPropsConfigModel } from '../../../../../d
 import EditorFieldGroupFields from '../EditorFields/components/EditorFieldGroupFields/EditorFieldGroupFields';
 import EditorFieldGroup from '../EditorFields/components/EditorFieldGroup/EditorFieldGroup';
 import { setBlockPropValue } from '../../../../../state/redux/editor/reducer';
-import { isBlockModuleImportBlock } from '../../../../../blocks/state';
+import { isBlockModuleBlock, isBlockModuleImportBlock } from '../../../../../blocks/state';
 import Button from '../../../../../components/Button/Button';
 import styles from './styles';
+import EditorComponentAddProp from './components/EditorComponentAddProp/EditorComponentAddProp';
 
 type Props = {
   block: BlockModel,
   moduleBlockPropsConfig: DataBlockPropsConfigModel,
+  isModuleBlock: boolean,
   isModuleImportBlock: boolean,
   // eslint-disable-next-line react/no-unused-prop-types
   dataBlock: DataBlockModel,
   updateProp: (blockKey: string, propKey: string, value: string) => void,
 };
 
-class EditorComponentContent extends Component<Props> {
+type State = {
+  addingNewProp: boolean,
+};
+
+class EditorComponentContent extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      addingNewProp: false,
+    };
+  }
+
+  handleSetAddingNewProp = (adding: boolean) => {
+    this.setState({
+      addingNewProp: adding,
+    });
+  };
+
   updateProp = (propKey: string, value: string) => {
     const { dataBlock } = this.props;
     const { updateProp } = this.props;
@@ -46,14 +66,27 @@ class EditorComponentContent extends Component<Props> {
   }
 
   render() {
-    const { block, dataBlock } = this.props;
+    const { block, dataBlock, isModuleBlock } = this.props;
+    const { addingNewProp } = this.state;
     const contentPropsFields = this.getContentPropsFields();
+    console.log('contentPropsFields', contentPropsFields);
     return (
       <div className={styles.containerClass}>
-        <div className={styles.addPropContainerClass}>
-          <Button>Add Prop</Button>
-        </div>
-        <div className={styles.fieldsContainerClass}>
+        {isModuleBlock && (
+          <div className={styles.addPropContainerClass}>
+            <EditorComponentAddProp
+              blockKey={dataBlock.key}
+              moduleProps={contentPropsFields.map(prop => prop.key)}
+              addingProp={addingNewProp}
+              setAdding={this.handleSetAddingNewProp}
+            />
+          </div>
+        )}
+        <div
+          className={cx(styles.fieldsContainerClass, {
+            [styles.disabledContainerClass]: addingNewProp,
+          })}
+        >
           <EditorLayout>
             <EditorLayoutColumn columns={14}>
               <EditorFieldGroup>
@@ -80,6 +113,7 @@ const mapStateToProps = (state: ReduxState) => {
     block,
     moduleBlockPropsConfig,
     isModuleImportBlock,
+    isModuleBlock: isBlockModuleBlock(block),
     moduleKey: getCurrentModuleKey(state),
   };
 };
