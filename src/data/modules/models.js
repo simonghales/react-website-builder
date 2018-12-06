@@ -8,7 +8,6 @@ export type DataModule = {
   name: string,
   blocks: SitePageDataBlocks,
   rootBlock: string,
-  selectedBlock: string,
   isTemplate: boolean,
 };
 

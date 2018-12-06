@@ -2,21 +2,31 @@
 
 import { createSelector } from 'reselect';
 import type { ReduxState } from '../store';
-import { getSelectedModule } from './state';
+import { getMixinsFromState, getModulesFromState } from './state';
 import type { DataModule, DataModules } from '../../../data/modules/models';
 import {
-  doesModuleChildrenContainModule,
+  getDataBlockFromModule,
   getModuleFromModules,
   getModuleKeyFromModule,
   getModuleParentModules,
-  getModuleRootBlock,
-  getSelectedBlockFromModule,
-  getSelectedBlockKeyFromModule,
+  getModuleRootBlockKey,
 } from '../../../data/modules/state';
-import type { SitePageDataBlocks } from '../../../data/blocks/models';
+import type { DataBlockModel, SitePageDataBlocks } from '../../../data/blocks/models';
 import { getBlockFromDataBlock, getDataBlockModuleProps } from '../../../blocks/blocks';
-import { getBlockChildrenKeys, getDataBlockPropsDetails } from '../../../data/blocks/state';
-import { getDataBlockPropsKeys } from '../../../editor/components/EditorContent/components/EditorFields/state';
+import {
+  getBlockChildrenKeys,
+  getDataBlockMixinStyles,
+  getDataBlockPropsDetails,
+} from '../../../data/blocks/state';
+import {
+  getModuleSelectedBlockKeyFromModulesSelectedBlockKeys,
+  getModulesSelectedBlockKeysFromUIState,
+  getSelectedModuleKeyFromUIState,
+} from '../ui/state';
+import type { ModulesSelectedBlockKeys } from '../ui/reducer';
+import { getBlockStyles } from '../../../data/styles/state';
+import type { MixinsModel } from '../../../data/mixins/models';
+import { getBlockMixinsStyles } from '../../../data/mixins/state';
 
 export type BlocksKeys = {
   key: string,
@@ -41,32 +51,47 @@ function getDataBlocksKeys(
   };
 }
 
-const getModule = (state: ReduxState) => getSelectedModule(state.editor);
+export const getModules = (state: ReduxState) => getModulesFromState(state.editor);
+export const getMixins = (state: ReduxState) => getMixinsFromState(state.editor);
+const getModulesSelectedBlocksKeys = (state: ReduxState) =>
+  getModulesSelectedBlockKeysFromUIState(state.ui);
+const getSelectedModuleKey = (state: ReduxState) => getSelectedModuleKeyFromUIState(state.ui);
+
+export const getCurrentModuleKey = createSelector(
+  [getSelectedModuleKey],
+  (moduleKey: string) => moduleKey
+);
+
+export const getCurrentModule = createSelector(
+  [getCurrentModuleKey, getModules],
+  (moduleKey: string, modules: DataModules) => getModuleFromModules(moduleKey, modules)
+);
+
+export const getSelectedBlockKey = createSelector(
+  [getSelectedModuleKey, getModulesSelectedBlocksKeys, getModules],
+  (moduleKey: string, modulesSelectedBlockKeys: ModulesSelectedBlockKeys, modules: DataModules) => {
+    const moduleSelectedBlockKey = getModuleSelectedBlockKeyFromModulesSelectedBlockKeys(
+      moduleKey,
+      modulesSelectedBlockKeys
+    );
+    if (moduleSelectedBlockKey) {
+      return moduleSelectedBlockKey;
+    }
+    const module = getModuleFromModules(moduleKey, modules);
+    const moduleRootBlockKey = getModuleRootBlockKey(module);
+    return moduleRootBlockKey;
+  }
+);
 
 export const getEditorSidebarBlocks = createSelector(
-  [getModule],
-  (module: DataModule) => {
+  [getCurrentModule, getSelectedBlockKey],
+  (module: DataModule, selectedBlockKey: string) => {
     const { blocks, rootBlock } = module;
-    const selectedBlockKey = getSelectedBlockKeyFromModule(module);
     return getDataBlocksKeys(rootBlock, blocks, selectedBlockKey);
   }
 );
 
-export const getSelectedBlockKey = createSelector(
-  [getModule],
-  (module: DataModule) => {
-    const selectedBlockKey = getSelectedBlockKeyFromModule(module);
-    return selectedBlockKey;
-  }
-);
-
-export const getCurrentModuleKey = createSelector(
-  [getModule],
-  (module: DataModule) => module.key
-);
-
-const getPreviousModules = (state: ReduxState) => state.editor.selectedModulesHistory;
-const getModules = (state: ReduxState) => state.editor.modules;
+const getPreviousModules = (state: ReduxState) => state.ui.selectedModulesHistory;
 
 export const getPreviousModulesKeys = createSelector(
   [getPreviousModules],
@@ -85,7 +110,7 @@ export const getPreviousModule = createSelector(
 );
 
 export const getParentModules = createSelector(
-  [getModule, getModules],
+  [getCurrentModule, getModules],
   (module: DataModule, modules: DataModules) => {
     const moduleKeyToMatch = getModuleKeyFromModule(module);
     return getModuleParentModules(moduleKeyToMatch, modules);
@@ -101,41 +126,47 @@ export const getAddableModules = createSelector(
 );
 
 export const getSelectedBlock = createSelector(
-  [getModule],
+  [getCurrentModule, getSelectedBlockKey],
+  (module: DataModule, selectedBlockKey: string) => {
+    const dataBlock = getDataBlockFromModule(module, selectedBlockKey);
+    return dataBlock;
+  }
+);
+
+export const getCurrentModuleRootBlock = createSelector(
+  [getCurrentModule],
   (module: DataModule) => {
-    const block = getSelectedBlockFromModule(module);
-    return block;
+    const rootBlockKey = getModuleRootBlockKey(module);
+    const dataBlock = getDataBlockFromModule(module, rootBlockKey);
+    return dataBlock;
   }
 );
 
 export const getSelectedBlockBlock = createSelector(
-  [getModule],
-  (module: DataModule) => {
-    const dataBlock = getSelectedBlockFromModule(module);
-    return getBlockFromDataBlock(dataBlock);
-  }
+  [getCurrentModule, getSelectedBlock],
+  (module: DataModule, dataBlock: DataBlockModel) => getBlockFromDataBlock(dataBlock)
 );
 
 export const getSelectedBlockModulePropsConfig = createSelector(
-  [getModule, getModules],
-  (module: DataModule, modules: DataModules) => {
-    const dataBlock = getSelectedBlockFromModule(module);
-    return getDataBlockModuleProps(dataBlock, modules);
-  }
-);
-
-export const getModuleBlockPropsKeys = createSelector(
-  [getModule],
-  (module: DataModule) => {
-    const dataBlock = getModuleRootBlock(module);
-    return getDataBlockPropsKeys(dataBlock);
-  }
+  [getCurrentModule, getModules, getSelectedBlock],
+  (module: DataModule, modules: DataModules, dataBlock: DataBlockModel) =>
+    getDataBlockModuleProps(dataBlock, modules)
 );
 
 export const getModuleBlockPropsDetails = createSelector(
-  [getModule],
-  (module: DataModule) => {
-    const dataBlock = getModuleRootBlock(module);
-    return getDataBlockPropsDetails(dataBlock);
+  [getCurrentModule, getCurrentModuleRootBlock],
+  (module: DataModule, dataBlock: DataBlockModel) => getDataBlockPropsDetails(dataBlock)
+);
+
+export const getSelectedBlockStyle = createSelector(
+  [getSelectedBlock],
+  (dataBlock: DataBlockModel) => getBlockStyles(dataBlock)
+);
+
+export const getSelectedBlockMixinsStyles = createSelector(
+  [getSelectedBlock, getMixins],
+  (dataBlock: DataBlockModel, mixins: MixinsModel) => {
+    const mixinStyles = getDataBlockMixinStyles(dataBlock);
+    return getBlockMixinsStyles(mixinStyles, mixins);
   }
 );

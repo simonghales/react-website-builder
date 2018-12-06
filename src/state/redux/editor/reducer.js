@@ -1,17 +1,11 @@
 // @flow
 
 import { DUMMY_PAGE_DATA } from '../../../data/redux';
-import {
-  getBlockFromSelectedModule,
-  getModuleFromState,
-  getModulesFromState,
-  getSelectedBlockKeyFromState,
-  getSelectedModule,
-  getSelectedModuleKey,
-} from './state';
+import { getModuleFromState, getModulesFromState } from './state';
 import {
   addMixinToBlockStylesMixins,
   addNewBlockToBlocks,
+  addNewDataBlockProp,
   removeBlockFromBlocks,
   removeBlockStylesMixinViaKey,
   replaceBlocksWithBlock,
@@ -22,37 +16,79 @@ import {
   updateBlockStylesMixinsOrderByKeys,
 } from './modifiers';
 import type { BlocksOrder } from './modifiers';
-import type { DataModules } from '../../../data/modules/models';
+import type { DataModule, DataModules } from '../../../data/modules/models';
 import type { MixinsModel } from '../../../data/mixins/models';
-import {
-  getBlockFromModuleBlocks,
-  getModuleBlocks,
-  getModuleRootBlock,
-  getModuleRootBlockKey,
-  getSelectedBlockFromModule,
-} from '../../../data/modules/state';
-import { getBlockDefaultDataBlock, getBlockFromModule } from '../../../blocks/state';
-import {
-  getBlockBlocks,
-  getBlockParentKey,
-  getDataBlockPropsDetails,
-} from '../../../data/blocks/state';
-import { generateNewModule } from '../../../data/modules/generator';
-import { generateNewModuleTemplateBlock } from '../../../data/blocks/generator';
+import { getBlockFromModuleBlocks, getModuleRootBlockKey } from '../../../data/modules/state';
+import { getBlockDefaultDataBlock } from '../../../blocks/state';
+import type { DataBlockModel } from '../../../data/blocks/models';
 
 export type EditorReduxState = {
   modules: DataModules,
-  selectedModule: string,
-  selectedModulesHistory: Array<string>,
   mixinStyles: MixinsModel,
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
 
+const ADD_NEW_PROP_TO_BLOCK = 'ADD_NEW_PROP_TO_BLOCK';
+
+type AddNewPropToBlockPayload = {
+  propKey: string,
+  propLabel: string,
+  propType: string,
+  moduleKey: string,
+  blockKey: string,
+};
+
+type AddNewPropToBlockAction = {
+  type: string,
+  payload: AddNewPropToBlockPayload,
+};
+
+export function addNewPropToBlock(
+  propKey: string,
+  propLabel: string,
+  propType: string,
+  moduleKey: string,
+  blockKey: string
+): AddNewPropToBlockAction {
+  return {
+    type: ADD_NEW_PROP_TO_BLOCK,
+    payload: {
+      propKey,
+      propLabel,
+      propType,
+      moduleKey,
+      blockKey,
+    },
+  };
+}
+
+function handleAddNewPropToBlock(
+  state: EditorReduxState,
+  { propKey, propLabel, propType, moduleKey, blockKey }: AddNewPropToBlockAction
+): EditorReduxState {
+  const module = getModuleFromState(state, moduleKey);
+  const dataBlock = getBlockFromModuleBlocks(blockKey, module);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [module.key]: {
+        ...module,
+        blocks: {
+          ...module.blocks,
+          [blockKey]: addNewDataBlockProp(dataBlock, propKey, propLabel, propType),
+        },
+      },
+    },
+  };
+}
+
 const SET_PROP_LINKED_REFERENCE = 'SET_PROP_LINKED_REFERENCE';
 
 type SetPropLinkedReferencePayload = {
-  blockKey?: string,
+  blockKey: string,
+  moduleKey: string,
   propKey: string,
   isLinked: boolean,
 };
@@ -65,7 +101,8 @@ type SetPropLinkedReferenceAction = {
 export function setPropLinkedReference(
   propKey: string,
   isLinked: boolean,
-  blockKey?: string
+  blockKey: string,
+  moduleKey: string
 ): SetPropLinkedReferenceAction {
   return {
     type: SET_PROP_LINKED_REFERENCE,
@@ -73,17 +110,17 @@ export function setPropLinkedReference(
       propKey,
       isLinked,
       blockKey,
+      moduleKey,
     },
   };
 }
 
 function handleSetPropLinkedReference(
   state: EditorReduxState,
-  { propKey, isLinked, blockKey }: SetPropLinkedReferencePayload
+  { propKey, isLinked, blockKey, moduleKey }: SetPropLinkedReferencePayload
 ): EditorReduxState {
-  blockKey = blockKey || getSelectedBlockKeyFromState(state);
-  const module = getSelectedModule(state);
-  const block = getBlockFromSelectedModule(state, blockKey);
+  const module = getModuleFromState(state, moduleKey);
+  const block = getBlockFromModuleBlocks(blockKey, module);
   return {
     ...state,
     modules: {
@@ -143,6 +180,7 @@ const ADD_MIXIN_TO_BLOCK = 'ADD_MIXIN_TO_BLOCK';
 type AddMixinToBlockPayload = {
   blockKey: string,
   mixinKey: string,
+  moduleKey: string,
 };
 
 type AddMixinToBlockAction = {
@@ -150,28 +188,32 @@ type AddMixinToBlockAction = {
   payload: AddMixinToBlockPayload,
 };
 
-export function addMixinToBlock(blockKey: string, mixinKey: string): AddMixinToBlockAction {
+export function addMixinToBlock(
+  blockKey: string,
+  mixinKey: string,
+  moduleKey: string
+): AddMixinToBlockAction {
   return {
     type: ADD_MIXIN_TO_BLOCK,
     payload: {
       blockKey,
       mixinKey,
+      moduleKey,
     },
   };
 }
 
 function handleAddMixinToBlock(
   state: EditorReduxState,
-  { blockKey, mixinKey }: AddMixinToBlockPayload
+  { blockKey, mixinKey, moduleKey }: AddMixinToBlockPayload
 ): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedModule = getModuleFromState(state, moduleKey);
   const block = getBlockFromModuleBlocks(blockKey, selectedModule);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: {
           ...selectedModule.blocks,
@@ -190,6 +232,7 @@ const UPDATE_BLOCK_STYLES_MIXINS_ORDER = 'UPDATE_BLOCK_STYLES_MIXINS_ORDER';
 type UpdateBlockStylesMixinsOrderPayload = {
   blockKey: string,
   mixinKeys: Array<string>,
+  moduleKey: string,
 };
 
 type UpdateBlockStylesMixinsOrderAction = {
@@ -199,29 +242,30 @@ type UpdateBlockStylesMixinsOrderAction = {
 
 export function updateBlockStylesMixinsOrder(
   blockKey: string,
-  mixinKeys: Array<string>
+  mixinKeys: Array<string>,
+  moduleKey: string
 ): UpdateBlockStylesMixinsOrderAction {
   return {
     type: UPDATE_BLOCK_STYLES_MIXINS_ORDER,
     payload: {
       blockKey,
       mixinKeys,
+      moduleKey,
     },
   };
 }
 
 function handleUpdateBlockStylesMixinsOrder(
   state: EditorReduxState,
-  { blockKey, mixinKeys }: UpdateBlockStylesMixinsOrderPayload
+  { blockKey, mixinKeys, moduleKey }: UpdateBlockStylesMixinsOrderPayload
 ): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedModule = getModuleFromState(state, moduleKey);
   const block = getBlockFromModuleBlocks(blockKey, selectedModule);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: {
           ...selectedModule.blocks,
@@ -240,6 +284,7 @@ const REMOVE_BLOCK_STYLES_MIXIN = 'REMOVE_BLOCK_STYLES_MIXIN';
 type RemoveBlockStylesMixinPayload = {
   blockKey: string,
   mixinKey: string,
+  moduleKey: string,
 };
 
 type RemoveBlockStylesMixinAction = {
@@ -249,29 +294,30 @@ type RemoveBlockStylesMixinAction = {
 
 export function removeBlockStylesMixin(
   blockKey: string,
-  mixinKey: string
+  mixinKey: string,
+  moduleKey: string
 ): RemoveBlockStylesMixinAction {
   return {
     type: REMOVE_BLOCK_STYLES_MIXIN,
     payload: {
       blockKey,
       mixinKey,
+      moduleKey,
     },
   };
 }
 
 function handleRemoveBlockStylesMixin(
   state: EditorReduxState,
-  { blockKey, mixinKey }: RemoveBlockStylesMixinPayload
+  { blockKey, mixinKey, moduleKey }: RemoveBlockStylesMixinPayload
 ): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedModule = getModuleFromState(state, moduleKey);
   const block = getBlockFromModuleBlocks(blockKey, selectedModule);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: {
           ...selectedModule.blocks,
@@ -285,127 +331,12 @@ function handleRemoveBlockStylesMixin(
   };
 }
 
-const RETURN_TO_PREVIOUS_SELECTED_MODULE = 'RETURN_TO_PREVIOUS_SELECTED_MODULE';
-
-type ReturnToPreviousSelectedModuleAction = {
-  type: string,
-  payload: {},
-};
-
-export function returnToPreviousSelectedModule() {
-  return {
-    type: RETURN_TO_PREVIOUS_SELECTED_MODULE,
-    payload: {},
-  };
-}
-
-function handleReturnToPreviousSelectedModule(state: EditorReduxState): EditorReduxState {
-  const updatedModulesHistory = state.selectedModulesHistory.slice();
-  const moduleKey = updatedModulesHistory.pop();
-  if (!moduleKey) {
-    throw new Error(`No previous module found.`);
-  }
-  return {
-    ...state,
-    selectedModule: moduleKey,
-    selectedModulesHistory: updatedModulesHistory,
-  };
-}
-
-const SET_SELECTED_MODULE = 'SET_SELECTED_MODULE';
-
-type SetSelectedModulePayload = {
-  moduleKey: string,
-  previousModuleKey: string,
-};
-
-type SetSelectedModuleAction = {
-  type: string,
-  payload: SetSelectedModulePayload,
-};
-
-export function setSelectedModule(
-  moduleKey: string,
-  previousModuleKey: string
-): SetSelectedModuleAction {
-  return {
-    type: SET_SELECTED_MODULE,
-    payload: {
-      moduleKey,
-      previousModuleKey,
-    },
-  };
-}
-
-function handleSetSelectedModule(
-  state: EditorReduxState,
-  { moduleKey, previousModuleKey }: SetSelectedModulePayload
-): EditorReduxState {
-  const currentSelectedModuleKey = getSelectedModuleKey(state);
-  const currentPreviousModuleKey =
-    state.selectedModulesHistory.length > 0
-      ? state.selectedModulesHistory[state.selectedModulesHistory.length - 1]
-      : '';
-  let updatedSelectedModulesHistory = state.selectedModulesHistory.slice();
-  if (moduleKey === currentPreviousModuleKey) {
-    updatedSelectedModulesHistory.pop();
-  } else if (previousModuleKey) {
-    updatedSelectedModulesHistory = updatedSelectedModulesHistory.concat([
-      currentSelectedModuleKey,
-    ]);
-  }
-  console.log('updatedSelectedModulesHistory', updatedSelectedModulesHistory, previousModuleKey);
-  return {
-    ...state,
-    selectedModule: moduleKey,
-    selectedModulesHistory: updatedSelectedModulesHistory,
-    hoveredBlockKey: '',
-  };
-}
-
-const SET_SELECTED_BLOCK = 'SET_SELECTED_BLOCK';
-
-type SetSelectedBlockPayload = {
-  blockKey: string,
-};
-
-type SetSelectedBlockAction = {
-  type: string,
-  payload: SetSelectedBlockPayload,
-};
-
-export function setSelectedBlock(blockKey: string): SetSelectedBlockAction {
-  return {
-    type: SET_SELECTED_BLOCK,
-    payload: {
-      blockKey,
-    },
-  };
-}
-
-function handleSetSelectedBlock(
-  state: EditorReduxState,
-  { blockKey }: SetSelectedBlockPayload
-): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
-  return {
-    ...state,
-    modules: {
-      ...state.modules,
-      [selectedModuleKey]: {
-        ...selectedModule,
-        selectedBlock: blockKey,
-      },
-    },
-  };
-}
-
 const SET_BLOCK_STYLE_VALUE = 'SET_BLOCK_STYLE_VALUE';
 
 type SetBlockStyleValuePayload = {
   blockKey: string,
   cssKey: string,
+  moduleKey: string,
   modifier: string,
   section: string,
   value: string,
@@ -421,7 +352,8 @@ export function setBlockStyleValue(
   cssKey: string,
   modifier: string,
   section: string,
-  value: string
+  value: string,
+  moduleKey: string
 ): SetBlockStyleValueAction {
   return {
     type: SET_BLOCK_STYLE_VALUE,
@@ -431,22 +363,22 @@ export function setBlockStyleValue(
       modifier,
       section,
       value,
+      moduleKey,
     },
   };
 }
 
 function handleSetBlockStyleValue(
   state: EditorReduxState,
-  { blockKey, cssKey, modifier, section, value }: SetBlockStyleValuePayload
+  { blockKey, cssKey, modifier, section, value, moduleKey }: SetBlockStyleValuePayload
 ): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedModule = getModuleFromState(state, moduleKey);
   const block = getBlockFromModuleBlocks(blockKey, selectedModule);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: {
           ...selectedModule.blocks,
@@ -465,6 +397,7 @@ const SET_BLOCKS_ORDER = 'SET_BLOCKS_ORDER';
 type SetBlocksOrderPayload = {
   blocksOrder: BlocksOrder,
   rootBlocksOrder: Array<string>,
+  moduleKey: string,
 };
 
 type SetBlocksOrderAction = {
@@ -474,28 +407,29 @@ type SetBlocksOrderAction = {
 
 export function setBlocksOrder(
   blocksOrder: BlocksOrder,
-  rootBlocksOrder: Array<string>
+  rootBlocksOrder: Array<string>,
+  moduleKey: string
 ): SetBlocksOrderAction {
   return {
     type: SET_BLOCKS_ORDER,
     payload: {
       blocksOrder,
       rootBlocksOrder,
+      moduleKey,
     },
   };
 }
 
 function handleSetBlocksOrder(
   state: EditorReduxState,
-  { blocksOrder, rootBlocksOrder }: SetBlocksOrderPayload
+  { blocksOrder, rootBlocksOrder, moduleKey }: SetBlocksOrderPayload
 ): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedModule = getModuleFromState(state, moduleKey);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: updateAllBlocksOrder(blocksOrder, selectedModule.blocks, rootBlocksOrder),
       },
@@ -508,6 +442,7 @@ const SET_BLOCK_PROP_VALUE = 'SET_BLOCK_PROP_VALUE';
 type SetBlockPropValuePayload = {
   blockKey: string,
   propKey: string,
+  moduleKey: string,
   value: any,
 };
 
@@ -519,13 +454,15 @@ type SetBlockPropValueAction = {
 export function setBlockPropValue(
   blockKey: string,
   propKey: string,
-  value: string
+  value: string,
+  moduleKey: string
 ): SetBlockPropValueAction {
   return {
     type: SET_BLOCK_PROP_VALUE,
     payload: {
       blockKey,
       propKey,
+      moduleKey,
       value,
     },
   };
@@ -533,16 +470,15 @@ export function setBlockPropValue(
 
 function handleSetBlockPropValue(
   state: EditorReduxState,
-  { blockKey, propKey, value }: SetBlockPropValuePayload
+  { blockKey, propKey, value, moduleKey }: SetBlockPropValuePayload
 ): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedModule = getModuleFromState(state, moduleKey);
   const block = getBlockFromModuleBlocks(blockKey, selectedModule);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: {
           ...selectedModule.blocks,
@@ -557,6 +493,7 @@ const REMOVE_BLOCK_FROM_MODULE = 'REMOVE_BLOCK_FROM_MODULE';
 
 type RemoveBlockFromModulePayload = {
   blockKey: string,
+  moduleKey: string,
 };
 
 type RemoveBlockFromModuleAction = {
@@ -564,21 +501,24 @@ type RemoveBlockFromModuleAction = {
   payload: RemoveBlockFromModulePayload,
 };
 
-export function removeBlockFromModule(blockKey: string): RemoveBlockFromModuleAction {
+export function removeBlockFromModule(
+  blockKey: string,
+  moduleKey: string
+): RemoveBlockFromModuleAction {
   return {
     type: REMOVE_BLOCK_FROM_MODULE,
     payload: {
       blockKey,
+      moduleKey,
     },
   };
 }
 
 function handleRemoveBlockFromModule(
   state: EditorReduxState,
-  { blockKey }: RemoveBlockFromModulePayload
+  { blockKey, moduleKey }: RemoveBlockFromModulePayload
 ): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
+  const selectedModule = getModuleFromState(state, moduleKey);
   const rootBlockKey = getModuleRootBlockKey(selectedModule);
   if (blockKey === rootBlockKey) {
     console.warn(`Block to be removed is the root block, which cannot be removed.`);
@@ -586,15 +526,13 @@ function handleRemoveBlockFromModule(
       ...state,
     };
   }
-  const blockToRemoveParentKey = getBlockParentKey(blockKey, selectedModule.blocks);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: removeBlockFromBlocks(selectedModule.blocks, blockKey, true),
-        selectedBlock: blockToRemoveParentKey,
       },
     },
   };
@@ -603,8 +541,9 @@ function handleRemoveBlockFromModule(
 const ADD_NEW_MODULE = 'ADD_NEW_MODULE';
 
 type AddNewModulePayload = {
-  newModuleKey: string,
   moduleKey: string,
+  dataBlock: DataBlockModel,
+  selectedBlockKey: string,
 };
 
 type AddNewModuleAction = {
@@ -612,26 +551,28 @@ type AddNewModuleAction = {
   payload: AddNewModulePayload,
 };
 
-export function addNewModule(newModuleKey: string, moduleKey: string): AddNewModuleAction {
+export function addNewModule(
+  moduleKey: string,
+  dataBlock: DataBlockModel,
+  selectedBlockKey: string
+): AddNewModuleAction {
   return {
     type: ADD_NEW_MODULE,
     payload: {
-      newModuleKey,
       moduleKey,
+      dataBlock,
+      selectedBlockKey,
     },
   };
 }
 
 function handleAddNewModule(
   state: EditorReduxState,
-  { newModuleKey, moduleKey }: AddNewModulePayload
+  { moduleKey, dataBlock, selectedBlockKey }: AddNewModulePayload
 ): EditorReduxState {
   const module = getModuleFromState(state, moduleKey);
-  const newModule = getModuleFromState(state, newModuleKey);
-  const dataBlock = getBlockFromModule(newModule);
   const rootBlockKey = getModuleRootBlockKey(module);
-  const selectedBlock = getSelectedBlockFromModule(module);
-  console.log('adding new module', module);
+  const selectedBlock = getBlockFromModuleBlocks(selectedBlockKey, module);
   return {
     ...state,
     modules: {
@@ -639,7 +580,6 @@ function handleAddNewModule(
       [moduleKey]: {
         ...module,
         blocks: addNewBlockToBlocks(module.blocks, rootBlockKey, dataBlock, selectedBlock),
-        selectedBlock: dataBlock.key,
       },
     },
   };
@@ -651,6 +591,7 @@ type AddNewBlockPayload = {
   blockKey: string,
   groupKey: string,
   moduleKey: string,
+  selectedBlockKey: string,
 };
 
 type AddNewBlockAction = {
@@ -661,7 +602,8 @@ type AddNewBlockAction = {
 export function addNewBlock(
   blockKey: string,
   groupKey: string,
-  moduleKey: string
+  moduleKey: string,
+  selectedBlockKey: string
 ): AddNewBlockAction {
   return {
     type: ADD_NEW_BLOCK,
@@ -669,18 +611,19 @@ export function addNewBlock(
       blockKey,
       groupKey,
       moduleKey,
+      selectedBlockKey,
     },
   };
 }
 
 function handleAddNewBlock(
   state: EditorReduxState,
-  { blockKey, groupKey, moduleKey }
+  { blockKey, groupKey, moduleKey, selectedBlockKey }
 ): EditorReduxState {
   const module = getModuleFromState(state, moduleKey);
   const dataBlock = getBlockDefaultDataBlock(groupKey, blockKey);
   const rootBlockKey = getModuleRootBlockKey(module);
-  const selectedBlock = getSelectedBlockFromModule(module);
+  const selectedBlock = getBlockFromModuleBlocks(selectedBlockKey, module);
   return {
     ...state,
     modules: {
@@ -688,7 +631,6 @@ function handleAddNewBlock(
       [moduleKey]: {
         ...module,
         blocks: addNewBlockToBlocks(module.blocks, rootBlockKey, dataBlock, selectedBlock),
-        selectedBlock: dataBlock.key,
       },
     },
   };
@@ -696,46 +638,48 @@ function handleAddNewBlock(
 
 const CREATE_NEW_MODULE_FROM_SELECTED_BLOCK = 'CREATE_NEW_MODULE_FROM_SELECTED_BLOCK';
 
-type CreateNewModuleFromSelectedBlockAction = {
-  type: string,
-  payload: {},
+type CreateNewModuleFromSelectedBlockPayload = {
+  moduleKey: string,
+  blockKey: string,
+  newModule: DataModule,
+  newBlock: DataBlockModel,
 };
 
-export function createNewModuleFromSelectedBlock(): CreateNewModuleFromSelectedBlockAction {
+type CreateNewModuleFromSelectedBlockAction = {
+  type: string,
+  payload: CreateNewModuleFromSelectedBlockPayload,
+};
+
+export function createNewModuleFromSelectedBlock(
+  moduleKey: string,
+  blockKey: string,
+  newModule: DataModule,
+  newBlock: DataBlockModel
+): CreateNewModuleFromSelectedBlockAction {
   return {
     type: CREATE_NEW_MODULE_FROM_SELECTED_BLOCK,
-    payload: {},
+    payload: {
+      moduleKey,
+      blockKey,
+      newModule,
+      newBlock,
+    },
   };
 }
 
-function handleCreateNewModuleFromSelectedBlock(state: EditorReduxState): EditorReduxState {
-  const selectedModuleKey = getSelectedModuleKey(state);
-  const selectedModule = getModuleFromState(state, selectedModuleKey);
-  const selectedBlock = getSelectedBlockFromModule(selectedModule);
-  const blocks = getModuleBlocks(selectedModule);
-  const newModuleBlocks = getBlockBlocks(selectedBlock.key, blocks);
-  const selectedModulePropsDetails = getDataBlockPropsDetails(getModuleRootBlock(selectedModule));
-  const newModule = generateNewModule(
-    newModuleBlocks,
-    selectedBlock.key,
-    selectedBlock.label,
-    selectedBlock,
-    selectedModulePropsDetails
-  );
-  const newBlock = generateNewModuleTemplateBlock(
-    newModule.key,
-    selectedBlock.label,
-    selectedBlock,
-    selectedModulePropsDetails
-  );
+function handleCreateNewModuleFromSelectedBlock(
+  state: EditorReduxState,
+  { moduleKey, blockKey, newModule, newBlock }: CreateNewModuleFromSelectedBlockPayload
+): EditorReduxState {
+  const selectedModule = getModuleFromState(state, moduleKey);
+  const selectedBlock = getBlockFromModuleBlocks(blockKey, selectedModule);
   return {
     ...state,
     modules: {
       ...state.modules,
-      [selectedModuleKey]: {
+      [selectedModule.key]: {
         ...selectedModule,
         blocks: replaceBlocksWithBlock(selectedModule.blocks, selectedBlock.key, newBlock),
-        selectedBlock: newBlock.key,
       },
       [newModule.key]: newModule,
     },
@@ -743,25 +687,19 @@ function handleCreateNewModuleFromSelectedBlock(state: EditorReduxState): Editor
 }
 
 type Actions =
-  | SetSelectedModuleAction
-  | SetSelectedBlockAction
   | SetBlockPropValueAction
   | SetBlockStyleValueAction
-  | SetSelectedModuleAction
-  | ReturnToPreviousSelectedModuleAction
   | AddNewModuleAction
   | AddNewBlockAction
   | CreateNewModuleFromSelectedBlockAction;
 
 const ACTION_HANDLERS = {
+  [ADD_NEW_PROP_TO_BLOCK]: handleAddNewPropToBlock,
   [SET_PROP_LINKED_REFERENCE]: handleSetPropLinkedReference,
   [SET_INITIAL_MODULE_HISTORY]: handleSetInitialModuleHistory,
   [ADD_MIXIN_TO_BLOCK]: handleAddMixinToBlock,
   [UPDATE_BLOCK_STYLES_MIXINS_ORDER]: handleUpdateBlockStylesMixinsOrder,
   [REMOVE_BLOCK_STYLES_MIXIN]: handleRemoveBlockStylesMixin,
-  [RETURN_TO_PREVIOUS_SELECTED_MODULE]: handleReturnToPreviousSelectedModule,
-  [SET_SELECTED_MODULE]: handleSetSelectedModule,
-  [SET_SELECTED_BLOCK]: handleSetSelectedBlock,
   [SET_BLOCK_STYLE_VALUE]: handleSetBlockStyleValue,
   [SET_BLOCK_PROP_VALUE]: handleSetBlockPropValue,
   [SET_BLOCKS_ORDER]: handleSetBlocksOrder,

@@ -5,17 +5,18 @@ import type { EditorFieldGroupModel } from './model';
 import EditorFieldGroupFields from './components/EditorFieldGroupFields/EditorFieldGroupFields';
 
 type Props = {
+  blockKey: string,
   fieldGroups: Array<EditorFieldGroupModel>,
 };
 
 class EditorFields extends Component<Props> {
   render() {
-    const { fieldGroups } = this.props;
+    const { fieldGroups, blockKey } = this.props;
     return (
       <div>
         {fieldGroups.map((fieldGroup: EditorFieldGroupModel) => (
           <EditorFieldGroup key={fieldGroup.key} label={fieldGroup.label} grid={fieldGroup.grid}>
-            <EditorFieldGroupFields fields={fieldGroup.fields} />
+            <EditorFieldGroupFields fields={fieldGroup.fields} blockKey={blockKey} />
           </EditorFieldGroup>
         ))}
       </div>

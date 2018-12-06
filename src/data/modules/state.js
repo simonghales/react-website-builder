@@ -11,11 +11,6 @@ export function getModuleRootBlockKey(module: DataModule): string {
   return rootBlock;
 }
 
-export function getSelectedBlockKeyFromModule(module: DataModule): string {
-  const { selectedBlock } = module;
-  return selectedBlock;
-}
-
 export function getModuleBlocks(module: DataModule): SitePageDataBlocks {
   const { blocks } = module;
   return blocks;
@@ -38,11 +33,6 @@ export function getBlockFromModuleBlocks(blockKey: string, module: DataModule): 
     throw new Error(`Block ${blockKey} couldn't be matched to module's blocks.`);
   }
   return block;
-}
-
-export function getSelectedBlockFromModule(module: DataModule): DataBlockModel {
-  const { selectedBlock } = module;
-  return getBlockFromModuleBlocks(selectedBlock, module);
 }
 
 export function getModuleFromModules(moduleKey: string, modules: DataModules): DataModule {
@@ -154,4 +144,17 @@ export function getModuleParentModules(
     }
   });
   return parentModules;
+}
+
+export function getDataBlocksFromModule(module: DataModule): SitePageDataBlocks {
+  return module.blocks;
+}
+
+export function getDataBlockFromModule(module: DataModule, blockKey: string): DataBlockModel {
+  const blocks = getDataBlocksFromModule(module);
+  const block = blocks[blockKey];
+  if (!block) {
+    throw new Error(`Block "${blockKey}" not found within module blocks.`);
+  }
+  return block;
 }

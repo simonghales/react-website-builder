@@ -7,11 +7,12 @@ import type { BlockModel } from '../../../../../../../blocks/models';
 
 type Props = {
   fields: Array<EditorFieldModel>,
+  blockKey: string,
   block?: BlockModel,
   isContent?: boolean,
 };
 
-const EditorFieldGroupFields = ({ fields, block, isContent }: Props) => (
+const EditorFieldGroupFields = ({ fields, block, blockKey, isContent }: Props) => (
   <React.Fragment>
     {fields.map((field: EditorFieldModel) => (
       <div
@@ -21,6 +22,7 @@ const EditorFieldGroupFields = ({ fields, block, isContent }: Props) => (
       >
         <EditorField
           propKey={field.key}
+          blockKey={blockKey}
           key={field.key}
           label={field.label}
           value={field.value}

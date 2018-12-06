@@ -15,16 +15,25 @@ import {
 } from '../../../data/blocks/models';
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { ReduxState } from '../../../state/redux/store';
-import { getSelectedModuleSelectedBlock } from '../../../state/redux/editor/state';
 import {
   createNewModuleFromSelectedBlock,
   removeBlockFromModule,
 } from '../../../state/redux/editor/reducer';
 import IconButton from '../../../components/IconButton/IconButton';
+import {
+  getCurrentModule,
+  getCurrentModuleKey,
+  getSelectedBlock,
+} from '../../../state/redux/editor/selector';
+import type { DataModule } from '../../../data/modules/models';
+import {
+  dispatchCreateNewModuleFromSelectedBlock,
+  dispatchRemoveBlockFromModule,
+} from '../../../state/redux/shared/dispatch';
 
 type Props = {
   selectedBlock: DataBlockModel,
-  createModule: () => void,
+  createModule: (blockKey: string) => void,
   removeBlock: (blockKey: string) => void,
 };
 
@@ -55,7 +64,7 @@ class EditorBlockView extends Component<Props> {
                 className={styles.buttonClass}
                 tooltip="Save as module"
                 icon={<MdCreateNewFolder size={17} />}
-                onClick={createModule}
+                onClick={() => createModule(selectedBlock.key)}
               />
             )}
             <SmallHeading>{`${getDataBlockGroupKey(selectedBlock)}.${getDataBlockBlockKey(
@@ -77,15 +86,30 @@ class EditorBlockView extends Component<Props> {
 }
 
 const mapStateToProps = (state: ReduxState) => ({
-  selectedBlock: getSelectedModuleSelectedBlock(state.editor),
+  selectedBlock: getSelectedBlock(state),
+  moduleKey: getCurrentModuleKey(state),
+  selectedModule: getCurrentModule(state),
 });
 
-const mapDispatchToProps = {
-  createModule: () => createNewModuleFromSelectedBlock(),
-  removeBlock: (blockKey: string) => removeBlockFromModule(blockKey),
-};
+const mapDispatchToProps = (dispatch: any) => ({
+  dispatchCreateModule: (blockKey: string, moduleKey: string, selectedModule: DataModule) =>
+    dispatchCreateNewModuleFromSelectedBlock(moduleKey, blockKey, selectedModule, dispatch),
+  dispatchRemoveBlock: (blockKey: string, moduleKey: string, selectedModule: DataModule) =>
+    dispatchRemoveBlockFromModule(blockKey, moduleKey, selectedModule, dispatch),
+});
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  createModule: (blockKey: string) =>
+    dispatchProps.dispatchCreateModule(blockKey, stateProps.moduleKey, stateProps.selectedModule),
+  removeBlock: (blockKey: string) =>
+    dispatchProps.dispatchRemoveBlock(blockKey, stateProps.moduleKey, stateProps.selectedModule),
+});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(EditorBlockView);

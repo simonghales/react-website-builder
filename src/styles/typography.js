@@ -66,3 +66,10 @@ export const tinyLabel = css`
   ${tinyFont};
   color: ${colors.light};
 `;
+
+export const fieldLabel = css`
+  color: ${colors.light};
+  font-size: 12px;
+  padding-left: 3px;
+  margin-bottom: 5px;
+`;

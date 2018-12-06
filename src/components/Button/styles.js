@@ -3,15 +3,7 @@ import { transparentize } from 'polished';
 import { css } from 'emotion';
 import colors from '../../styles/config/colors';
 import fontWeights from '../../styles/config/fontWeights';
-
-const buttonReset = css`
-  font: inherit;
-  border: 0;
-  padding: 0;
-  background: none;
-  border-radius: 0;
-  cursor: pointer;
-`;
+import { buttonReset } from '../../styles/buttons';
 
 const buttonClass = css`
   ${buttonReset};
@@ -24,23 +16,21 @@ const buttonSlimClass = css`
   padding: 5px 8px;
   background-color: ${colors.darkInput};
   border-radius: 3px;
-  
+
   &:hover {
     color: ${colors.light};
   }
-  
 `;
 
 const buttonSlimIconClass = css`
-    ${buttonSlimClass};
-    display: flex;
-    align-items: center;
-    padding-right: 10px;
-    
-    svg {
-        margin-right: 3px;
-    }
-    
+  ${buttonSlimClass};
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+
+  svg {
+    margin-right: 3px;
+  }
 `;
 
 export default {

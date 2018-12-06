@@ -35,7 +35,7 @@ class EditorComponentHtml extends Component<Props> {
   }
 
   render() {
-    const { block, disabled } = this.props;
+    const { block, dataBlock, disabled } = this.props;
     if (disabled) {
       return <DisabledMessage message="HTML cannot be modified for this block." />;
     }
@@ -44,7 +44,11 @@ class EditorComponentHtml extends Component<Props> {
       <EditorLayout>
         <EditorLayoutColumn columns={8}>
           <EditorFieldGroup label="HTML">
-            <EditorFieldGroupFields fields={htmlPropsFields} block={block} />
+            <EditorFieldGroupFields
+              fields={htmlPropsFields}
+              block={block}
+              blockKey={dataBlock.key}
+            />
           </EditorFieldGroup>
         </EditorLayoutColumn>
         <EditorLayoutColumn columns={1} />

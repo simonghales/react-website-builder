@@ -5,7 +5,7 @@ import styles from './styles';
 import EditorComponentTabs, {
   editorComponentTabs,
 } from './components/EditorComponentTabs/EditorComponentTabs';
-import EditorComponentProps from './components/EditorComponentProps/EditorComponentProps';
+import EditorComponentProps from './components/EditorComponentContent/EditorComponentContent';
 import type { DataBlockModel } from '../../../data/blocks/models';
 import type { EditorComponentTabsOptions } from './components/EditorComponentTabs/EditorComponentTabs';
 import { doesBlockAllowHtml, doesBlockAllowStyles } from '../../../data/blocks/state';

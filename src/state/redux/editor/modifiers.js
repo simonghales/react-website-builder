@@ -14,6 +14,10 @@ import {
   getBlockParentKey,
   removeBlockKeyFromBlockChildrenKeys,
 } from '../../../data/blocks/state';
+import {
+  getDataBlockProps,
+  getDataBlockPropsConfig,
+} from '../../../editor/components/EditorContent/components/EditorFields/state';
 
 export function updateBlockProp(
   block: DataBlockModel,
@@ -28,6 +32,30 @@ export function updateBlockProp(
     },
   };
   return updatedBlock;
+}
+
+export function addNewDataBlockProp(
+  dataBlock: DataBlockModel,
+  propKey: string,
+  propLabel: string,
+  propType: string
+) {
+  const propsConfig = getDataBlockPropsConfig(dataBlock);
+  const props = getDataBlockProps(dataBlock);
+  return {
+    ...dataBlock,
+    props: {
+      ...props,
+      [propKey]: '',
+    },
+    propsConfig: {
+      ...propsConfig,
+      [propKey]: {
+        label: propLabel,
+        type: propType,
+      },
+    },
+  };
 }
 
 export function updateBlockPropIsLinked(
