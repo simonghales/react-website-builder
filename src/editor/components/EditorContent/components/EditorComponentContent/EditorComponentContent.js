@@ -17,7 +17,6 @@ import EditorFieldGroupFields from '../EditorFields/components/EditorFieldGroupF
 import EditorFieldGroup from '../EditorFields/components/EditorFieldGroup/EditorFieldGroup';
 import { setBlockPropValue } from '../../../../../state/redux/editor/reducer';
 import { isBlockModuleBlock, isBlockModuleImportBlock } from '../../../../../blocks/state';
-import Button from '../../../../../components/Button/Button';
 import styles from './styles';
 import EditorComponentAddProp from './components/EditorComponentAddProp/EditorComponentAddProp';
 
