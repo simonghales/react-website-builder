@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { cx } from 'emotion';
 import styles from './styles';
-import EditorSidebar from '../../components/EditorSidebar/EditorSidebar';
 import EditorBlockView from '../EditorBlockView/EditorBlockView';
 import type { ReduxState } from '../../../state/redux/store';
 import { getAddingBlock } from '../../../state/redux/ui/state';
@@ -14,6 +13,9 @@ import {
   setSelectedModuleKey,
 } from '../../../state/redux/ui/reducer';
 import Tooltip from '../../../components/Tooltip/Tooltip';
+import EditorSidebar from '../../components/EditorSidebar/EditorSidebar';
+import EditorLogo from '../../components/EditorLogo/EditorLogo';
+import EditorHeader from '../../components/EditorHeader/EditorHeader';
 
 type Props = {
   addingBlock: boolean,
@@ -79,7 +81,14 @@ class EditorView extends Component<Props> {
       <React.Fragment>
         <Tooltip />
         <div className={styles.containerClass}>
-          <header className={styles.headerClass}>zote</header>
+          <header className={styles.headerClass}>
+            <div className={styles.headerLogoClass}>
+              <EditorLogo />
+            </div>
+            <div className={styles.headerRemainingClass}>
+              <EditorHeader />
+            </div>
+          </header>
           <main className={styles.mainClass}>
             <div className={styles.editorClass}>
               <EditorSidebar />

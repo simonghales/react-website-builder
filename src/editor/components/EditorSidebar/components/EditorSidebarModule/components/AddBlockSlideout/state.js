@@ -1,7 +1,7 @@
 // @flow
 
-import type { AddableBlockGroups } from '../../../../../blocks/models';
-import { reduxDoesModuleChildrenContainModule } from '../../../../../state/redux/state';
+import type { AddableBlockGroups } from '../../../../../../../blocks/models';
+import { reduxDoesModuleChildrenContainModule } from '../../../../../../../state/redux/state';
 
 export type DisabledBlock = {
   currentModule: boolean,

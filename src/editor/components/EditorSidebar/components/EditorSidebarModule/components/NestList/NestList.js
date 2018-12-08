@@ -6,8 +6,8 @@ import Nestable from 'react-nestable';
 import { cx } from 'emotion';
 import BlockPreview from '../BlockPreview/BlockPreview';
 import styles from './styles';
-import type { BlocksKeys } from '../../../../../state/redux/editor/selector';
-import { goToModule } from '../../../../routing';
+import type { BlocksKeys } from '../../../../../../../state/redux/editor/selector';
+import { goToModule } from '../../../../../../routing';
 
 export type CondensedNestItem = {
   id: string,

@@ -2,8 +2,8 @@
 
 import { css } from 'emotion';
 import { transparentize } from 'polished';
-import colors from '../../../../../styles/config/colors';
-import fontWeights from '../../../../../styles/config/fontWeights';
+import colors from '../../../../../../../styles/config/colors';
+import fontWeights from '../../../../../../../styles/config/fontWeights';
 
 const containerClass = css`
   width: 100%;

@@ -4,15 +4,15 @@ import { MdTitle } from 'react-icons/md';
 import { cx } from 'emotion';
 import { connect } from 'react-redux';
 import styles from './styles';
-import type { ReduxState } from '../../../../../state/redux/store';
-import { getAddableBlockGroups } from '../../../../../blocks/state';
+import type { ReduxState } from '../../../../../../../state/redux/store';
+import { getAddableBlockGroups } from '../../../../../../../blocks/state';
 import type {
   AddableBlockGroups,
   AddBlockGroupModel,
   AddBlockModel,
-} from '../../../../../blocks/models';
-import { addNewBlock, addNewModule } from '../../../../../state/redux/editor/reducer';
-import { setAddingBlock } from '../../../../../state/redux/ui/reducer';
+} from '../../../../../../../blocks/models';
+import { addNewBlock, addNewModule } from '../../../../../../../state/redux/editor/reducer';
+import { setAddingBlock } from '../../../../../../../state/redux/ui/reducer';
 import { getDisabledBlocks } from './state';
 import type { DisabledBlocks } from './state';
 import {
@@ -20,9 +20,9 @@ import {
   getCurrentModuleKey,
   getModules,
   getSelectedBlockKey,
-} from '../../../../../state/redux/editor/selector';
-import { dispatchAddNewModule } from '../../../../../state/redux/shared/dispatch';
-import type { DataModules } from '../../../../../data/modules/models';
+} from '../../../../../../../state/redux/editor/selector';
+import { dispatchAddNewModule } from '../../../../../../../state/redux/shared/dispatch';
+import type { DataModules } from '../../../../../../../data/modules/models';
 
 const Block = ({
   block,

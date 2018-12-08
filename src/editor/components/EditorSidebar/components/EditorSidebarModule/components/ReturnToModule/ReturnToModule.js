@@ -4,14 +4,14 @@ import { MdKeyboardBackspace } from 'react-icons/md';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styles from './styles';
-import type { ReduxState } from '../../../../../state/redux/store';
+import type { ReduxState } from '../../../../../../../state/redux/store';
 import {
   getParentModules,
   getPreviousModule,
   getPreviousModulesKeys,
-} from '../../../../../state/redux/editor/selector';
-import type { DataModule } from '../../../../../data/modules/models';
-import { goToModule } from '../../../../routing';
+} from '../../../../../../../state/redux/editor/selector';
+import type { DataModule } from '../../../../../../../data/modules/models';
+import { goToModule } from '../../../../../../routing';
 
 type Props = {
   parentModules: Array<DataModule>,
