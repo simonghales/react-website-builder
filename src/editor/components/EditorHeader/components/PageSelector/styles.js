@@ -23,18 +23,27 @@ const containerClass = css`
 const iconClass = css`
   width: 32px;
   height: 32px;
-  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.05);
   margin-right: ${spacing.tiny}px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${colors.brightBlue};
+  border-radius: 50%;
+
+  svg {
+    display: block;
+  }
 `;
 
 const nameClass = css`
-  color: ${colors.lightSlight};
+  color: ${colors.lightMid};
   font-size: 14px;
   font-weight: ${fontWeights.medium};
 `;
 
 const pathClass = css`
-  color: ${colors.lightMid};
+  color: ${colors.lightFaint};
   font-size: 12px;
 `;
 

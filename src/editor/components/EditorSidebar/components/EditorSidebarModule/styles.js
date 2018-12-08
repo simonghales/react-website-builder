@@ -10,6 +10,7 @@ import {
 } from '../../../../../styles/utils/transitions';
 import { smallHeading } from '../../../../../styles/typography';
 import { squareButton } from '../../../../../styles/buttons';
+import { sidebarTopOption } from '../../../../../styles/shared/sidebar';
 
 const classNames = {
   slideoutTransition: 'slideoutTransition',
@@ -71,9 +72,7 @@ const slideoutClass = css`
 `;
 
 const addBlockSectionClass = css`
-  display: flex;
-  align-items: center;
-  padding: 5px;
+  ${sidebarTopOption};
 `;
 
 const returnToWrapperClass = css`

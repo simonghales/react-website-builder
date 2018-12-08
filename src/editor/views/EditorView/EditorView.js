@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { cx } from 'emotion';
@@ -16,6 +17,9 @@ import Tooltip from '../../../components/Tooltip/Tooltip';
 import EditorSidebar from '../../components/EditorSidebar/EditorSidebar';
 import EditorLogo from '../../components/EditorLogo/EditorLogo';
 import EditorHeader from '../../components/EditorHeader/EditorHeader';
+import EditorSidebarModule from '../../components/EditorSidebar/components/EditorSidebarModule/EditorSidebarModule';
+import EditorPageView from '../EditorPageView/EditorPageView';
+import { editorRoutes } from '../../routing';
 
 type Props = {
   addingBlock: boolean,
@@ -99,7 +103,8 @@ class EditorView extends Component<Props> {
                   [styles.previewContentDisabledClass]: addingBlock,
                 })}
               >
-                <EditorBlockView />
+                <Route exact path={editorRoutes.page} component={EditorPageView} />
+                <Route exact path={editorRoutes.pageWithModule} component={EditorBlockView} />
               </div>
               {addingBlock && (
                 <div className={styles.previewBlockerClass} onClick={completeAddingBlock} />

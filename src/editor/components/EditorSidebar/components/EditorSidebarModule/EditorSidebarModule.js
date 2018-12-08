@@ -12,6 +12,7 @@ import type { ReduxState } from '../../../../../state/redux/store';
 import { getAddingBlock } from '../../../../../state/redux/ui/state';
 import { setAddingBlock } from '../../../../../state/redux/ui/reducer';
 import ReturnToModule from './components/ReturnToModule/ReturnToModule';
+import IconButton from '../../../../../components/IconButton/IconButton';
 
 type Props = {
   addingBlock: boolean,
@@ -55,13 +56,11 @@ class EditorSidebarModule extends Component<Props, State> {
             <div className={styles.returnToWrapperClass}>
               <ReturnToModule />
             </div>
-            <div
-              className={styles.addBlockToggleClass}
+            <IconButton
+              tooltip={addingBlock ? 'Close' : 'Add a block'}
+              icon={addingBlock ? <MdClose size={18} /> : <MdAdd size={18} />}
               onClick={this.handleStartAddingBlock}
-              data-tip={addingBlock ? 'Close' : 'Add a block'}
-            >
-              {addingBlock ? <MdClose size={20} /> : <MdAdd size={20} />}
-            </div>
+            />
           </div>
           <div className={styles.blocksSectionClass}>
             <BlocksManager />

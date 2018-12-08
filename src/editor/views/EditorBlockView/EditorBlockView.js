@@ -47,9 +47,6 @@ class EditorBlockView extends Component<Props> {
     return (
       <div className={styles.containerClass}>
         <header className={styles.headerClass}>
-          <div className={styles.titleWrapperClass}>
-            <MediumLargeHeading>{`${getDataBlockLabel(selectedBlock)}`}</MediumLargeHeading>
-          </div>
           <div className={styles.detailsClass}>
             {!selectedBlock.isParentModule && (
               <IconButton
@@ -70,6 +67,9 @@ class EditorBlockView extends Component<Props> {
             <SmallHeading>{`${getDataBlockGroupKey(selectedBlock)}.${getDataBlockBlockKey(
               selectedBlock
             )}`}</SmallHeading>
+          </div>
+          <div className={styles.titleWrapperClass}>
+            <MediumLargeHeading>{`${getDataBlockLabel(selectedBlock)}`}</MediumLargeHeading>
           </div>
         </header>
         <div className={styles.mainClass}>

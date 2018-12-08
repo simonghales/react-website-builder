@@ -5,14 +5,15 @@ import EditorSidebarModule from './components/EditorSidebarModule/EditorSidebarM
 import styles from './styles';
 import EditorSidebarPage from './components/EditorSidebarPage/EditorSidebarPage';
 import EditorSidebarSave from './components/EditorSidebarSave/EditorSidebarSave';
+import { editorRoutes } from '../../routing';
 
 class EditorSidebar extends Component<{}> {
   render() {
     return (
       <div className={styles.containerClass}>
         <div className={styles.contentClass}>
-          <Route exact path="/test/:pageKey?" component={EditorSidebarPage} />
-          <Route exact path="/test/:pageKey/:moduleKey" component={EditorSidebarModule} />
+          <Route exact path={editorRoutes.optionalPage} component={EditorSidebarPage} />
+          <Route exact path={editorRoutes.pageWithModule} component={EditorSidebarModule} />
         </div>
         <div className={styles.actionClass}>
           <EditorSidebarSave />

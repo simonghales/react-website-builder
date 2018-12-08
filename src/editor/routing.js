@@ -7,3 +7,9 @@ export function goToModule(moduleKey: string, previousModuleKey: string, history
     history.push(`/editor/${moduleKey}`);
   }
 }
+
+export const editorRoutes = {
+  optionalPage: `/test/:pageKey?`,
+  page: `/test/:pageKey`,
+  pageWithModule: `/test/:pageKey/:moduleKey`,
+};

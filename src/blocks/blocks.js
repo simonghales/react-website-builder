@@ -5,16 +5,14 @@ import Heading from './groups/basic/Heading/Heading';
 import Container from './groups/basic/Container/Container';
 import Module from './groups/module/Module/Module';
 import ModuleImport from './groups/module/ModuleImport/ModuleImport';
+import Page from './groups/module/Page/Page';
 import Element from './groups/html/Element/Element';
 import type { DataBlockModel } from '../data/blocks/models';
 import { blockGroups } from './config';
 import type { DataModule, DataModules } from '../data/modules/models';
-import { isBlockModuleBlock, isBlockModuleImportBlock } from './state';
+import { isBlockModuleImportBlock } from './state';
 import { getModuleFromModules, getModuleRootBlock } from '../data/modules/state';
-import {
-  getBlockPropsConfig,
-  getDataBlockPropsConfig,
-} from '../editor/components/EditorContent/components/EditorFields/state';
+import { getDataBlockPropsConfig } from '../editor/components/EditorContent/components/EditorFields/state';
 
 export const basicBlocks: BlockGroupModel = {
   key: blockGroups.Basic,
@@ -29,6 +27,7 @@ export const moduleBlocks: BlockGroupModel = {
   blocks: {
     [Module.key]: Module,
     [ModuleImport.key]: ModuleImport,
+    [Page.key]: Page,
   },
 };
 

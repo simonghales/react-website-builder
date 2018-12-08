@@ -14,6 +14,7 @@ import type { DataModule } from '../data/modules/models';
 import type { DataBlockModel } from '../data/blocks/models';
 import { getBlockUniqueId } from './utils';
 import { blockGroups, blockTypes } from './config';
+import Page from './groups/module/Page/Page';
 import Module from './groups/module/Module/Module';
 import ModuleImport from './groups/module/ModuleImport/ModuleImport';
 import { EMPTY_BLOCK_STYLES } from '../data/styles/defaults';
@@ -160,7 +161,9 @@ export function getBlockContentPropsKeys(block: BlockModel): Array<string> {
 }
 
 export function isBlockModuleBlock(block: BlockModel): boolean {
-  return block.groupKey === blockGroups.Module && block.key === Module.key;
+  return (
+    block.groupKey === blockGroups.Module && (block.key === Module.key || block.key === Page.key)
+  );
 }
 
 export function isBlockModuleImportBlock(block: BlockModel): boolean {

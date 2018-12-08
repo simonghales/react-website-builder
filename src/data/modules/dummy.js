@@ -8,7 +8,6 @@ import {
   DUMMY_BLOCK_PAGE_PARAGRAPH,
   DUMMY_BLOCK_PAGE_MODULE,
   DUMMY_BLOCK_SUB_MODULE,
-  DUMMY_BLOCK_HEADING,
 } from '../blocks/dummy';
 
 export const DUMMY_INTRO_MODULE: DataModule = {
