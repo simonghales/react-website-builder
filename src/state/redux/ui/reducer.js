@@ -12,6 +12,7 @@ export type UiReduxState = {
   selectedModuleKey: string,
   selectedModulesHistory: Array<string>,
   modulesSelectedBlockKeys: ModulesSelectedBlockKeys,
+  selectedPageKey: string,
 };
 
 export const initialUiReduxState: UiReduxState = {
@@ -20,7 +21,10 @@ export const initialUiReduxState: UiReduxState = {
   selectedModuleKey: '',
   selectedModulesHistory: [],
   modulesSelectedBlockKeys: {},
+  selectedPageKey: '',
 };
+
+const SET_SELECTED_PAGE_KEY = 'SET_SELECTED_PAGE_KEY';
 
 const SET_INITIAL_SELECTED_MODULE_HISTORY = 'SET_INITIAL_SELECTED_MODULE_HISTORY';
 

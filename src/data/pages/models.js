@@ -6,3 +6,7 @@ export type PageDataModel = {
   slug: string,
   moduleKey: string,
 };
+
+export type PagesDataModel = {
+  [string]: PageDataModel,
+};

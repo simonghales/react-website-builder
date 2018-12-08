@@ -69,6 +69,10 @@ export function getSelectedModuleSelectedBlockMixins(state: ReduxState): Array<M
   return getDataBlockMixins(selectedBlock, mixins);
 }
 
+export function getPagesFromState(state: EditorReduxState): DataModules {
+  return state.pages;
+}
+
 export function getModulesFromState(state: EditorReduxState): DataModules {
   return state.modules;
 }
