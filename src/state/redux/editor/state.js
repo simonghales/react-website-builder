@@ -27,7 +27,9 @@ import {
   getModules,
   getSelectedBlockKey,
   getSelectedBlockMixinsStyles,
+  getSelectedPageSelector,
 } from './selector';
+import { getPageModuleKey } from '../../../data/pages/state';
 
 export function getModuleFromState(state: EditorReduxState, moduleKey: string): DataModule {
   const { modules } = state;
@@ -43,14 +45,31 @@ export function getMixinsFromState(state: EditorReduxState): MixinsModel {
   return mixinStyles;
 }
 
-export function getPreviewMappedBlocks(state: ReduxState): MappedDataBlocks {
+export function getPreviewMappedBlocks(
+  module: DataModule,
+  modules: DataModules,
+  mixins: MixinsModel
+): MappedDataBlocks {
+  const blocks = getModuleBlocks(module);
+  const rootBlockKey = getModuleRootBlockKey(module);
+  const mappedBlocks = getMappedDataBlocks(rootBlockKey, blocks, true, modules, mixins);
+  return mappedBlocks;
+}
+
+export function getPreviewModuleMappedBlocks(state: ReduxState): MappedDataBlocks {
   const modules = getModules(state);
   const mixins = getMixins(state);
   const selectedModule = getCurrentModule(state);
-  const blocks = getModuleBlocks(selectedModule);
-  const rootBlockKey = getModuleRootBlockKey(selectedModule);
-  const mappedBlocks = getMappedDataBlocks(rootBlockKey, blocks, true, modules, mixins);
-  return mappedBlocks;
+  return getPreviewMappedBlocks(selectedModule, modules, mixins);
+}
+
+export function getPagePreviewMappedBlocks(state: ReduxState): MappedDataBlocks {
+  const modules = getModules(state);
+  const mixins = getMixins(state);
+  const selectedPage = getSelectedPageSelector(state);
+  const pageModuleKey = getPageModuleKey(selectedPage);
+  const pageModule = getModuleFromState(state.editor, pageModuleKey);
+  return getPreviewMappedBlocks(pageModule, modules, mixins);
 }
 
 export function getSelectedModuleSelectedBlockMappedMixins(state: ReduxState) {

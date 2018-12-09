@@ -8,6 +8,7 @@ import BlockPreview from '../BlockPreview/BlockPreview';
 import styles from './styles';
 import type { BlocksKeys } from '../../../../../../../state/redux/editor/selector';
 import { goToModule } from '../../../../../../routing';
+import type { EditorRoutingMatch } from '../../../../../../routing';
 
 export type CondensedNestItem = {
   id: string,
@@ -48,12 +49,13 @@ type Props = {
   currentModuleKey: string,
   onChange: (items: Array<CondensedNestItem>, item: CondensedNestItem) => void,
   history: any,
+  match: EditorRoutingMatch,
 };
 
 class NestList extends Component<Props> {
   navigateToModule = (moduleKey: string) => {
-    const { currentModuleKey, history } = this.props;
-    goToModule(moduleKey, currentModuleKey, history);
+    const { currentModuleKey, history, match } = this.props;
+    goToModule(moduleKey, currentModuleKey, match, history);
   };
 
   handleRenderItem = item => renderCondensedNestItem(item, this.navigateToModule);

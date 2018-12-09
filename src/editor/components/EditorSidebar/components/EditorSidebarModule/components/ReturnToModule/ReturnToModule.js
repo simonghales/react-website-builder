@@ -12,12 +12,14 @@ import {
 } from '../../../../../../../state/redux/editor/selector';
 import type { DataModule } from '../../../../../../../data/modules/models';
 import { goToModule } from '../../../../../../routing';
+import type { EditorRoutingMatch } from '../../../../../../routing';
 
 type Props = {
   parentModules: Array<DataModule>,
   previousModulesKeys: Array<string>,
   previousModule: DataModule | null,
   history: any,
+  match: EditorRoutingMatch,
 };
 
 class ReturnToModule extends Component<Props> {
@@ -53,7 +55,7 @@ class ReturnToModule extends Component<Props> {
 
   handleReturnToPreviousModule = () => {
     const { previousModule } = this.props;
-    const { history } = this.props;
+    const { history, match } = this.props;
     if (previousModule) {
       history.goBack();
     }
@@ -62,7 +64,7 @@ class ReturnToModule extends Component<Props> {
       return;
     }
     const [moduleKey, previousModuleKey] = this.getReturnModuleKeys();
-    goToModule(moduleKey, previousModuleKey, history);
+    goToModule(moduleKey, previousModuleKey, match, history);
   };
 
   render() {

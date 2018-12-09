@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { MdOpenInNew } from 'react-icons/md';
 import { connect } from 'react-redux';
+import { cx } from 'emotion';
 import { PREVIEW_IFRAME_BROADCAST_INIT } from '../../../preview/constants';
 import {
   PREVIEW_CONTENT_UPDATE_EVENT,
@@ -11,13 +12,32 @@ import {
 } from '../../../preview/event';
 import styles from './styles';
 import type { ReduxState } from '../../../state/redux/store';
-import { getPreviewMappedBlocks } from '../../../state/redux/editor/state';
+import {
+  getPagePreviewMappedBlocks,
+  getPreviewModuleMappedBlocks,
+} from '../../../state/redux/editor/state';
 import type { MappedDataBlocks } from '../../../data/blocks/models';
 import IconButton from '../../../components/IconButton/IconButton';
+
+export const editorPreviewIframeSizes = {
+  full: 'full',
+  embed: 'embed',
+};
+
+export const editorPreviewIframeTypes = {
+  module: 'module',
+  page: 'page',
+};
+
+type EditorPreviewIframeTypes = $Keys<typeof editorPreviewIframeTypes>;
+
+type EditorPreviewIframeSizes = $Keys<typeof editorPreviewIframeSizes>;
 
 type Props = {
   blocks: MappedDataBlocks,
   hoveredBlockKey: string,
+  size?: EditorPreviewIframeSizes,
+  type: EditorPreviewIframeTypes,
 };
 
 type State = {
@@ -33,6 +53,10 @@ class EditorPreviewIframe extends Component<Props, State> {
   previewTabPollInterval: IntervalID;
 
   previewTabReference;
+
+  static defaultProps = {
+    size: editorPreviewIframeSizes.embed,
+  };
 
   constructor(props: Props) {
     super(props);
@@ -51,6 +75,11 @@ class EditorPreviewIframe extends Component<Props, State> {
 
   componentWillUnmount() {
     this.removeIframeListener();
+  }
+
+  isFullSize() {
+    const { size } = this.props;
+    return size === editorPreviewIframeSizes.full;
   }
 
   addIframeListener() {
@@ -144,33 +173,47 @@ class EditorPreviewIframe extends Component<Props, State> {
   };
 
   render() {
+    const isFullSize = this.isFullSize();
     return (
       <div className={styles.containerClass}>
-        <div className={styles.iframeWrapperClass}>
+        <div
+          className={cx(styles.iframeWrapperClass, {
+            [styles.iframeWrapperEmbedClass]: !isFullSize,
+            [styles.iframeWrapperFullClass]: isFullSize,
+          })}
+        >
           <iframe
             className={styles.iframeClass}
             ref={this.iframeRef}
             src={this.getPreviewUrl()}
             title="Preview"
           />
-          <div className={styles.openInTabClass}>
-            <div>
-              <IconButton
-                onClick={this.handleOpenPreviewInNewTab}
-                icon={<MdOpenInNew />}
-                tooltip="Open preview in new tab"
-              />
+          {!this.isFullSize() && (
+            <div className={styles.openInTabClass}>
+              <div>
+                <IconButton
+                  onClick={this.handleOpenPreviewInNewTab}
+                  icon={<MdOpenInNew />}
+                  tooltip="Open preview in new tab"
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state: ReduxState) => ({
-  blocks: getPreviewMappedBlocks(state),
-  hoveredBlockKey: state.ui.hoveredBlockKey,
-});
+const mapStateToProps = (state: ReduxState, props: Props) => {
+  const { type } = props;
+  const isModuleType = type === editorPreviewIframeTypes.module;
+  const blocks = isModuleType ? getPreviewModuleMappedBlocks(state) : getPagePreviewMappedBlocks(state);
+  const hoveredBlockKey = isModuleType ? state.ui.hoveredBlockKey : '';
+  return {
+    blocks,
+    hoveredBlockKey,
+  };
+};
 
 export default connect(mapStateToProps)(EditorPreviewIframe);

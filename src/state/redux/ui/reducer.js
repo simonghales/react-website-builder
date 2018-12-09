@@ -26,6 +26,34 @@ export const initialUiReduxState: UiReduxState = {
 
 const SET_SELECTED_PAGE_KEY = 'SET_SELECTED_PAGE_KEY';
 
+type SetSelectedPageKeyPayload = {
+  pageKey: string,
+};
+
+type SetSelectedPageKeyAction = {
+  type: string,
+  payload: SetSelectedPageKeyPayload,
+};
+
+export function setSelectedPageKey(pageKey: string): SetSelectedPageKeyAction {
+  return {
+    type: SET_SELECTED_PAGE_KEY,
+    payload: {
+      pageKey,
+    },
+  };
+}
+
+function handleSetSelectedPageKey(
+  state: UiReduxState,
+  { pageKey }: SetSelectedPageKeyPayload
+): UiReduxState {
+  return {
+    ...state,
+    selectedPageKey: pageKey,
+  };
+}
+
 const SET_INITIAL_SELECTED_MODULE_HISTORY = 'SET_INITIAL_SELECTED_MODULE_HISTORY';
 
 type SetInitialSelectedModuleHistoryPayload = {
@@ -212,6 +240,7 @@ function handleSetAddingBlock(
 type Actions = SetAddingBlockAction;
 
 const ACTION_HANDLERS = {
+  [SET_SELECTED_PAGE_KEY]: handleSetSelectedPageKey,
   [SET_INITIAL_SELECTED_MODULE_HISTORY]: handleSetInitialSelectedModuleHistory,
   [SET_SELECTED_MODULE_KEY]: handleSetSelectedModuleKey,
   [SET_MODULE_SELECTED_BLOCK_KEY]: handleSetModuleSelectedBlockKey,

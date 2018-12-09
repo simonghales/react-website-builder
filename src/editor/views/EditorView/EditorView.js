@@ -1,67 +1,44 @@
 // @flow
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { cx } from 'emotion';
 import styles from './styles';
 import EditorBlockView from '../EditorBlockView/EditorBlockView';
 import type { ReduxState } from '../../../state/redux/store';
 import { getAddingBlock } from '../../../state/redux/ui/state';
-import {
-  setAddingBlock,
-  setInitialSelectedModuleHistory,
-  setSelectedModuleKey,
-} from '../../../state/redux/ui/reducer';
 import Tooltip from '../../../components/Tooltip/Tooltip';
 import EditorSidebar from '../../components/EditorSidebar/EditorSidebar';
 import EditorLogo from '../../components/EditorLogo/EditorLogo';
 import EditorHeader from '../../components/EditorHeader/EditorHeader';
-import EditorSidebarModule from '../../components/EditorSidebar/components/EditorSidebarModule/EditorSidebarModule';
 import EditorPageView from '../EditorPageView/EditorPageView';
-import { editorRoutes } from '../../routing';
+import { editorRoutes, getEditorRoutingMatchParam } from '../../routing';
+import { matchPageKeyViaNameSlug } from '../../../data/pages/state';
+import type { PageDataModel } from '../../../data/pages/models';
+import { getPagesSelector } from '../../../state/redux/editor/selector';
+import { setSelectedPageKey } from '../../../state/redux/ui/reducer';
+import type { EditorRoutingMatch } from '../../routing';
 
 type Props = {
   addingBlock: boolean,
   completeAddingBlock: () => void,
-  setInitialHistory: (moduleKey: string, previousModuleKey: string) => void,
-  setModule: (moduleKey: string, previousModuleKey: string) => void,
-  match: {
-    params: {
-      moduleKey?: string,
-      previousModuleKey?: string,
-    },
-  },
-};
-
-const getParamModuleKey = (props: Props): string => {
-  const { match } = props;
-  const { params } = match;
-  const { moduleKey = '' } = params;
-  return moduleKey;
-};
-
-const getParamPreviousModuleKey = (props: Props): string => {
-  const { match } = props;
-  const { params } = match;
-  const { previousModuleKey = '' } = params;
-  return previousModuleKey;
+  match: EditorRoutingMatch,
+  selectPage: (pageKey: string) => void,
+  pages: PageDataModel,
 };
 
 class EditorView extends Component<Props> {
   constructor(props: Props) {
     super(props);
-    this.checkUrlParams(props);
+    this.checkUrlForPageSlugKey();
   }
 
-  checkUrlParams(props: Props = this.props) {
-    const { match } = props;
-    const { params } = match;
-    const { previousModuleKey = '' } = params;
-    const moduleKey = getParamModuleKey(props);
-    if (moduleKey) {
-      const { setInitialHistory } = this.props;
-      setInitialHistory(moduleKey, previousModuleKey);
+  checkUrlForPageSlugKey() {
+    const { selectPage, pages, match } = this.props;
+    const pageNameSlug = getEditorRoutingMatchParam('pageNameSlug', match);
+    const matchedPageKey = matchPageKeyViaNameSlug(pageNameSlug, pages);
+    if (matchedPageKey) {
+      selectPage(matchedPageKey);
     }
   }
 
@@ -70,12 +47,14 @@ class EditorView extends Component<Props> {
   }
 
   checkUpdatedUrlParams(nextProps: Props) {
-    const moduleKey = getParamModuleKey(nextProps);
-    const previousModuleKey = getParamModuleKey(this.props);
-    const newPreviousModuleKey = getParamPreviousModuleKey(nextProps);
-    if (moduleKey !== previousModuleKey) {
-      const { setModule } = this.props;
-      setModule(moduleKey, newPreviousModuleKey);
+    const { pages, selectPage } = this.props;
+    const pageNameSlug = getEditorRoutingMatchParam('pageNameSlug', nextProps.match);
+    const previousPageNameSlug = getEditorRoutingMatchParam('pageNameSlug', this.props.match);
+    if (pageNameSlug !== previousPageNameSlug) {
+      const matchedPageKey = matchPageKeyViaNameSlug(pageNameSlug, pages);
+      if (matchedPageKey) {
+        selectPage(matchedPageKey);
+      }
     }
   }
 
@@ -119,14 +98,11 @@ class EditorView extends Component<Props> {
 
 const mapStateToProps = (state: ReduxState) => ({
   addingBlock: getAddingBlock(state.ui),
+  pages: getPagesSelector(state),
 });
 
 const mapDispatchToProps = {
-  setInitialHistory: (moduleKey: string, previousModuleKey: string) =>
-    setInitialSelectedModuleHistory(moduleKey, previousModuleKey), // todo - verify moduleKey is valid
-  completeAddingBlock: () => setAddingBlock(false),
-  setModule: (moduleKey: string, previousModuleKey: string) =>
-    setSelectedModuleKey(moduleKey, previousModuleKey),
+  selectPage: (pageKey: string) => setSelectedPageKey(pageKey),
 };
 
 export default withRouter(

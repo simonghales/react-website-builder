@@ -13,5 +13,5 @@ export const DUMMY_PAGE_ABOUT: PageDataModel = {
   key: 'DUMMY_PAGE_ABOUT',
   name: 'About',
   slug: 'about',
-  moduleKey: 'DUMMY_PAGE_MODULE',
+  moduleKey: 'DUMMY_INTRO_MODULE',
 };

@@ -8,14 +8,16 @@ import type { PageDataModel } from '../../../../../../../data/pages/models';
 type Props = {
   page: PageDataModel,
   selected: boolean,
+  select: () => void,
 };
 
-const PagePreview = ({ page, selected }: Props) => (
+const PagePreview = ({ page, selected, select }: Props) => (
   <div
     className={cx(styles.containerClass, {
       [styles.notSelectedClass]: !selected,
       [styles.selectedClass]: selected,
     })}
+    onClick={select}
   >
     <div className={styles.infoClass}>
       <div className={styles.labelClass}>/{page.slug}</div>

@@ -1,7 +1,22 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import EditorPagePreviewView from './views/EditorPagePreviewView/EditorPagePreviewView';
+import type { ReduxState } from '../../../state/redux/store';
 
-const EditorPageView = () => <EditorPagePreviewView />;
+type Props = {};
 
-export default EditorPageView;
+class EditorPageView extends Component<Props, {}> {
+  render() {
+    return <EditorPagePreviewView />;
+  }
+}
+
+const mapStateToProps = (state: ReduxState) => {};
+
+const mapDispatchToProps = {};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditorPageView);
