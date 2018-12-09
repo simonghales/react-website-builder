@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
 import styles from './styles';
+import SiteLogo from '../../../svgs/SiteLogo/SiteLogo';
 
 const EditorLogo = () => (
   <div className={styles.containerClass}>
-    <h1>zote</h1>
+    <SiteLogo />
   </div>
 );
 

@@ -1,6 +1,7 @@
 // @flow
 
 import type { ModulesSelectedBlockKeys, UiReduxState } from './reducer';
+import type { PageEditorModes } from '../../../editor/views/EditorPageView/EditorPageView';
 
 export function getAddingBlock(state: UiReduxState): boolean {
   return state.addingBlock;
@@ -36,4 +37,8 @@ export function getSelectedModuleSelectedBlockKeyFromUIState(state: UiReduxState
 
 export function getSelectedPageKeyFromState(state: UiReduxState): string {
   return state.selectedPageKey;
+}
+
+export function getPageEditorModeFromUIState(state: UiReduxState): PageEditorModes {
+  return state.pageEditorMode;
 }

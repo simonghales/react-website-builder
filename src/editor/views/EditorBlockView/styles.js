@@ -1,33 +1,28 @@
 // @flow
 
 import { css } from 'emotion';
-import colors from 'styles/config/colors';
 import spacing from '../../../styles/config/spacing';
+import {
+  editViewContainer,
+  editViewHeader,
+  editViewHeaderDetails,
+  editViewHeaderTitleWrapper,
+} from '../../../styles/shared/editView';
 
 const containerClass = css`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  ${editViewContainer};
 `;
 
 const headerClass = css`
-  margin-top: ${spacing.medium}px;
-  margin-bottom: ${spacing.medium}px;
-  padding: 0 ${spacing.medium}px;
+  ${editViewHeader};
 `;
 
 const detailsClass = css`
-  display: flex;
-  align-items: center;
-  min-height: 24px;
+  ${editViewHeaderDetails};
 `;
 
 const titleWrapperClass = css`
-  display: flex;
-  align-items: center;
-  margin-top: 5px;
-  min-height: 30px;
+  ${editViewHeaderTitleWrapper};
 `;
 
 const buttonClass = css`

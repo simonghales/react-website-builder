@@ -43,7 +43,7 @@ export function goToPage(pageNameSlug: string, match: EditorRoutingMatch, histor
 }
 
 export const editorRoutes = {
-  optionalPage: `/editor/:pageNameSlug?`,
+  optionalPage: `/editor/:pageNameSlug?/:moduleKey?/:previousModuleKey?`,
   page: `/editor/:pageNameSlug`,
   pageWithModule: `/editor/:pageNameSlug/:moduleKey/:previousModuleKey?`,
 };
