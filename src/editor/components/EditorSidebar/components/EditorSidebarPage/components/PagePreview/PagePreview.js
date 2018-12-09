@@ -9,9 +9,10 @@ type Props = {
   page: PageDataModel,
   selected: boolean,
   select: () => void,
+  onEdit: () => void,
 };
 
-const PagePreview = ({ page, selected, select }: Props) => (
+const PagePreview = ({ page, selected, select, onEdit }: Props) => (
   <div
     className={cx(styles.containerClass, {
       [styles.notSelectedClass]: !selected,
@@ -24,7 +25,7 @@ const PagePreview = ({ page, selected, select }: Props) => (
       <div className={styles.titleClass}>{page.name}</div>
     </div>
     <div className={styles.iconWrapperClass}>
-      <div className={styles.iconClass}>
+      <div className={styles.iconClass} onClick={onEdit}>
         <MdModeEdit />
       </div>
     </div>

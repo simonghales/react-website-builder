@@ -21,6 +21,15 @@ const containerClass = css`
   &:hover {
     color: ${colors.light};
   }
+
+  svg {
+    display: block;
+    width: 80px;
+
+    path {
+      fill: currentColor;
+    }
+  }
 `;
 
 export default {

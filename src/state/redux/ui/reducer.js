@@ -1,6 +1,8 @@
 // @flow
 
 import { getSelectedModuleKeyFromUIState } from './state';
+import type { PageEditorModes } from '../../../editor/views/EditorPageView/EditorPageView';
+import { pageEditorModes } from '../../../editor/views/EditorPageView/EditorPageView';
 
 export type ModulesSelectedBlockKeys = {
   [string]: string,
@@ -13,6 +15,7 @@ export type UiReduxState = {
   selectedModulesHistory: Array<string>,
   modulesSelectedBlockKeys: ModulesSelectedBlockKeys,
   selectedPageKey: string,
+  pageEditorMode: PageEditorModes,
 };
 
 export const initialUiReduxState: UiReduxState = {
@@ -22,7 +25,38 @@ export const initialUiReduxState: UiReduxState = {
   selectedModulesHistory: [],
   modulesSelectedBlockKeys: {},
   selectedPageKey: '',
+  pageEditorMode: pageEditorModes.preview,
 };
+
+const SET_PAGE_EDITOR_MODE = 'SET_PAGE_EDITOR_MODE';
+
+type SetPageEditorModePayload = {
+  mode: PageEditorModes,
+};
+
+type SetPageEditorModeAction = {
+  type: string,
+  payload: SetPageEditorModePayload,
+};
+
+export function setPageEditorMode(mode: PageEditorModes): SetPageEditorModeAction {
+  return {
+    type: SET_PAGE_EDITOR_MODE,
+    payload: {
+      mode,
+    },
+  };
+}
+
+function handleSetPageEditorMode(
+  state: UiReduxState,
+  { mode }: SetPageEditorModePayload
+): UiReduxState {
+  return {
+    ...state,
+    pageEditorMode: mode,
+  };
+}
 
 const SET_SELECTED_PAGE_KEY = 'SET_SELECTED_PAGE_KEY';
 
@@ -240,6 +274,7 @@ function handleSetAddingBlock(
 type Actions = SetAddingBlockAction;
 
 const ACTION_HANDLERS = {
+  [SET_PAGE_EDITOR_MODE]: handleSetPageEditorMode,
   [SET_SELECTED_PAGE_KEY]: handleSetSelectedPageKey,
   [SET_INITIAL_SELECTED_MODULE_HISTORY]: handleSetInitialSelectedModuleHistory,
   [SET_SELECTED_MODULE_KEY]: handleSetSelectedModuleKey,

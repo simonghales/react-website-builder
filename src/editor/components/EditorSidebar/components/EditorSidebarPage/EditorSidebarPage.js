@@ -15,12 +15,15 @@ import type { PageDataModel, PagesDataModel } from '../../../../../data/pages/mo
 import type { EditorRoutingMatch } from '../../../../routing';
 import { goToPage } from '../../../../routing';
 import { getNameSlug } from '../../../../../utils/slugs';
+import { setPageEditorMode } from '../../../../../state/redux/ui/reducer';
+import { pageEditorModes } from '../../../../views/EditorPageView/EditorPageView';
 
 type Props = {
   selectedPageKey: string,
   pages: PagesDataModel,
   history: {},
   match: EditorRoutingMatch,
+  switchToEditMode: () => void,
 };
 
 class EditorSidebarPage extends Component<Props> {
@@ -28,6 +31,11 @@ class EditorSidebarPage extends Component<Props> {
     const { match, history } = this.props;
     const pageNameSlug = getNameSlug(page.name);
     goToPage(pageNameSlug, match, history);
+  };
+
+  switchToEditMode = () => {
+    const { switchToEditMode } = this.props;
+    switchToEditMode();
   };
 
   render() {
@@ -46,6 +54,7 @@ class EditorSidebarPage extends Component<Props> {
               select={() => {
                 this.navigateToPage(pages[pageKey]);
               }}
+              onEdit={this.switchToEditMode}
               selected={pageKey === selectedPageKey}
             />
           ))}
@@ -60,7 +69,9 @@ const mapStateToProps = (state: ReduxState) => ({
   selectedPageKey: getSelectedPageKeySelector(state),
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  switchToEditMode: () => setPageEditorMode(pageEditorModes.edit),
+};
 
 export default withRouter(
   connect(
