@@ -1,18 +1,23 @@
 // @flow
 import React from 'react';
-import { MdRemoveRedEye } from 'react-icons/md';
+import { MdRemoveRedEye, MdCreate, MdViewList } from 'react-icons/md';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import styles from './styles';
 import type { PageDataModel } from '../../../../../data/pages/models';
 import type { ReduxState } from '../../../../../state/redux/store';
 import { getPageEditorModeFromUIState } from '../../../../../state/redux/ui/state';
-import { pageEditorModes } from '../../../../views/EditorPageView/EditorPageView';
+import {
+  getPageEditorModeWithMatch,
+  pageEditorModes,
+} from '../../../../views/EditorPageView/EditorPageView';
 import type { PageEditorModes } from '../../../../views/EditorPageView/EditorPageView';
+import type { EditorRoutingMatch } from '../../../../routing';
 
 const modeIcons = {
-  [pageEditorModes.edit]: <MdRemoveRedEye size={18} />,
+  [pageEditorModes.edit]: <MdCreate size={18} />,
   [pageEditorModes.preview]: <MdRemoveRedEye size={18} />,
-  [pageEditorModes.modules]: <MdRemoveRedEye size={18} />,
+  [pageEditorModes.modules]: <MdViewList size={18} />,
 };
 
 const getModeIcon = (mode: PageEditorModes) => {
@@ -22,13 +27,16 @@ const getModeIcon = (mode: PageEditorModes) => {
 };
 
 type Props = {
-  page: PageDataModel | null,
   pageEditorMode: PageEditorModes,
+  page: PageDataModel | null,
+  match: EditorRoutingMatch,
 };
 
-const PageSelector = ({ page, pageEditorMode }: Props) => (
+const PageSelector = ({ page, pageEditorMode, match }: Props) => (
   <div className={styles.containerClass}>
-    <div className={styles.iconClass}>{getModeIcon(pageEditorMode)}</div>
+    <div className={styles.iconClass}>
+      {getModeIcon(getPageEditorModeWithMatch(pageEditorMode, match))}
+    </div>
     <div>
       <div className={styles.pathClass}>/{page.slug}</div>
       <div className={styles.nameClass}>{page.name}</div>
@@ -40,4 +48,4 @@ const mapStateToProps = (state: ReduxState) => ({
   pageEditorMode: getPageEditorModeFromUIState(state.ui),
 });
 
-export default connect(mapStateToProps)(PageSelector);
+export default withRouter(connect(mapStateToProps)(PageSelector));

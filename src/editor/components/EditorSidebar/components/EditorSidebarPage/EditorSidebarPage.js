@@ -17,13 +17,16 @@ import { goToPage } from '../../../../routing';
 import { getNameSlug } from '../../../../../utils/slugs';
 import { setPageEditorMode } from '../../../../../state/redux/ui/reducer';
 import { pageEditorModes } from '../../../../views/EditorPageView/EditorPageView';
+import type { PageEditorModes } from '../../../../views/EditorPageView/EditorPageView';
+import { getPageEditorModeFromUIState } from '../../../../../state/redux/ui/state';
 
 type Props = {
   selectedPageKey: string,
   pages: PagesDataModel,
   history: {},
   match: EditorRoutingMatch,
-  switchToEditMode: () => void,
+  pageEditorMode: PageEditorModes,
+  setPageMode: (mode: PageEditorModes) => void,
 };
 
 class EditorSidebarPage extends Component<Props> {
@@ -33,13 +36,17 @@ class EditorSidebarPage extends Component<Props> {
     goToPage(pageNameSlug, match, history);
   };
 
-  switchToEditMode = () => {
-    const { switchToEditMode } = this.props;
-    switchToEditMode();
+  handleToggleMod = () => {
+    const { setPageMode, pageEditorMode } = this.props;
+    if (pageEditorMode === pageEditorModes.preview) {
+      setPageMode(pageEditorModes.edit);
+    } else {
+      setPageMode(pageEditorModes.preview);
+    }
   };
 
   render() {
-    const { pages, selectedPageKey } = this.props;
+    const { pages, selectedPageKey, pageEditorMode } = this.props;
     return (
       <div>
         <div className={styles.addPageSectionClass}>
@@ -54,8 +61,9 @@ class EditorSidebarPage extends Component<Props> {
               select={() => {
                 this.navigateToPage(pages[pageKey]);
               }}
-              onEdit={this.switchToEditMode}
+              toggleMode={this.handleToggleMod}
               selected={pageKey === selectedPageKey}
+              showEditIcon={pageEditorMode === pageEditorModes.preview}
             />
           ))}
         </div>
@@ -67,10 +75,11 @@ class EditorSidebarPage extends Component<Props> {
 const mapStateToProps = (state: ReduxState) => ({
   pages: getPagesSelector(state),
   selectedPageKey: getSelectedPageKeySelector(state),
+  pageEditorMode: getPageEditorModeFromUIState(state.ui),
 });
 
 const mapDispatchToProps = {
-  switchToEditMode: () => setPageEditorMode(pageEditorModes.edit),
+  setPageMode: (mode: PageEditorModes) => setPageEditorMode(mode),
 };
 
 export default withRouter(

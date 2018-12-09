@@ -25,7 +25,7 @@ export const initialUiReduxState: UiReduxState = {
   selectedModulesHistory: [],
   modulesSelectedBlockKeys: {},
   selectedPageKey: '',
-  pageEditorMode: pageEditorModes.preview,
+  pageEditorMode: pageEditorModes.edit,
 };
 
 const SET_PAGE_EDITOR_MODE = 'SET_PAGE_EDITOR_MODE';

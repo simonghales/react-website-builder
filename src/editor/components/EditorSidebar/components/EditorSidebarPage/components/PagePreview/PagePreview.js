@@ -1,18 +1,19 @@
 // @flow
 import React from 'react';
 import { cx } from 'emotion';
-import { MdModeEdit } from 'react-icons/md';
+import { MdModeEdit, MdRemoveRedEye } from 'react-icons/md';
 import styles from './styles';
 import type { PageDataModel } from '../../../../../../../data/pages/models';
 
 type Props = {
   page: PageDataModel,
   selected: boolean,
+  showEditIcon: boolean,
   select: () => void,
-  onEdit: () => void,
+  toggleMode: () => void,
 };
 
-const PagePreview = ({ page, selected, select, onEdit }: Props) => (
+const PagePreview = ({ page, selected, select, toggleMode, showEditIcon }: Props) => (
   <div
     className={cx(styles.containerClass, {
       [styles.notSelectedClass]: !selected,
@@ -25,8 +26,8 @@ const PagePreview = ({ page, selected, select, onEdit }: Props) => (
       <div className={styles.titleClass}>{page.name}</div>
     </div>
     <div className={styles.iconWrapperClass}>
-      <div className={styles.iconClass} onClick={onEdit}>
-        <MdModeEdit />
+      <div className={styles.iconClass} onClick={toggleMode}>
+        {showEditIcon ? <MdModeEdit /> : <MdRemoveRedEye />}
       </div>
     </div>
   </div>
