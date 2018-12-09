@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import { MdArrowForward } from 'react-icons/md';
 import { cx } from 'emotion';
 import styles from '../BlocksManager/styles';
-import type { ReduxState } from '../../../../../state/redux/store';
-import { getDataBlockPreviewProps } from '../../../../../state/redux/editor/state';
+import type { ReduxState } from '../../../../../../../state/redux/store';
+import { getDataBlockPreviewProps } from '../../../../../../../state/redux/editor/state';
 import {
   setHoveredBlockKey,
   setModuleSelectedBlockKey,
-} from '../../../../../state/redux/ui/reducer';
-import { getCurrentModuleKey } from '../../../../../state/redux/editor/selector';
+} from '../../../../../../../state/redux/ui/reducer';
+import { getCurrentModuleKey } from '../../../../../../../state/redux/editor/selector';
 
 type Props = {
   type: string,

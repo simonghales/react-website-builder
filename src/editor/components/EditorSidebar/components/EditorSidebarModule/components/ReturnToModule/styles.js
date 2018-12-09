@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'emotion';
-import { smallHeading } from '../../../../../styles/typography';
-import colors from '../../../../../styles/config/colors';
+import { smallHeading } from '../../../../../../../styles/typography';
+import colors from '../../../../../../../styles/config/colors';
 
 const containerClass = css`
   display: flex;

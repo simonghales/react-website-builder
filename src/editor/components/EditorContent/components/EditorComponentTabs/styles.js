@@ -4,7 +4,7 @@ import { css } from 'emotion';
 import { transparentize } from 'polished';
 import colors from '../../../../../styles/config/colors';
 import { mediumHeading, mediumTab } from "../../../../../styles/typography";
-import { blockPreviewColors } from "../../../EditorSidebar/components/BlocksManager/styles";
+import { blockPreviewColors } from "../../../../../styles/shared/previewBlock";
 
 const containerClass = css`
   display: flex;

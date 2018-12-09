@@ -33,3 +33,7 @@ export function getSelectedModuleSelectedBlockKeyFromUIState(state: UiReduxState
     modulesSelectedBlockKeys
   );
 }
+
+export function getSelectedPageKeyFromState(state: UiReduxState): string {
+  return state.selectedPageKey;
+}

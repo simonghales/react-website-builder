@@ -1,15 +1,15 @@
 // @flow
 
 import { css } from 'emotion';
-import colors from 'styles/config/colors';
-import { mediumLargeHeading, sectionHeading } from '../../../../../styles/typography';
-import fontWeights from '../../../../../styles/config/fontWeights';
+import colors from '../../../../../../../styles/config/colors';
+import { mediumLargeHeading, sectionHeading } from '../../../../../../../styles/typography';
+import fontWeights from '../../../../../../../styles/config/fontWeights';
 import {
   addlistBlockClass,
   addListClassNames,
   addListIconClass,
   addListLabelClass,
-} from '../../../../../styles/shared/addList';
+} from '../../../../../../../styles/shared/addList';
 
 const containerClass = css`
   height: 100%;

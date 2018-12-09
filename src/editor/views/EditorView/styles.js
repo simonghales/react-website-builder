@@ -15,7 +15,19 @@ const containerClass = css`
 `;
 
 const headerClass = css`
-  height: 80px;
+  height: 64px;
+  display: flex;
+  background-color: #06080e;
+`;
+
+const sidebarWidth = 200;
+
+const headerLogoClass = css`
+  width: ${sidebarWidth}px;
+`;
+
+const headerRemainingClass = css`
+  flex: 1;
 `;
 
 const mainClass = css`
@@ -25,7 +37,7 @@ const mainClass = css`
 `;
 
 const editorClass = css`
-  width: 200px;
+  width: ${sidebarWidth}px;
   height: 100%;
 `;
 
@@ -59,6 +71,8 @@ const previewBlockerClass = css`
 export default {
   containerClass,
   headerClass,
+  headerLogoClass,
+  headerRemainingClass,
   mainClass,
   editorClass,
   previewClass,

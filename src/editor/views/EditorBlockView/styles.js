@@ -26,7 +26,7 @@ const detailsClass = css`
 const titleWrapperClass = css`
   display: flex;
   align-items: center;
-  margin-bottom: 5px;
+  margin-top: 5px;
   min-height: 30px;
 `;
 

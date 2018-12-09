@@ -1,91 +1,26 @@
 // @flow
-
 import React, { Component } from 'react';
-import { MdAdd, MdClose } from 'react-icons/md';
-import { connect } from 'react-redux';
-import { cx } from 'emotion';
-import { CSSTransition } from 'react-transition-group';
+import { Route } from 'react-router-dom';
+import EditorSidebarModule from './components/EditorSidebarModule/EditorSidebarModule';
 import styles from './styles';
-import BlocksManager from './components/BlocksManager/BlocksManager';
-import AddBlockSlideout from './components/AddBlockSlideout/AddBlockSlideout';
-import type { ReduxState } from '../../../state/redux/store';
-import { getAddingBlock } from '../../../state/redux/ui/state';
-import { setAddingBlock } from '../../../state/redux/ui/reducer';
-import ReturnToModule from './components/ReturnToModule/ReturnToModule';
+import EditorSidebarPage from './components/EditorSidebarPage/EditorSidebarPage';
+import EditorSidebarSave from './components/EditorSidebarSave/EditorSidebarSave';
+import { editorRoutes } from '../../routing';
 
-type Props = {
-  addingBlock: boolean,
-  startAddingBlock: () => void,
-  completeAddingBlock: () => void,
-};
-
-type State = {};
-
-const SlideOutContainer = ({ children, visible }: { children: any, visible: boolean }) => (
-  <CSSTransition
-    in={visible}
-    timeout={300}
-    classNames={styles.classNames.slideoutTransition}
-    unmountOnExit
-  >
-    <div className={styles.slideoutClass}>{children}</div>
-  </CSSTransition>
-);
-
-class EditorSidebar extends Component<Props, State> {
-  handleStartAddingBlock = () => {
-    const { addingBlock, startAddingBlock, completeAddingBlock } = this.props;
-    if (addingBlock) {
-      completeAddingBlock();
-    } else {
-      startAddingBlock();
-    }
-  };
-
+class EditorSidebar extends Component<{}> {
   render() {
-    const { addingBlock } = this.props;
     return (
-      <div className={styles.wrapperClass}>
-        <div
-          className={cx(styles.containerClass, {
-            [styles.containerRaisedClass]: addingBlock,
-          })}
-        >
-          <div className={styles.addBlockSectionClass}>
-            <div className={styles.returnToWrapperClass}>
-              <ReturnToModule />
-            </div>
-            <div
-              className={styles.addBlockToggleClass}
-              onClick={this.handleStartAddingBlock}
-              data-tip={addingBlock ? 'Close' : 'Add a block'}
-            >
-              {addingBlock ? <MdClose size={20} /> : <MdAdd size={20} />}
-            </div>
-          </div>
-          <div className={styles.blocksSectionClass}>
-            <BlocksManager />
-          </div>
-          <div className={styles.saveChangesClass}>save changes</div>
+      <div className={styles.containerClass}>
+        <div className={styles.contentClass}>
+          <Route exact path={editorRoutes.page} component={EditorSidebarPage} />
+          <Route exact path={editorRoutes.pageWithModule} component={EditorSidebarModule} />
         </div>
-        <SlideOutContainer visible={addingBlock}>
-          <AddBlockSlideout />
-        </SlideOutContainer>
+        <div className={styles.actionClass}>
+          <EditorSidebarSave />
+        </div>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state: ReduxState) => ({
-  addingBlock: getAddingBlock(state.ui),
-});
-
-const mapDispatchToProps = {
-  startAddingBlock: () => setAddingBlock(true),
-  completeAddingBlock: () => setAddingBlock(false),
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EditorSidebar);
+export default EditorSidebar;

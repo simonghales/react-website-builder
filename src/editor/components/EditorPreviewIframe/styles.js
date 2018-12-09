@@ -8,10 +8,17 @@ const containerClass = css`
 
 const iframeWrapperClass = css`
   font-size: 0;
-  padding-bottom: 65%;
   position: relative;
   width: 100%;
+`;
+
+const iframeWrapperEmbedClass = css`
+  padding-bottom: 65%;
   margin-top: 60px;
+`;
+
+const iframeWrapperFullClass = css`
+  height: 100%;
 `;
 
 const iframeClass = css`
@@ -36,6 +43,8 @@ const openInTabClass = css`
 export default {
   containerClass,
   iframeWrapperClass,
+  iframeWrapperEmbedClass,
+  iframeWrapperFullClass,
   iframeClass,
   openInTabClass,
 };

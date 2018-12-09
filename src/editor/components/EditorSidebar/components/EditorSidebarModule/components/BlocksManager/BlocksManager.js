@@ -2,19 +2,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styles from './styles';
-import type { ReduxState } from '../../../../../state/redux/store';
-import { setBlocksOrder } from '../../../../../state/redux/editor/reducer';
+import type { ReduxState } from '../../../../../../../state/redux/store';
+import { setBlocksOrder } from '../../../../../../../state/redux/editor/reducer';
 import NestList from '../NestList/NestList';
 import type { CondensedNestItem } from '../NestList/NestList';
-import type { BlocksOrder } from '../../../../../state/redux/editor/modifiers';
+import type { BlocksOrder } from '../../../../../../../state/redux/editor/modifiers';
 import RootBlock from '../RootBlock/RootBlock';
-import { setHoveredBlockKey } from '../../../../../state/redux/ui/reducer';
-import type { BlocksKeys } from '../../../../../state/redux/editor/selector';
+import { setHoveredBlockKey } from '../../../../../../../state/redux/ui/reducer';
+import type { BlocksKeys } from '../../../../../../../state/redux/editor/selector';
 import {
   getCurrentModuleKey,
   getEditorSidebarBlocks,
   getSelectedBlockKey,
-} from '../../../../../state/redux/editor/selector';
+} from '../../../../../../../state/redux/editor/selector';
 
 function mapBlocksOrder(items: Array<CondensedNestItem>) {
   let blocks = {};

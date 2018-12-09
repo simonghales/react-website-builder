@@ -21,8 +21,10 @@ import type { MixinsModel } from '../../../data/mixins/models';
 import { getBlockFromModuleBlocks, getModuleRootBlockKey } from '../../../data/modules/state';
 import { getBlockDefaultDataBlock } from '../../../blocks/state';
 import type { DataBlockModel } from '../../../data/blocks/models';
+import type { PagesDataModel } from '../../../data/pages/models';
 
 export type EditorReduxState = {
+  pages: PagesDataModel,
   modules: DataModules,
   mixinStyles: MixinsModel,
 };

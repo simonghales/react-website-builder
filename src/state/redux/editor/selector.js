@@ -2,7 +2,7 @@
 
 import { createSelector } from 'reselect';
 import type { ReduxState } from '../store';
-import { getMixinsFromState, getModulesFromState } from './state';
+import { getMixinsFromState, getModulesFromState, getPagesFromState } from './state';
 import type { DataModule, DataModules } from '../../../data/modules/models';
 import {
   getDataBlockFromModule,
@@ -22,11 +22,14 @@ import {
   getModuleSelectedBlockKeyFromModulesSelectedBlockKeys,
   getModulesSelectedBlockKeysFromUIState,
   getSelectedModuleKeyFromUIState,
+  getSelectedPageKeyFromState,
 } from '../ui/state';
 import type { ModulesSelectedBlockKeys } from '../ui/reducer';
 import { getBlockStyles } from '../../../data/styles/state';
 import type { MixinsModel } from '../../../data/mixins/models';
 import { getBlockMixinsStyles } from '../../../data/mixins/state';
+import type { PagesDataModel } from '../../../data/pages/models';
+import { getPageFromPages } from '../../../data/pages/state';
 
 export type BlocksKeys = {
   key: string,
@@ -51,11 +54,31 @@ function getDataBlocksKeys(
   };
 }
 
+const getPages = (state: ReduxState) => getPagesFromState(state.editor);
+const getSelectedPageKey = (state: ReduxState) => getSelectedPageKeyFromState(state.ui);
 export const getModules = (state: ReduxState) => getModulesFromState(state.editor);
 export const getMixins = (state: ReduxState) => getMixinsFromState(state.editor);
 const getModulesSelectedBlocksKeys = (state: ReduxState) =>
   getModulesSelectedBlockKeysFromUIState(state.ui);
 const getSelectedModuleKey = (state: ReduxState) => getSelectedModuleKeyFromUIState(state.ui);
+
+export const getPagesSelector = createSelector(
+  [getPages],
+  (pages: PagesDataModel) => pages
+);
+
+export const getSelectedPageKeySelector = createSelector(
+  [getSelectedPageKey],
+  (pageKey: string) => pageKey
+);
+
+export const getSelectedPageSelector = createSelector(
+  [getSelectedPageKey, getPages],
+  (pageKey: string, pages: PagesDataModel) => {
+    if (!pageKey) return null;
+    return getPageFromPages(pageKey, pages);
+  }
+);
 
 export const getCurrentModuleKey = createSelector(
   [getSelectedModuleKey],
@@ -64,7 +87,10 @@ export const getCurrentModuleKey = createSelector(
 
 export const getCurrentModule = createSelector(
   [getCurrentModuleKey, getModules],
-  (moduleKey: string, modules: DataModules) => getModuleFromModules(moduleKey, modules)
+  (moduleKey: string, modules: DataModules) => {
+    console.log('moduleKey', moduleKey);
+    return getModuleFromModules(moduleKey, modules);
+  }
 );
 
 export const getSelectedBlockKey = createSelector(
