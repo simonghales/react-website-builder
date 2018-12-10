@@ -1,5 +1,14 @@
 // @flow
 
+import type { PageDataModel } from '../data/pages/models';
+import { getNameSlug } from '../utils/slugs';
+
+export const editorPathname = '/editor';
+
+export function getEditorPageNameSlug(name: string): string {
+  return getNameSlug(name);
+}
+
 export type EditorRoutingMatch = {
   params: {
     pageNameSlug: string,
@@ -13,6 +22,19 @@ export function getEditorRoutingMatchParam(
   match: EditorRoutingMatch
 ): string | undefined {
   return match.params[paramName];
+}
+
+export function goToPageModulesEditor(
+  page: PageDataModel,
+  match: EditorRoutingMatch,
+  history: any
+) {
+  const pageNameSlug = getEditorPageNameSlug(page.name);
+  const { moduleKey } = page;
+  history.push({
+    pathname: `${editorPathname}/${pageNameSlug}/${moduleKey}`,
+    state: {},
+  });
 }
 
 export function goToModule(

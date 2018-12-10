@@ -27,3 +27,16 @@ export const editViewHeaderTitleWrapper = css`
   margin-top: 5px;
   min-height: 30px;
 `;
+
+export const editViewHeaderButton = css`
+  margin-right: 5px;
+
+  &:last-of-type {
+    margin-right: 10px;
+  }
+`;
+
+export const editViewMain = css`
+  flex: 1;
+  overflow: hidden;
+`;
