@@ -1,12 +1,9 @@
 // @flow
 import React from 'react';
 import { MdRemoveRedEye, MdCreate, MdViewList } from 'react-icons/md';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styles from './styles';
 import type { PageDataModel } from '../../../../../data/pages/models';
-import type { ReduxState } from '../../../../../state/redux/store';
-import { getPageEditorModeFromUIState } from '../../../../../state/redux/ui/state';
 import {
   getPageEditorModeWithMatch,
   pageEditorModes,
@@ -44,8 +41,4 @@ const PageSelector = ({ page, pageEditorMode, match }: Props) => (
   </div>
 );
 
-const mapStateToProps = (state: ReduxState) => ({
-  pageEditorMode: getPageEditorModeFromUIState(state.ui),
-});
-
-export default withRouter(connect(mapStateToProps)(PageSelector));
+export default withRouter(PageSelector);

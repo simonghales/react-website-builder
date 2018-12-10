@@ -5,8 +5,10 @@ import spacing from '../../../styles/config/spacing';
 import {
   editViewContainer,
   editViewHeader,
+  editViewHeaderButton,
   editViewHeaderDetails,
   editViewHeaderTitleWrapper,
+  editViewMain,
 } from '../../../styles/shared/editView';
 
 const containerClass = css`
@@ -26,17 +28,12 @@ const titleWrapperClass = css`
 `;
 
 const buttonClass = css`
-  margin-right: 5px;
-
-  &:last-of-type {
-    margin-right: 10px;
-  }
+  ${editViewHeaderButton};
 `;
 
 const mainClass = css`
+  ${editViewMain};
   display: flex;
-  flex: 1;
-  overflow: hidden;
 `;
 
 const editorClass = css`
