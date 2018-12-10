@@ -48,6 +48,8 @@ export function dispatchCreateNewModuleFromSelectedBlock(
     selectedBlock,
     selectedModulePropsDetails
   );
+  console.log('newModule', newModule);
+  console.log('newBlock', newBlock);
 
   dispatch(createNewModuleFromSelectedBlock(moduleKey, blockKey, newModule, newBlock));
   dispatch(setModuleSelectedBlockKey(moduleKey, newBlock.key));
