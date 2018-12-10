@@ -13,6 +13,7 @@ import type { DataBlockPropsDetails } from '../blocks/state';
 
 export function getDataBlockLinkedPropsKeys(dataBlock: DataBlockModel): Array<string> {
   const combinedPropsConfig = getDataBlockCombinedPropsConfig(dataBlock);
+  console.log('combinedPropsConfig', combinedPropsConfig);
 
   return Object.keys(combinedPropsConfig).filter(
     propKey => !!combinedPropsConfig[propKey].propReference

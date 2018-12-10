@@ -44,6 +44,10 @@ export function getDataBlockCombinedPropsConfig(
         ...combinedPropsConfig[propKey],
         ...dataBlockPropsConfig[propKey],
       };
+    } else {
+      combinedPropsConfig[propKey] = {
+        ...dataBlockPropsConfig[propKey],
+      };
     }
   });
   return combinedPropsConfig;
