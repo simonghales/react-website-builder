@@ -9,10 +9,11 @@ import styles from './styles';
 import BlocksManager from './components/BlocksManager/BlocksManager';
 import AddBlockSlideout from './components/AddBlockSlideout/AddBlockSlideout';
 import type { ReduxState } from '../../../../../state/redux/store';
-import { getAddingBlock } from '../../../../../state/redux/ui/state';
+import { getAddingBlockFromUIState } from '../../../../../state/redux/ui/state';
 import { setAddingBlock } from '../../../../../state/redux/ui/reducer';
 import ReturnToModule from './components/ReturnToModule/ReturnToModule';
 import IconButton from '../../../../../components/IconButton/IconButton';
+import EditorSidebarSlideout from '../EditorSidebarSlideout/EditorSidebarSlideout';
 
 type Props = {
   addingBlock: boolean,
@@ -21,17 +22,6 @@ type Props = {
 };
 
 type State = {};
-
-const SlideOutContainer = ({ children, visible }: { children: any, visible: boolean }) => (
-  <CSSTransition
-    in={visible}
-    timeout={300}
-    classNames={styles.classNames.slideoutTransition}
-    unmountOnExit
-  >
-    <div className={styles.slideoutClass}>{children}</div>
-  </CSSTransition>
-);
 
 class EditorSidebarModule extends Component<Props, State> {
   handleStartAddingBlock = () => {
@@ -44,7 +34,7 @@ class EditorSidebarModule extends Component<Props, State> {
   };
 
   render() {
-    const { addingBlock } = this.props;
+    const { addingBlock, completeAddingBlock } = this.props;
     return (
       <div className={styles.wrapperClass}>
         <div
@@ -57,6 +47,7 @@ class EditorSidebarModule extends Component<Props, State> {
               <ReturnToModule />
             </div>
             <IconButton
+              addPreventOffclick
               tooltip={addingBlock ? 'Close' : 'Add a block'}
               icon={addingBlock ? <MdClose size={18} /> : <MdAdd size={18} />}
               onClick={this.handleStartAddingBlock}
@@ -66,16 +57,16 @@ class EditorSidebarModule extends Component<Props, State> {
             <BlocksManager />
           </div>
         </div>
-        <SlideOutContainer visible={addingBlock}>
+        <EditorSidebarSlideout visible={addingBlock} close={completeAddingBlock}>
           <AddBlockSlideout />
-        </SlideOutContainer>
+        </EditorSidebarSlideout>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state: ReduxState) => ({
-  addingBlock: getAddingBlock(state.ui),
+  addingBlock: getAddingBlockFromUIState(state.ui),
 });
 
 const mapDispatchToProps = {

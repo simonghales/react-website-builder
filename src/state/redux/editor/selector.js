@@ -196,3 +196,8 @@ export const getSelectedBlockMixinsStyles = createSelector(
     return getBlockMixinsStyles(mixinStyles, mixins);
   }
 );
+
+export const getAllPagePathsSelector = createSelector(
+  [getPages],
+  (pages: PagesDataModel) => Object.keys(pages).map(pageKey => pages[pageKey].slug)
+);

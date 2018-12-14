@@ -2,7 +2,7 @@
 import { css } from 'emotion';
 import colors from 'styles/config/colors';
 import spacing from 'styles/config/spacing';
-import { inputStylesConfig } from '../TextInput/styles';
+import { inputStylesConfig } from '../../../../styles/inputs';
 import { inputReset } from '../../../../styles/inputs';
 
 const containerClass = css`

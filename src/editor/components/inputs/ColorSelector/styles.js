@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'emotion';
-import { inputStylesConfig } from '../TextInput/styles';
+import { inputStylesConfig } from '../../../../styles/inputs';
 import zindexes from '../../../../styles/config/zindexes';
 
 const wrapperClass = css`

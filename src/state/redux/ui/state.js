@@ -3,8 +3,12 @@
 import type { ModulesSelectedBlockKeys, UiReduxState } from './reducer';
 import type { PageEditorModes } from '../../../editor/views/EditorPageView/EditorPageView';
 
-export function getAddingBlock(state: UiReduxState): boolean {
+export function getAddingBlockFromUIState(state: UiReduxState): boolean {
   return state.addingBlock;
+}
+
+export function getCreatingPageFromUIState(state: UiReduxState): boolean {
+  return state.creatingPage;
 }
 
 export function getSelectedModuleKeyFromUIState(state: UiReduxState): string {

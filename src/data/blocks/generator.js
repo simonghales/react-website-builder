@@ -13,13 +13,7 @@ export function getNewModuleImportPropsAndPropsConfig(
   dataBlock: DataBlockModel,
   selectedModulePropsDetails: DataBlockPropsDetails
 ) {
-  console.log('getNewModuleImportPropsAndPropsConfig: dataBlock', dataBlock);
-  console.log(
-    'getNewModuleImportPropsAndPropsConfig: selectedModulePropsDetails',
-    selectedModulePropsDetails
-  );
   const linkedPropsKeys = getDataBlockLinkedPropsKeys(dataBlock);
-  console.log('linkedPropsKeys', linkedPropsKeys);
   const props = getDataBlockCombinedProps(dataBlock);
   const propsConfig = getDataBlockCombinedPropsConfig(dataBlock);
   const newProps = {};

@@ -2,73 +2,35 @@
 import { css } from 'emotion';
 import colors from '../../../../../styles/config/colors';
 import zindexes from '../../../../../styles/config/zindexes';
-import {
-  transitionEnter,
-  transitionEnterActive,
-  transitionExit,
-  transitionExitActive,
-} from '../../../../../styles/utils/transitions';
 import { smallHeading } from '../../../../../styles/typography';
 import { squareButton } from '../../../../../styles/buttons';
-import { sidebarTopOption } from '../../../../../styles/shared/sidebar';
+import {
+  sidebarContainer,
+  sidebarTopOption,
+  sidebarSlideoutTransitionClassName,
+  sidebarSlideout,
+  sidebarContentContainer,
+  sidebarContentContainerRaised,
+} from '../../../../../styles/shared/sidebar';
 
 const classNames = {
-  slideoutTransition: 'slideoutTransition',
+  slideoutTransition: sidebarSlideoutTransitionClassName,
 };
 
 const wrapperClass = css`
-  height: 100%;
-  position: relative;
+  ${sidebarContainer};
 `;
 
 const containerClass = css`
-  width: 100%;
-  height: 100%;
-  background-color: ${colors.darkBlue};
-  position: relative;
-  z-index: ${zindexes.sidebar};
-  transition: box-shadow 250ms ease;
-  display: flex;
-  flex-direction: column;
+  ${sidebarContentContainer};
 `;
 
 const containerRaisedClass = css`
-  box-shadow: 0px 4px 2px rgba(11, 17, 31, 0.29);
+  ${sidebarContentContainerRaised};
 `;
 
-const slideOutTransitions = {
-  enter: transitionEnter(classNames.slideoutTransition),
-  enterActive: transitionEnterActive(classNames.slideoutTransition),
-  exit: transitionExit(classNames.slideoutTransition),
-  exitActive: transitionExitActive(classNames.slideoutTransition),
-};
-
 const slideoutClass = css`
-  position: absolute;
-  top: 0;
-  left: 100%;
-  bottom: 0;
-  width: 200px;
-  background-color: ${colors.blackInactiveBlue};
-  z-index: ${zindexes.sidebarSlideout};
-
-  &.${slideOutTransitions.enter} {
-    transform: translateX(-100%);
-  }
-
-  &.${slideOutTransitions.enterActive} {
-    transform: translateX(0);
-    transition: all 300ms ease;
-  }
-
-  &.${slideOutTransitions.exit} {
-    transform: translateX(0);
-  }
-
-  &.${slideOutTransitions.exitActive} {
-    transform: translateX(-100%);
-    transition: all 300ms ease;
-  }
+  ${sidebarSlideout};
 `;
 
 const addBlockSectionClass = css`

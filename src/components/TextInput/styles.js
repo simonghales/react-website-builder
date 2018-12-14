@@ -1,6 +1,6 @@
 // @flow
 import { css } from 'emotion';
-import { textInputStyles } from '../../../../styles/inputs';
+import { textInputStyles } from '../../styles/inputs';
 
 const inputClass = css`
   ${textInputStyles};

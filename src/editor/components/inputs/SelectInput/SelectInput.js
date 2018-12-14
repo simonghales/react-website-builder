@@ -5,7 +5,7 @@ import CreatableSelect from 'react-select/lib/Creatable';
 import colors from '../../../../styles/config/colors';
 import measurements from '../../../../styles/config/measurements';
 import { parseSelectInputStyleValue } from './state';
-import { inputStylesConfig } from "../TextInput/styles";
+import { inputStylesConfig } from "../../../../styles/inputs";
 
 const customStyles = {
   control: (baseStyles, state) => ({

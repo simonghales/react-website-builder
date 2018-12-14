@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'emotion';
 import colors from 'styles/config/colors';
-import { fieldLabel } from '../../../../../../../styles/typography';
+import { fieldInactive, fieldLabel } from '../../../../../../../styles/typography';
 
 const classNames = {
   editorField: 'editorField',
@@ -16,7 +16,7 @@ const labelClass = css`
 `;
 
 const labelInactiveClass = css`
-  color: ${colors.lightFaint};
+  ${fieldInactive};
 `;
 
 const inputContainerClass = css``;

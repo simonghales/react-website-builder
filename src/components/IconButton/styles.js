@@ -1,7 +1,7 @@
 // @flow
 import { css } from 'emotion';
 import colors from 'styles/config/colors';
-import { inputStylesConfig } from '../../editor/components/inputs/TextInput/styles';
+import { inputStylesConfig } from '../../styles/inputs';
 import { buttonReset } from '../../styles/buttons';
 
 const classNames = {
