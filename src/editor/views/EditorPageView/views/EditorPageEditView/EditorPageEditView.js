@@ -38,7 +38,7 @@ class EditorPageEditView extends Component<Props> {
         </header>
         <main className={styles.mainClass}>
           <div>
-            <Button onClick={this.handleEditPage} type={buttonTypes.slim}>
+            <Button onClick={this.handleEditPage} buttonType={buttonTypes.slim}>
               Edit page
             </Button>
           </div>

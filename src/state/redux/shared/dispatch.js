@@ -1,7 +1,7 @@
 // @flow
 
 import { generateNewModuleTemplateBlock } from '../../../data/blocks/generator';
-import { generateNewModule } from '../../../data/modules/generator';
+import { generateNewEmptyModule, generateNewModule } from '../../../data/modules/generator';
 import {
   getBlockFromModuleBlocks,
   getModuleBlocks,
@@ -16,12 +16,15 @@ import {
 } from '../../../data/blocks/state';
 import {
   addNewModule,
+  addNewPageReducer,
   createNewModuleFromSelectedBlock,
   removeBlockFromModule,
 } from '../editor/reducer';
 import type { DataModule, DataModules } from '../../../data/modules/models';
-import { setModuleSelectedBlockKey } from '../ui/reducer';
+import { setCreatingPageRedux, setModuleSelectedBlockKey } from '../ui/reducer';
 import { getBlockFromModule } from '../../../blocks/state';
+import { generateNewPage } from '../../../data/pages/generator';
+import type { PageDataModel } from '../../../data/pages/models';
 
 export function dispatchCreateNewModuleFromSelectedBlock(
   moduleKey: string,
@@ -89,4 +92,12 @@ export function dispatchRemoveBlockFromModule(
 
   dispatch(removeBlockFromModule(blockKey, moduleKey));
   dispatch(setModuleSelectedBlockKey(moduleKey, blockToRemoveParentKey));
+}
+
+export function dispatchCreateNewPage(name: string, slug: string, dispatch: any): PageDataModel {
+  const emptyModule = generateNewEmptyModule(name);
+  const page = generateNewPage(name, slug, emptyModule.key);
+  dispatch(addNewPageReducer(page, emptyModule));
+  dispatch(setCreatingPageRedux(false));
+  return page;
 }

@@ -2,6 +2,7 @@
 
 import type { DataBlockModel } from './models';
 import ModuleImport from '../../blocks/groups/module/ModuleImport/ModuleImport';
+import Module from '../../blocks/groups/module/Module/Module';
 import { getDataBlockLinkedPropsKeys } from '../modules/generator';
 import {
   getDataBlockCombinedProps,
@@ -49,4 +50,12 @@ export function generateNewModuleTemplateBlock(
     selectedModulePropsDetails
   );
   return ModuleImport.dataBlock({ moduleKey, label, props, propsConfig });
+}
+
+export function generateNewEmptyModuleBlock(label: string): DataBlockModel {
+  return Module.dataBlock({
+    label,
+    props: {},
+    propsConfig: {},
+  });
 }

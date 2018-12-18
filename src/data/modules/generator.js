@@ -2,14 +2,13 @@
 import Module from 'blocks/groups/module/Module/Module';
 import type { DataBlockModel, SitePageDataBlocks } from '../blocks/models';
 import type { DataModule } from './models';
-import { getBlockUniqueId } from '../../blocks/utils';
+import { getBlockUniqueId, getModuleUniqueId } from '../../blocks/utils';
 import {
   getDataBlockCombinedProps,
   getDataBlockCombinedPropsConfig,
-  getDataBlockProps,
-  getDataBlockPropsConfig,
 } from '../../editor/components/EditorContent/components/EditorFields/state';
 import type { DataBlockPropsDetails } from '../blocks/state';
+import { generateNewEmptyModuleBlock } from '../blocks/generator';
 
 export function getDataBlockLinkedPropsKeys(dataBlock: DataBlockModel): Array<string> {
   const combinedPropsConfig = getDataBlockCombinedPropsConfig(dataBlock);
@@ -48,6 +47,23 @@ export function getNewModulePropsAndPropsConfig(
   };
 }
 
+export function generateModule(
+  name: string,
+  blocks: SitePageDataBlocks,
+  moduleBlock: DataBlockModel
+): DataModule {
+  return {
+    key: getModuleUniqueId(),
+    groupKey: 'Site',
+    name,
+    blocks: {
+      ...blocks,
+      [moduleBlock.key]: moduleBlock,
+    },
+    rootBlock: moduleBlock.key,
+  };
+}
+
 export function generateNewModule(
   blocks: SitePageDataBlocks,
   rootBlockKey: string,
@@ -65,14 +81,10 @@ export function generateNewModule(
     props,
     propsConfig,
   });
-  return {
-    key: getBlockUniqueId(),
-    groupKey: 'Site',
-    name,
-    blocks: {
-      ...blocks,
-      [moduleBlock.key]: moduleBlock,
-    },
-    rootBlock: moduleBlock.key,
-  };
+  return generateModule(name, blocks, moduleBlock);
+}
+
+export function generateNewEmptyModule(name: string): DataModule {
+  const emptyRootBlock = generateNewEmptyModuleBlock(name);
+  return generateModule(name, [], emptyRootBlock);
 }

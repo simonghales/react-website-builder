@@ -11,7 +11,7 @@ const dataBlock = ({
   props,
   propsConfig,
 }: {
-  rootBlockKey: string,
+  rootBlockKey?: string,
   label: string,
   props: {},
   propsConfig: {},
@@ -26,7 +26,7 @@ const dataBlock = ({
     ...props,
   },
   propsConfig,
-  blockChildrenKeys: [rootBlockKey],
+  blockChildrenKeys: rootBlockKey ? [rootBlockKey] : [],
   isParentModule: true,
   rawStyles: {
     ...EMPTY_BLOCK_STYLES,

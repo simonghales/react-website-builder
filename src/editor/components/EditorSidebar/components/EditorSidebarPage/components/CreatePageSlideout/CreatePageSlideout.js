@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { cx } from 'emotion';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import styles from './styles';
 import Button, { buttonTypes } from '../../../../../../../components/Button/Button';
 import TextInput from '../../../../../../../components/TextInput/TextInput';
@@ -9,14 +10,24 @@ import { getNameSlug } from '../../../../../../../utils/slugs';
 import type { ReduxState } from '../../../../../../../state/redux/store';
 import { getAllPagePathsSelector } from '../../../../../../../state/redux/editor/selector';
 import ErrorMessage from '../../../../../ErrorMessage/ErrorMessage';
+import { dispatchCreateNewPage } from '../../../../../../../state/redux/shared/dispatch';
+import type { PageDataModel } from '../../../../../../../data/pages/models';
+import { goToPage } from '../../../../../../routing';
+import type { EditorRoutingMatch } from '../../../../../../routing';
+
+type Props = {
+  history: {},
+  match: EditorRoutingMatch,
+  existingPagePaths: Array<string>,
+  createPage: (name: string, slug: string) => PageDataModel,
+};
 
 type State = {
   name: string,
   path: string,
-  existingPagePaths: Array<string>,
 };
 
-class CreatePageSlideout extends Component<{}, State> {
+class CreatePageSlideout extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -57,6 +68,28 @@ class CreatePageSlideout extends Component<{}, State> {
     return existingPagePaths.includes(path);
   }
 
+  handleFormSubmit = (event: any) => {
+    event.preventDefault();
+    this.handleCreatePage();
+    return false;
+  };
+
+  handleCreatePage() {
+    const { createPage, history, match } = this.props;
+    const { name } = this.state;
+    const path = this.getPathValue();
+    const newPage = createPage(name, path);
+    this.clearInputs();
+    goToPage(newPage.slug, match, history);
+  }
+
+  clearInputs() {
+    this.setState({
+      name: '',
+      path: '',
+    });
+  }
+
   render() {
     const { name } = this.state;
     const path = this.getPathValue();
@@ -64,7 +97,7 @@ class CreatePageSlideout extends Component<{}, State> {
     return (
       <div className={styles.containerClass}>
         <header className={styles.headerClass}>New Page</header>
-        <div className={styles.bodyClass}>
+        <form className={styles.bodyClass} onSubmit={this.handleFormSubmit}>
           <section className={styles.formClass}>
             <div className={styles.formFieldClass}>
               <label>
@@ -101,11 +134,11 @@ class CreatePageSlideout extends Component<{}, State> {
             </div>
           </section>
           <div>
-            <Button type={buttonTypes.solid} onClick={() => {}} disabled={!this.canSubmit()}>
+            <Button buttonType={buttonTypes.solid} type="submit" disabled={!this.canSubmit()}>
               Create Page
             </Button>
           </div>
-        </div>
+        </form>
       </div>
     );
   }
@@ -115,4 +148,13 @@ const mapStateToProps = (state: ReduxState) => ({
   existingPagePaths: getAllPagePathsSelector(state),
 });
 
-export default connect(mapStateToProps)(CreatePageSlideout);
+const mapDispatchToProps = (dispatch: any) => ({
+  createPage: (name: string, slug: string) => dispatchCreateNewPage(name, slug, dispatch),
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(CreatePageSlideout)
+);

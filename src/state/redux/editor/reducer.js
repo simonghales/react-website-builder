@@ -21,7 +21,7 @@ import type { MixinsModel } from '../../../data/mixins/models';
 import { getBlockFromModuleBlocks, getModuleRootBlockKey } from '../../../data/modules/state';
 import { getBlockDefaultDataBlock } from '../../../blocks/state';
 import type { DataBlockModel } from '../../../data/blocks/models';
-import type { PagesDataModel } from '../../../data/pages/models';
+import type { PageDataModel, PagesDataModel } from '../../../data/pages/models';
 
 export type EditorReduxState = {
   pages: PagesDataModel,
@@ -30,6 +30,45 @@ export type EditorReduxState = {
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
+
+const ADD_NEW_PAGE = 'ADD_NEW_PAGE';
+
+type AddNewPagePayload = {
+  page: PageDataModel,
+  module: DataModule,
+};
+
+type AddNewPageAction = {
+  type: string,
+  payload: AddNewPagePayload,
+};
+
+export function addNewPageReducer(page: PageDataModel, module: DataModule): AddNewPageAction {
+  return {
+    type: ADD_NEW_PAGE,
+    payload: {
+      page,
+      module,
+    },
+  };
+}
+
+function handleAddNewPageReducer(
+  state: EditorReduxState,
+  { page, module }: AddNewPagePayload
+): EditorReduxState {
+  return {
+    ...state,
+    pages: {
+      ...state.pages,
+      [page.key]: page,
+    },
+    modules: {
+      ...state.modules,
+      [module.key]: module,
+    },
+  };
+}
 
 const ADD_NEW_PROP_TO_BLOCK = 'ADD_NEW_PROP_TO_BLOCK';
 
@@ -696,6 +735,7 @@ type Actions =
   | CreateNewModuleFromSelectedBlockAction;
 
 const ACTION_HANDLERS = {
+  [ADD_NEW_PAGE]: handleAddNewPageReducer,
   [ADD_NEW_PROP_TO_BLOCK]: handleAddNewPropToBlock,
   [SET_PROP_LINKED_REFERENCE]: handleSetPropLinkedReference,
   [SET_INITIAL_MODULE_HISTORY]: handleSetInitialModuleHistory,

@@ -21,7 +21,7 @@ export type UiReduxState = {
 
 export const initialUiReduxState: UiReduxState = {
   addingBlock: false,
-  creatingPage: true, // todo - set back to false
+  creatingPage: false,
   hoveredBlockKey: '',
   selectedModuleKey: '',
   selectedModulesHistory: [],

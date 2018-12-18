@@ -55,7 +55,8 @@ class EditorView extends Component<Props> {
   }
 
   checkUpdatedUrlParams(nextProps: Props) {
-    const { pages, selectPage } = this.props;
+    const { selectPage } = this.props;
+    const { pages } = nextProps;
     const pageNameSlug = getEditorRoutingMatchParam('pageNameSlug', nextProps.match);
     const previousPageNameSlug = getEditorRoutingMatchParam('pageNameSlug', this.props.match);
     if (pageNameSlug !== previousPageNameSlug) {
@@ -113,9 +114,10 @@ class EditorView extends Component<Props> {
 const mapStateToProps = (state: ReduxState) => {
   const addingBlock = getAddingBlockFromUIState(state.ui);
   const creatingPage = getCreatingPageFromUIState(state.ui);
+  const pages = getPagesSelector(state);
   return {
     showBlocker: addingBlock || creatingPage,
-    pages: getPagesSelector(state),
+    pages,
   };
 };
 

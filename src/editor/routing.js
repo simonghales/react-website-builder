@@ -53,6 +53,7 @@ export function goToModule(
 
 export function goToPage(pageNameSlug: string, match: EditorRoutingMatch, history: any): void {
   const { moduleKey = '', previousModuleKey = '' } = match;
+  console.log(`goToPage: ${pageNameSlug}`);
   if (moduleKey) {
     if (previousModuleKey) {
       history.push(`/editor/${pageNameSlug}/${moduleKey}/${previousModuleKey}`);

@@ -14,19 +14,20 @@ type ButtonTypes = $Keys<typeof buttonTypes>;
 type Props = {
   children: any,
   disabled?: boolean,
-  type?: ButtonTypes,
+  buttonType?: ButtonTypes,
   onClick: () => void,
 };
 
-const Button = ({ children, type, onClick, disabled }: Props) => (
+const Button = ({ children, buttonType, onClick, disabled, ...otherProps }: Props) => (
   <button
     className={cx(styles.buttonClass, {
-      [styles.buttonSlimClass]: type === buttonTypes.slim,
-      [styles.buttonSlimIconClass]: type === buttonTypes.slimIcon,
-      [styles.buttonSolidClass]: type === buttonTypes.solid,
+      [styles.buttonSlimClass]: buttonType === buttonTypes.slim,
+      [styles.buttonSlimIconClass]: buttonType === buttonTypes.slimIcon,
+      [styles.buttonSolidClass]: buttonType === buttonTypes.solid,
       [styles.classNames.buttonDisabled]: disabled,
     })}
     onClick={onClick}
+    {...otherProps}
   >
     {children}
   </button>
@@ -34,7 +35,7 @@ const Button = ({ children, type, onClick, disabled }: Props) => (
 
 Button.defaultProps = {
   disabled: false,
-  type: buttonTypes.slim,
+  buttonType: buttonTypes.slim,
 };
 
 export default Button;
