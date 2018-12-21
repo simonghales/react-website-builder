@@ -4,7 +4,6 @@ import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { cx } from 'emotion';
 import styles from './styles';
-import EditorBlockView from '../EditorBlockView/EditorBlockView';
 import type { ReduxState } from '../../../state/redux/store';
 import {
   getAddingBlockFromUIState,
@@ -25,6 +24,7 @@ import {
   setSelectedPageKey,
 } from '../../../state/redux/ui/reducer';
 import type { EditorRoutingMatch } from '../../routing';
+import EditorRouteHandler from '../../components/EditorRouteHandler/EditorRouteHandler';
 
 type Props = {
   showBlocker: boolean,
@@ -98,7 +98,7 @@ class EditorView extends Component<Props> {
                 })}
               >
                 <Route exact path={editorRoutes.page} component={EditorPageView} />
-                <Route exact path={editorRoutes.pageWithModule} component={EditorBlockView} />
+                <Route exact path={editorRoutes.pageWithModule} component={EditorRouteHandler} />
               </div>
               {showBlocker && (
                 <div className={styles.previewBlockerClass} onClick={this.closeSlideouts} />

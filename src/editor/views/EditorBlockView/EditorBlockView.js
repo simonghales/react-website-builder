@@ -29,11 +29,7 @@ import {
   dispatchRemoveBlockFromModule,
   dispatchWrapSelectedBlockWithRepeaterBlock,
 } from '../../../state/redux/shared/dispatch';
-import {
-  setAddingBlock,
-  setInitialSelectedModuleHistory,
-  setSelectedModuleKey,
-} from '../../../state/redux/ui/reducer';
+import { setAddingBlock } from '../../../state/redux/ui/reducer';
 
 type Props = {
   selectedBlock: DataBlockModel,
@@ -41,63 +37,11 @@ type Props = {
   createModule: (blockKey: string) => void,
   removeBlock: (blockKey: string) => void,
   wrapBlockWithRepeater: (blockKey: string) => void,
-  setInitialHistory: (moduleKey: string, previousModuleKey: string) => void,
-  setModule: (moduleKey: string, previousModuleKey: string) => void,
-  match: {
-    params: {
-      moduleKey?: string,
-      previousModuleKey?: string,
-    },
-  },
-};
-
-const getParamModuleKey = (props: Props): string => {
-  const { match } = props;
-  const { params } = match;
-  const { moduleKey = '' } = params;
-  return moduleKey;
-};
-
-const getParamPreviousModuleKey = (props: Props): string => {
-  const { match } = props;
-  const { params } = match;
-  const { previousModuleKey = '' } = params;
-  return previousModuleKey;
 };
 
 class EditorBlockView extends Component<Props> {
-  constructor(props: Props) {
-    super(props);
-    this.checkUrlParams(props);
-  }
-
   componentDidUpdate() {
     ReactTooltip.rebuild();
-  }
-
-  checkUrlParams(props: Props = this.props) {
-    const { match } = props;
-    const { params } = match;
-    const { previousModuleKey = '' } = params;
-    const moduleKey = getParamModuleKey(props);
-    if (moduleKey) {
-      const { setInitialHistory } = this.props;
-      setInitialHistory(moduleKey, previousModuleKey);
-    }
-  }
-
-  componentWillReceiveProps(nextProps: Props): void {
-    this.checkUpdatedUrlParams(nextProps);
-  }
-
-  checkUpdatedUrlParams(nextProps: Props) {
-    const moduleKey = getParamModuleKey(nextProps);
-    const previousModuleKey = getParamModuleKey(this.props);
-    const newPreviousModuleKey = getParamPreviousModuleKey(nextProps);
-    if (moduleKey !== previousModuleKey) {
-      const { setModule } = this.props;
-      setModule(moduleKey, newPreviousModuleKey);
-    }
   }
 
   handleWrapWithRepeater = () => {
@@ -167,11 +111,7 @@ const mapDispatchToProps = (dispatch: any) => ({
     dispatchCreateNewModuleFromSelectedBlock(moduleKey, blockKey, selectedModule, dispatch),
   dispatchRemoveBlock: (blockKey: string, moduleKey: string, selectedModule: DataModule) =>
     dispatchRemoveBlockFromModule(blockKey, moduleKey, selectedModule, dispatch),
-  setInitialHistory: (moduleKey: string, previousModuleKey: string) =>
-    dispatch(setInitialSelectedModuleHistory(moduleKey, previousModuleKey)),
   completeAddingBlock: () => dispatch(setAddingBlock(false)),
-  setModule: (moduleKey: string, previousModuleKey: string) =>
-    dispatch(setSelectedModuleKey(moduleKey, previousModuleKey)),
   dispatchWrapBlockWithRepeater: (blockKey: string, moduleKey: string) =>
     dispatchWrapSelectedBlockWithRepeaterBlock(blockKey, moduleKey, dispatch),
 });
@@ -188,10 +128,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     dispatchProps.dispatchWrapBlockWithRepeater(blockKey, stateProps.moduleKey),
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-    mergeProps
-  )(EditorBlockView)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  mergeProps
+)(EditorBlockView);

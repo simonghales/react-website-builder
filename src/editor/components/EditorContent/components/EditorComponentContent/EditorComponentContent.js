@@ -68,7 +68,6 @@ class EditorComponentContent extends Component<Props, State> {
     const { block, dataBlock, isModuleBlock } = this.props;
     const { addingNewProp } = this.state;
     const contentPropsFields = this.getContentPropsFields();
-    console.log('contentPropsFields', contentPropsFields);
     return (
       <div className={styles.containerClass}>
         {isModuleBlock && (

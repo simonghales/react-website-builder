@@ -12,6 +12,7 @@ export type EditorFieldModel = {
   columns: number,
   isPropReference: boolean,
   linkedPropKey: string,
+  isLinkable?: boolean,
 };
 
 export type EditorFieldGroupModel = {

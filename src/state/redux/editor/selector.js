@@ -104,6 +104,12 @@ export const getSelectedBlockKey = createSelector(
     }
     const module = getModuleFromModules(moduleKey, modules);
     const moduleRootBlockKey = getModuleRootBlockKey(module);
+    console.warn(
+      `Defaulting to moduleRootBlockKey.`,
+      modulesSelectedBlockKeys,
+      moduleSelectedBlockKey,
+      moduleKey
+    );
     return moduleRootBlockKey;
   }
 );
