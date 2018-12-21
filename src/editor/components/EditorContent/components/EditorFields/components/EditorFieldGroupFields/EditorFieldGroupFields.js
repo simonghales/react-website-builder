@@ -31,7 +31,7 @@ const EditorFieldGroupFields = ({ fields, block, blockKey, isContent }: Props) =
           inputType={field.inputType}
           noLabelWrapper={field.noLabelWrapper}
           block={block}
-          linkedPropEnabled={isContent}
+          linkedPropEnabled={isContent && field.isLinkable}
           isPropReference={field.isPropReference}
           linkedPropKey={field.linkedPropKey}
         />

@@ -73,7 +73,6 @@ type Props = {
   block?: BlockModel,
   isPropReference: boolean,
   linkedPropEnabled: boolean,
-  linkedPropKey?: string,
 };
 
 const EditorFieldInner = ({

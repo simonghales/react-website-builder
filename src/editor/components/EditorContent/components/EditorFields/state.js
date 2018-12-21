@@ -221,15 +221,12 @@ export function getFieldInputTypeFromPropType(propType: BlockPropsConfigTypes): 
 
 export function getPropConfigFromCombinedPropsConfig(propKey: string, dataBlock: DataBlockModel) {
   const combinedPropsConfig = getDataBlockCombinedPropsConfig(dataBlock);
-  console.log('combinedPropsConfig', combinedPropsConfig);
-  console.log('propKey', propKey);
   return combinedPropsConfig[propKey];
 }
 
 export function canPropBeLinked(propKey: string, dataBlock: DataBlockModel): boolean {
   const propConfig = getPropConfigFromCombinedPropsConfig(propKey, dataBlock);
-  console.log('propConfig', propConfig);
-  return propConfig.type !== blockPropsConfigTypes;
+  return propConfig.type !== blockPropsConfigTypes.repeaterData;
 }
 
 export function mapHtmlPropField(
@@ -238,7 +235,6 @@ export function mapHtmlPropField(
   dataBlock: DataBlockModel,
   updateValue: (propKey: string, value: string) => void
 ): EditorFieldModel {
-  console.log('dataBlock', dataBlock);
   const label = getPropFieldLabel(propKey, block, dataBlock);
   const value = getDataBlockPropValue(propKey, dataBlock);
   const type = getPropFieldType(propKey, block, dataBlock);
