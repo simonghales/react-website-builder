@@ -1,5 +1,7 @@
 // @flow
 
+export const BLOCK_REPEATER_DATA_CHILDREN = '_BLOCK_REPEATER_DATA_CHILDREN';
+
 export const blockPropsConfigTypes = {
   string: 'string',
   html: 'html',
@@ -7,6 +9,7 @@ export const blockPropsConfigTypes = {
   blocks: 'blocks',
   htmlAttribute: 'htmlAttribute',
   propReference: 'propReference',
+  repeaterData: 'repeaterData',
 };
 
 export const blockPropsCustomAllowedTypes: Array<string> = [blockPropsConfigTypes.string];

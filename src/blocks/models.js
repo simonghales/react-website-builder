@@ -10,6 +10,14 @@ export type BlockModelPropsConfig = {
   displaySection?: BlockPropsDisplaySections,
   custom?: boolean,
   propReference?: boolean,
+  repeaterReference?: boolean,
+  repeaterReferenceKey?: string,
+  repeaterDataModel?: {
+    [string]: {
+      label: string,
+      type: BlockPropsConfigTypes,
+    },
+  },
 };
 
 export type BlockPropsConfigModel = {

@@ -13,6 +13,7 @@ import { blockPropsConfigTypes } from '../../../../../blocks/props';
 import type { BlockPropsConfigTypes } from '../../../../../blocks/props';
 import type { EditorInputTypes } from './components/EditorField/EditorField';
 import { getBlockFromDataBlock } from '../../../../../blocks/blocks';
+import { isValueDefined } from '../../../../../utils/validation';
 
 export function getDataBlockPropsConfig(dataBlock: DataBlockModel): DataBlockPropsConfigModel {
   const { propsConfig = {} } = dataBlock;
@@ -194,12 +195,11 @@ export function getPropFieldType(
 export function getDataBlockPropValue(propKey: string, dataBlock: DataBlockModel): string {
   const props = getDataBlockProps(dataBlock);
   const prop = props[propKey];
-  if (prop) {
-    // todo - check if not undefined, not truthy
-    return prop;
+  if (!isValueDefined(prop)) {
+    console.warn(`No prop found for ${propKey}.`, dataBlock);
+    return '';
   }
-  console.warn(`No prop found for ${propKey}.`);
-  return '';
+  return prop;
 }
 
 const mappedPropTypeToInputType = {
@@ -208,6 +208,7 @@ const mappedPropTypeToInputType = {
   [blockPropsConfigTypes.module]: editorInputTypes.string,
   [blockPropsConfigTypes.blocks]: editorInputTypes.string,
   [blockPropsConfigTypes.htmlAttribute]: editorInputTypes.string,
+  [blockPropsConfigTypes.repeaterData]: editorInputTypes.string,
 };
 
 export function getFieldInputTypeFromPropType(propType: BlockPropsConfigTypes): EditorInputTypes {

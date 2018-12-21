@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import ReactTooltip from 'react-tooltip';
-import { MdDelete, MdCreateNewFolder } from 'react-icons/md';
+import { MdDelete, MdCreateNewFolder, MdRepeat } from 'react-icons/md';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { editorPreviewIframeTypes } from 'editor/components/EditorPreviewIframe/EditorPreviewIframe.js';
@@ -27,6 +27,7 @@ import type { DataModule } from '../../../data/modules/models';
 import {
   dispatchCreateNewModuleFromSelectedBlock,
   dispatchRemoveBlockFromModule,
+  dispatchWrapSelectedBlockWithRepeaterBlock,
 } from '../../../state/redux/shared/dispatch';
 import {
   setAddingBlock,
@@ -39,6 +40,7 @@ type Props = {
   selectedModule: DataModule,
   createModule: (blockKey: string) => void,
   removeBlock: (blockKey: string) => void,
+  wrapBlockWithRepeater: (blockKey: string) => void,
   setInitialHistory: (moduleKey: string, previousModuleKey: string) => void,
   setModule: (moduleKey: string, previousModuleKey: string) => void,
   match: {
@@ -98,6 +100,11 @@ class EditorBlockView extends Component<Props> {
     }
   }
 
+  handleWrapWithRepeater = () => {
+    const { wrapBlockWithRepeater, selectedBlock } = this.props;
+    wrapBlockWithRepeater(selectedBlock.key);
+  };
+
   render() {
     const { createModule, selectedBlock, removeBlock } = this.props;
     return (
@@ -118,6 +125,14 @@ class EditorBlockView extends Component<Props> {
                 tooltip="Save as module"
                 icon={<MdCreateNewFolder size={17} />}
                 onClick={() => createModule(selectedBlock.key)}
+              />
+            )}
+            {!selectedBlock.isParentModule && (
+              <IconButton
+                className={styles.buttonClass}
+                tooltip="Repeat"
+                icon={<MdRepeat size={17} />}
+                onClick={this.handleWrapWithRepeater}
               />
             )}
             <SmallHeading>{`${getDataBlockGroupKey(selectedBlock)}.${getDataBlockBlockKey(
@@ -153,10 +168,12 @@ const mapDispatchToProps = (dispatch: any) => ({
   dispatchRemoveBlock: (blockKey: string, moduleKey: string, selectedModule: DataModule) =>
     dispatchRemoveBlockFromModule(blockKey, moduleKey, selectedModule, dispatch),
   setInitialHistory: (moduleKey: string, previousModuleKey: string) =>
-    dispatch(setInitialSelectedModuleHistory(moduleKey, previousModuleKey)), // todo - verify moduleKey is valid
+    dispatch(setInitialSelectedModuleHistory(moduleKey, previousModuleKey)),
   completeAddingBlock: () => dispatch(setAddingBlock(false)),
   setModule: (moduleKey: string, previousModuleKey: string) =>
     dispatch(setSelectedModuleKey(moduleKey, previousModuleKey)),
+  dispatchWrapBlockWithRepeater: (blockKey: string, moduleKey: string) =>
+    dispatchWrapSelectedBlockWithRepeaterBlock(blockKey, moduleKey, dispatch),
 });
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
@@ -167,6 +184,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
     dispatchProps.dispatchCreateModule(blockKey, stateProps.moduleKey, stateProps.selectedModule),
   removeBlock: (blockKey: string) =>
     dispatchProps.dispatchRemoveBlock(blockKey, stateProps.moduleKey, stateProps.selectedModule),
+  wrapBlockWithRepeater: (blockKey: string) =>
+    dispatchProps.dispatchWrapBlockWithRepeater(blockKey, stateProps.moduleKey),
 });
 
 export default withRouter(

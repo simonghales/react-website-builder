@@ -66,7 +66,7 @@ export type SitePageDataBlocks = {
   [string]: DataBlockModel,
 };
 
-export function getBlockFromBlocks(blocks: SitePageDataBlocks, key: string): DataBlockModel {
+export function getDataBlockFromBlocks(blocks: SitePageDataBlocks, key: string): DataBlockModel {
   const block = blocks[key];
   if (!block) {
     throw new Error(`Block "${key}" not found within blocks.`);
@@ -95,7 +95,7 @@ export function mapDataBlock(
   modules: DataModules,
   mixins: MixinsModel
 ): MappedDataBlockModel {
-  const dataBlock = getBlockFromBlocks(blocks, blockKey);
+  const dataBlock = getDataBlockFromBlocks(blocks, blockKey);
   const block = getBlockFromDataBlock(dataBlock);
   return {
     ...dataBlock,

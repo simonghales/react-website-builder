@@ -6,6 +6,7 @@ import { getMixinsFromState, getModulesFromState, getPagesFromState } from './st
 import type { DataModule, DataModules } from '../../../data/modules/models';
 import {
   getDataBlockFromModule,
+  getModuleBlocks,
   getModuleFromModules,
   getModuleKeyFromModule,
   getModuleParentModules,
@@ -14,6 +15,7 @@ import {
 import type { DataBlockModel, SitePageDataBlocks } from '../../../data/blocks/models';
 import { getBlockFromDataBlock, getDataBlockModuleProps } from '../../../blocks/blocks';
 import {
+  getAvailableDataBlockPropsDetails,
   getBlockChildrenKeys,
   getDataBlockMixinStyles,
   getDataBlockPropsDetails,
@@ -87,10 +89,7 @@ export const getCurrentModuleKey = createSelector(
 
 export const getCurrentModule = createSelector(
   [getCurrentModuleKey, getModules],
-  (moduleKey: string, modules: DataModules) => {
-    console.log('moduleKey', moduleKey);
-    return getModuleFromModules(moduleKey, modules);
-  }
+  (moduleKey: string, modules: DataModules) => getModuleFromModules(moduleKey, modules)
 );
 
 export const getSelectedBlockKey = createSelector(
@@ -182,6 +181,14 @@ export const getSelectedBlockModulePropsConfig = createSelector(
 export const getModuleBlockPropsDetails = createSelector(
   [getCurrentModule, getCurrentModuleRootBlock],
   (module: DataModule, dataBlock: DataBlockModel) => getDataBlockPropsDetails(dataBlock)
+);
+
+export const getDataBlockAllAvailablePropsDetailsSelector = createSelector(
+  [getCurrentModule, getSelectedBlock],
+  (module: DataModule, dataBlock: DataBlockModel) => {
+    const blocks = getModuleBlocks(module);
+    return getAvailableDataBlockPropsDetails(dataBlock.key, blocks);
+  }
 );
 
 export const getSelectedBlockStyle = createSelector(

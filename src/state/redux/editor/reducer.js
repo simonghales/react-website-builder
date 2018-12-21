@@ -14,6 +14,7 @@ import {
   updateBlockPropIsLinked,
   updateBlockStyle,
   updateBlockStylesMixinsOrderByKeys,
+  wrapBlockWithBlock,
 } from './modifiers';
 import type { BlocksOrder } from './modifiers';
 import type { DataModule, DataModules } from '../../../data/modules/models';
@@ -66,6 +67,52 @@ function handleAddNewPageReducer(
     modules: {
       ...state.modules,
       [module.key]: module,
+    },
+  };
+}
+
+const WRAP_BLOCK_WITH_NEW_BLOCK = 'WRAP_BLOCK_WITH_NEW_BLOCK';
+
+type WrapBlockWithNewBlockPayload = {
+  blockKey: string,
+  newBlock: DataBlockModel,
+  moduleKey: string,
+};
+
+type WrapBlockWithNewBlockAction = {
+  type: string,
+  payload: WrapBlockWithNewBlockPayload,
+};
+
+export function wrapBlockWithNewBlockRedux(
+  blockKey: string,
+  newBlock: DataBlockModel,
+  moduleKey: string
+): WrapBlockWithNewBlockAction {
+  return {
+    type: WRAP_BLOCK_WITH_NEW_BLOCK,
+    payload: {
+      blockKey,
+      newBlock,
+      moduleKey,
+    },
+  };
+}
+
+function handleWrapBlockWithNewBlockRedux(
+  state: EditorReduxState,
+  { blockKey, newBlock, moduleKey }: WrapBlockWithNewBlockPayload
+): EditorReduxState {
+  const selectedModule = getModuleFromState(state, moduleKey);
+  const selectedBlock = getBlockFromModuleBlocks(blockKey, selectedModule);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [selectedModule.key]: {
+        ...selectedModule,
+        blocks: wrapBlockWithBlock(selectedModule.blocks, selectedBlock.key, newBlock),
+      },
     },
   };
 }
@@ -735,6 +782,7 @@ type Actions =
   | CreateNewModuleFromSelectedBlockAction;
 
 const ACTION_HANDLERS = {
+  [WRAP_BLOCK_WITH_NEW_BLOCK]: handleWrapBlockWithNewBlockRedux,
   [ADD_NEW_PAGE]: handleAddNewPageReducer,
   [ADD_NEW_PROP_TO_BLOCK]: handleAddNewPropToBlock,
   [SET_PROP_LINKED_REFERENCE]: handleSetPropLinkedReference,

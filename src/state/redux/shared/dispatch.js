@@ -19,12 +19,14 @@ import {
   addNewPageReducer,
   createNewModuleFromSelectedBlock,
   removeBlockFromModule,
+  wrapBlockWithNewBlockRedux,
 } from '../editor/reducer';
 import type { DataModule, DataModules } from '../../../data/modules/models';
 import { setCreatingPageRedux, setModuleSelectedBlockKey } from '../ui/reducer';
 import { getBlockFromModule } from '../../../blocks/state';
 import { generateNewPage } from '../../../data/pages/generator';
 import type { PageDataModel } from '../../../data/pages/models';
+import Repeater from '../../../blocks/groups/functional/Repeater/Repeater';
 
 export function dispatchCreateNewModuleFromSelectedBlock(
   moduleKey: string,
@@ -51,8 +53,6 @@ export function dispatchCreateNewModuleFromSelectedBlock(
     selectedBlock,
     selectedModulePropsDetails
   );
-  console.log('newModule', newModule);
-  console.log('newBlock', newBlock);
 
   dispatch(createNewModuleFromSelectedBlock(moduleKey, blockKey, newModule, newBlock));
   dispatch(setModuleSelectedBlockKey(moduleKey, newBlock.key));
@@ -100,4 +100,16 @@ export function dispatchCreateNewPage(name: string, slug: string, dispatch: any)
   dispatch(addNewPageReducer(page, emptyModule));
   dispatch(setCreatingPageRedux(false));
   return page;
+}
+
+export function dispatchWrapSelectedBlockWithRepeaterBlock(
+  blockKey: string,
+  moduleKey: string,
+  dispatch: any
+) {
+  const newBlock = Repeater.dataBlock({
+    blockKey,
+  });
+  dispatch(wrapBlockWithNewBlockRedux(blockKey, newBlock, moduleKey));
+  dispatch(setModuleSelectedBlockKey(moduleKey, newBlock.key));
 }

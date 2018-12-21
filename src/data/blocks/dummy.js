@@ -9,6 +9,7 @@ import Container from '../../blocks/groups/basic/Container/Container';
 import { DUMMY_STYLE_EMPTY, DUMMY_STYLE_TEST } from '../styles/dummy';
 import type { DataBlockModel } from './models';
 import { blockPropsConfigTypes } from '../../blocks/props';
+import Repeater from '../../blocks/groups/functional/Repeater/Repeater';
 
 export const DUMMY_BLOCK_HEADING: DataBlockModel = {
   key: 'N7vqq3r2ykL',
@@ -17,7 +18,7 @@ export const DUMMY_BLOCK_HEADING: DataBlockModel = {
   blockType: blockTypes.module,
   label: 'Site Title',
   props: {
-    text: 'title',
+    text: '7n7Q1N5KQxj.title',
   },
   propsConfig: {
     text: {
@@ -38,11 +39,12 @@ const DUMMY_BLOCK_SUBHEADING: DataBlockModel = {
   blockType: blockTypes.module,
   label: 'Site Subheading',
   props: {
-    text: 'Web Developer',
+    text: '7n7Q1N5KQxj.title',
   },
   propsConfig: {
     text: {
       label: 'Text',
+      propReference: true,
       type: blockPropsConfigTypes.string,
     },
   },
@@ -59,10 +61,71 @@ export const DUMMY_BLOCK_PARAGRAPH: DataBlockModel = {
   label: 'Site Description',
   props: {
     element: 'p',
-    content: 'Hello Luke',
+    content: 'DUMMY_BLOCK_REPEATER.data.title',
   },
-  propsConfig: {},
+  propsConfig: {
+    content: {
+      propReference: true,
+    },
+  },
   blockChildrenKeys: [],
+  isParentModule: false,
+  rawStyles: DUMMY_STYLE_EMPTY,
+};
+
+export const DUMMY_BLOCK_PARAGRAPH_TWO: DataBlockModel = {
+  key: 'DUMMY_BLOCK_PARAGRAPH_TWO',
+  groupKey: blockGroups.HTML,
+  blockKey: Element.key,
+  blockType: blockTypes.html,
+  label: 'Site Description',
+  props: {
+    element: 'p',
+    content: 'Testing',
+  },
+  propsConfig: {
+    content: {},
+  },
+  blockChildrenKeys: [],
+  isParentModule: false,
+  rawStyles: DUMMY_STYLE_EMPTY,
+};
+
+export const DUMMY_BLOCK_REPEATER: DataBlockModel = {
+  key: 'DUMMY_BLOCK_REPEATER',
+  groupKey: blockGroups.Functional,
+  blockKey: Repeater.key,
+  blockType: blockTypes.module,
+  label: 'Repeater',
+  props: {
+    data: [
+      {
+        title: 'Hello',
+        subtitle: 'World!',
+      },
+      {
+        title: 'World',
+      },
+      {
+        title: 'Boop woop!',
+      },
+    ],
+  },
+  propsConfig: {
+    data: {
+      repeaterDataModel: {
+        title: {
+          label: 'Title',
+          type: blockPropsConfigTypes.string,
+        },
+        subtitle: {
+          label: 'Subtitle',
+          type: blockPropsConfigTypes.string,
+        },
+      },
+    },
+  },
+  blockChildrenKeys: [DUMMY_BLOCK_PARAGRAPH.key, DUMMY_BLOCK_PARAGRAPH_TWO.key],
   isParentModule: false,
   rawStyles: DUMMY_STYLE_EMPTY,
 };
@@ -77,7 +140,7 @@ const DUMMY_BLOCK_CONTAINER: DataBlockModel = {
     children: null,
   },
   propsConfig: {},
-  blockChildrenKeys: [DUMMY_BLOCK_PARAGRAPH.key],
+  blockChildrenKeys: [DUMMY_BLOCK_REPEATER.key],
   isParentModule: false,
   rawStyles: DUMMY_STYLE_EMPTY,
 };
@@ -132,6 +195,8 @@ export const DUMMY_BLOCKS = {
   [DUMMY_BLOCK_PARAGRAPH.key]: DUMMY_BLOCK_PARAGRAPH,
   [DUMMY_BLOCK_MODULE_SUB.key]: DUMMY_BLOCK_MODULE_SUB,
   [DUMMY_BLOCK_MODULE.key]: DUMMY_BLOCK_MODULE,
+  [DUMMY_BLOCK_REPEATER.key]: DUMMY_BLOCK_REPEATER,
+  [DUMMY_BLOCK_PARAGRAPH_TWO.key]: DUMMY_BLOCK_PARAGRAPH_TWO,
 };
 
 export const DUMMY_BLOCK_PAGE_INTRO_MODULE: DataBlockModel = {
@@ -160,7 +225,7 @@ export const DUMMY_BLOCK_PAGE_PARAGRAPH: DataBlockModel = {
   groupKey: blockGroups.HTML,
   blockKey: Element.key,
   blockType: blockTypes.html,
-  label: 'Site Description',
+  label: 'Site Description2',
   props: {
     element: 'p',
     content: 'testing',
