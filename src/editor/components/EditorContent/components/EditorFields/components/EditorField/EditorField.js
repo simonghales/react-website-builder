@@ -14,6 +14,8 @@ import type { BlockModel } from '../../../../../../../blocks/models';
 import LinkedHeader from './components/LinkedHeader/LinkedHeader';
 import { isBlockModuleBlock } from '../../../../../../../blocks/state';
 import PropReferenceSelector from '../../../../../inputs/extended/PropReferenceSelector/PropReferenceSelector';
+import RepeaterDataInput from '../../../../../inputs/RepeaterDataInput/RepeaterDataInput';
+import type { DataBlockModel } from '../../../../../../../data/blocks/models';
 
 export const editorInputTypes = {
   string: 'string',
@@ -24,11 +26,13 @@ export const editorInputTypes = {
   fontFamily: 'fontFamily',
   fontWeight: 'fontWeight',
   fontStyle: 'fontStyle',
+  repeaterData: 'repeaterData',
 };
 
 export type EditorInputTypes = $Keys<typeof editorInputTypes>;
 
 export type FieldProps = {
+  propKey: string,
   value: string,
   inheritedValue: string,
   onChange: (value: string) => void,
@@ -36,6 +40,7 @@ export type FieldProps = {
 
 const mappedFieldTypes = {
   [editorInputTypes.string]: (props: FieldProps) => <TextInput {...props} />,
+  [editorInputTypes.repeaterData]: (props: FieldProps) => <RepeaterDataInput {...props} />,
   [editorInputTypes.color]: (props: FieldProps) => <ColorSelector {...props} />,
   [editorInputTypes.textAlign]: (props: FieldProps) => <TextAlignSelector {...props} />,
   [editorInputTypes.fontFamily]: (props: FieldProps) => <FontFamilySelector {...props} />,
@@ -113,6 +118,7 @@ const EditorFieldInner = ({
             value,
             inheritedValue,
             onChange,
+            propKey,
           },
           block
         )}

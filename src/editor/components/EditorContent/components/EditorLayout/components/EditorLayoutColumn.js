@@ -8,7 +8,7 @@ const Column = styled('div')`
 `;
 
 type Props = {
-  children: any,
+  children?: any,
   columns: number,
 };
 

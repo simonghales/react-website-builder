@@ -7,6 +7,8 @@ import { previewBlocksParser, previewModuleParser, previewRepeaterBlocksParser }
 import type { BlockModelPropsConfig } from '../blocks/models';
 import type { ParsePropsGrouped } from './parser';
 import { isValueArray } from '../utils/validation';
+import { getRepeaterDataItemsArray } from '../editor/components/inputs/RepeaterDataInput/components/DataView/DataView';
+import type { BlockPropsConfigTypes } from '../blocks/props';
 
 export type RepeaterIndexes = {
   [string]: number,
@@ -26,9 +28,19 @@ export function getPropReferenceValue(
       console.error(`No repeaterIndex matched.`, repeaterIndexes);
       repeaterIndex = 0;
     }
-    propPath = `${blockKey}.${splitPropPath[1]}[${repeaterIndex}].${splitPropPath
-      .slice(2)
-      .join('.')}`;
+    const propNameKey = splitPropPath[1];
+    if (propNameKey === 'data') {
+      const dataItems = get(combinedProps, `${blockKey}.${splitPropPath[1]}.items`, {});
+      const items = getRepeaterDataItemsArray(dataItems);
+      const itemKey = get(items, `[${repeaterIndex}]._key`, undefined);
+      propPath = `${blockKey}.${splitPropPath[1]}.items[${itemKey}].${splitPropPath
+        .slice(2)
+        .join('.')}`;
+    } else {
+      propPath = `${blockKey}.${splitPropPath[1]}[${repeaterIndex}].${splitPropPath
+        .slice(2)
+        .join('.')}`;
+    }
   }
   const propValue = get(combinedProps, propPath, undefined);
   if (typeof propValue !== 'undefined') {
@@ -75,12 +87,13 @@ export function parsePropValue(
   }
   if (propConfig.type && propConfig.type === blockPropsConfigTypes.repeaterData) {
     // console.log('is repeater data...???', propValue);
-    if (!isValueArray(propValue)) {
+    const items = getRepeaterDataItemsArray(propValue.items);
+    if (!isValueArray(items)) {
       console.warn(`Repeater data is not an array.`);
       return null;
     }
     const blockChildren = blockData.blockChildren ? blockData.blockChildren : [];
-    return propValue.map((data, index) =>
+    return items.map((data, index) =>
       previewRepeaterBlocksParser(blockChildren, hoveredBlockKey, passedProps, combinedProps, {
         ...repeaterIndexes,
         [blockData.key]: index,

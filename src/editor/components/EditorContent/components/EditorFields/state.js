@@ -1,7 +1,11 @@
 // @flow
 
 import type { EditorFieldModel } from './model';
-import type { BlockModel, BlockPropsConfigModel } from '../../../../../blocks/models';
+import type {
+  BlockModel,
+  BlockModelPropsConfig,
+  BlockPropsConfigModel,
+} from '../../../../../blocks/models';
 import { getBlockContentPropsKeys, getBlockHtmlPropsKeys } from '../../../../../blocks/state';
 import type {
   DataBlockModel,
@@ -52,6 +56,18 @@ export function getDataBlockCombinedPropsConfig(
     }
   });
   return combinedPropsConfig;
+}
+
+export function getPropConfigFromDataBlockCombinedPropsConfig(
+  combinedPropsConfig: DataBlockPropsConfigModel,
+  propKey: string
+): BlockModelPropsConfig {
+  const propConfig = combinedPropsConfig[propKey];
+  if (propConfig) {
+    return propConfig;
+  }
+  console.warn(`Couldn't match propKey "${propKey}" to combinedPropsConfig.`);
+  return {};
 }
 
 export function getDataBlockProps(dataBlock: DataBlockModel): DataBlockPropsModel {
@@ -208,7 +224,7 @@ const mappedPropTypeToInputType = {
   [blockPropsConfigTypes.module]: editorInputTypes.string,
   [blockPropsConfigTypes.blocks]: editorInputTypes.string,
   [blockPropsConfigTypes.htmlAttribute]: editorInputTypes.string,
-  [blockPropsConfigTypes.repeaterData]: editorInputTypes.string,
+  [blockPropsConfigTypes.repeaterData]: editorInputTypes.repeaterData,
 };
 
 export function getFieldInputTypeFromPropType(propType: BlockPropsConfigTypes): EditorInputTypes {
@@ -227,6 +243,10 @@ export function getPropConfigFromCombinedPropsConfig(propKey: string, dataBlock:
 export function canPropBeLinked(propKey: string, dataBlock: DataBlockModel): boolean {
   const propConfig = getPropConfigFromCombinedPropsConfig(propKey, dataBlock);
   return propConfig.type !== blockPropsConfigTypes.repeaterData;
+}
+
+export function isFieldNoLabelWrapper(propType: BlockPropsConfigTypes): boolean {
+  return propType === blockPropsConfigTypes.repeaterData;
 }
 
 export function mapHtmlPropField(
@@ -250,7 +270,7 @@ export function mapHtmlPropField(
     inheritedValue: '',
     inputType,
     onChange: (newValue: string) => updateValue(propKey, newValue),
-    noLabelWrapper: false,
+    noLabelWrapper: isFieldNoLabelWrapper(type),
     columns: 0,
     isPropReference,
     linkedPropKey,
@@ -316,7 +336,6 @@ export function getContentPropsFields(
 ): Array<EditorFieldModel> {
   const dataBlockPropsKeys = getDataBlockPropsKeys(dataBlock);
   const blockPropsKeys = getBlockContentPropsKeys(block);
-  console.log('blockPropsKeys', blockPropsKeys, block);
   const propsKeys = combinePropsKeys([dataBlockPropsKeys, blockPropsKeys]);
   return propsKeys.map(propKey => mapHtmlPropField(propKey, block, dataBlock, updateValue));
 }

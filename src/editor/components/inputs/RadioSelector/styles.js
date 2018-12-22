@@ -2,8 +2,7 @@
 import { css } from 'emotion';
 import colors from 'styles/config/colors';
 import spacing from 'styles/config/spacing';
-import { inputStylesConfig } from '../../../../styles/inputs';
-import { inputReset } from '../../../../styles/inputs';
+import { inputStylesConfig, inputReset } from '../../../../styles/inputs';
 
 const containerClass = css`
   display: grid;

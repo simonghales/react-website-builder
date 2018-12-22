@@ -40,3 +40,9 @@ export const editViewMain = css`
   flex: 1;
   overflow: hidden;
 `;
+
+export const editViewGrid = css`
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  grid-column-gap: ${spacing.tiny}px;
+`;

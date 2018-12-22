@@ -182,7 +182,7 @@ function renderBlock(
 ) {
   const blockGroup = getBlockGroup(blockData.groupKey);
   if (!blockGroup) {
-    console.warn(`Unable to match block groupKey "${blockData.grougetPropLabelFromDataBlocksPropsDetailspKey}"`);
+    console.warn(`Unable to match block groupKey "${blockData.groupKey}"`);
     return null;
   }
   const block = getBlock(blockGroup, blockData.blockKey);

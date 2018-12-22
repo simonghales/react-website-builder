@@ -98,18 +98,26 @@ export const DUMMY_BLOCK_REPEATER: DataBlockModel = {
   blockType: blockTypes.module,
   label: 'Repeater',
   props: {
-    data: [
-      {
-        title: 'Hello',
-        subtitle: 'World!',
+    data: {
+      items: {
+        '1': {
+          _key: '1',
+          _order: 0,
+          title: 'Hello',
+          subtitle: 'World!',
+        },
+        '2': {
+          _key: '2',
+          _order: 1,
+          title: 'World',
+        },
+        '3': {
+          _key: '3',
+          _order: 2,
+          title: 'Boop woop!',
+        },
       },
-      {
-        title: 'World',
-      },
-      {
-        title: 'Boop woop!',
-      },
-    ],
+    },
   },
   propsConfig: {
     data: {
