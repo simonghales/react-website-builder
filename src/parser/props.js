@@ -8,7 +8,7 @@ import type { BlockModelPropsConfig } from '../blocks/models';
 import type { ParsePropsGrouped } from './parser';
 import { isValueArray } from '../utils/validation';
 import { getRepeaterDataItemsArray } from '../editor/components/inputs/RepeaterDataInput/components/DataView/DataView';
-import type { BlockPropsConfigTypes } from '../blocks/props';
+import { getRepeaterDataItems } from '../blocks/groups/functional/Repeater/state';
 
 export type RepeaterIndexes = {
   [string]: number,
@@ -87,7 +87,7 @@ export function parsePropValue(
   }
   if (propConfig.type && propConfig.type === blockPropsConfigTypes.repeaterData) {
     // console.log('is repeater data...???', propValue);
-    const items = getRepeaterDataItemsArray(propValue.items);
+    const items = getRepeaterDataItemsArray(getRepeaterDataItems(propValue));
     if (!isValueArray(items)) {
       console.warn(`Repeater data is not an array.`);
       return null;

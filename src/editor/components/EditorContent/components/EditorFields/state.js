@@ -290,6 +290,7 @@ export function mapModuleHtmlPropField(
   const inputType = getFieldInputTypeFromPropType(type);
   const isPropReference = getDataBlockPropReference(propKey, dataBlock);
   const linkedPropKey = isPropReference ? value : '';
+  const isPropLinkable = canPropBeLinked(propKey, dataBlock);
   return {
     key: propKey,
     label,
@@ -302,6 +303,7 @@ export function mapModuleHtmlPropField(
     columns: 0,
     isPropReference,
     linkedPropKey,
+    isLinkable: isPropLinkable,
   };
 }
 

@@ -2,7 +2,12 @@
 
 import { createSelector } from 'reselect';
 import type { ReduxState } from '../store';
-import { getMixinsFromState, getModulesFromState, getPagesFromState } from './state';
+import {
+  doesModuleKeyExistInModules,
+  getMixinsFromState,
+  getModulesFromState,
+  getPagesFromState,
+} from './state';
 import type { DataModule, DataModules } from '../../../data/modules/models';
 import {
   getDataBlockFromModule,
@@ -90,6 +95,11 @@ export const getCurrentModuleKey = createSelector(
 export const getCurrentModule = createSelector(
   [getCurrentModuleKey, getModules],
   (moduleKey: string, modules: DataModules) => getModuleFromModules(moduleKey, modules)
+);
+
+export const doesCurrentModuleExistSelector = createSelector(
+  [getSelectedModuleKey, getModules],
+  (moduleKey: string, modules: DataModules) => doesModuleKeyExistInModules(moduleKey, modules)
 );
 
 export const getSelectedBlockKey = createSelector(

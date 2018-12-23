@@ -78,6 +78,7 @@ type Props = {
   block?: BlockModel,
   isPropReference: boolean,
   linkedPropEnabled: boolean,
+  linkedPropKey: string,
 };
 
 const EditorFieldInner = ({
@@ -95,6 +96,7 @@ const EditorFieldInner = ({
 }: Props) => {
   const Input = getInput(inputType, isPropReference);
   const isModuleBlock = block ? isBlockModuleBlock(block) : false;
+  console.log('value', value);
   return (
     <React.Fragment>
       <div

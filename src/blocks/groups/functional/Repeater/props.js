@@ -7,12 +7,13 @@ export type RepeaterProps = {
 };
 
 export const repeaterDefaultProps = {
-  data: [],
+  data: {},
 };
 
 export const repeaterPropsConfig = {
   data: {
     label: 'Data',
     type: blockPropsConfigTypes.repeaterData,
+    repeaterDataModel: {},
   },
 };

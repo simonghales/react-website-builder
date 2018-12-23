@@ -1,4 +1,5 @@
 // @flow
+import { get } from 'lodash';
 import Module from 'blocks/groups/module/Module/Module';
 import type { DataBlockModel, SitePageDataBlocks } from '../blocks/models';
 import type { DataModule } from './models';
@@ -7,7 +8,11 @@ import {
   getDataBlockCombinedProps,
   getDataBlockCombinedPropsConfig,
 } from '../../editor/components/EditorContent/components/EditorFields/state';
-import type { DataBlockPropsDetails } from '../blocks/state';
+import type {
+  AvailableDataBlockPropsDetails,
+  DataBlockPropDetail,
+  DataBlockPropsDetails,
+} from '../blocks/state';
 import { generateNewEmptyModuleBlock } from '../blocks/generator';
 
 export function getDataBlockLinkedPropsKeys(dataBlock: DataBlockModel): Array<string> {
@@ -17,9 +22,19 @@ export function getDataBlockLinkedPropsKeys(dataBlock: DataBlockModel): Array<st
   );
 }
 
+export function getReferencedPropFromAllPropsDetails(
+  referencedPropKey: string,
+  allAvailablePropsDetails: AvailableDataBlockPropsDetails
+): DataBlockPropDetail | null {
+  const splitPropPath = referencedPropKey.split('.');
+  const blockKey = splitPropPath[0];
+  const blockProps = get(allAvailablePropsDetails[blockKey], 'props', undefined);
+  return get(blockProps, referencedPropKey, null);
+}
+
 export function getNewModulePropsAndPropsConfig(
   dataBlock: DataBlockModel,
-  selectedModulePropsDetails: DataBlockPropsDetails
+  allAvailablePropsDetails: AvailableDataBlockPropsDetails
 ) {
   const dataBlockLinkedPropsKeys = getDataBlockLinkedPropsKeys(dataBlock);
   const props = getDataBlockCombinedProps(dataBlock);
@@ -28,15 +43,17 @@ export function getNewModulePropsAndPropsConfig(
   const newModulePropsConfig = {};
   dataBlockLinkedPropsKeys.forEach(propKey => {
     const referencedPropKey = props[propKey];
-    const referencedPropLabel = selectedModulePropsDetails[referencedPropKey].label;
-    const referencedPropValue = selectedModulePropsDetails[referencedPropKey].value;
-    if (props[propKey]) {
-      newModuleProps[referencedPropKey] = referencedPropValue;
+    const referencedProp = getReferencedPropFromAllPropsDetails(
+      referencedPropKey,
+      allAvailablePropsDetails
+    );
+    if (referencedProp) {
+      newModuleProps[propKey] = referencedProp.value;
     }
     if (propsConfig[propKey]) {
-      newModulePropsConfig[referencedPropKey] = {
+      newModulePropsConfig[propKey] = {
         ...propsConfig[propKey],
-        label: referencedPropLabel,
+        label: referencedProp.label,
         propReference: false,
       };
     }
@@ -69,11 +86,11 @@ export function generateNewModule(
   rootBlockKey: string,
   name: string,
   dataBlock: DataBlockModel,
-  selectedModulePropsDetails: DataBlockPropsDetails
+  allAvailablePropsDetails: AvailableDataBlockPropsDetails
 ): DataModule {
   const { props, propsConfig } = getNewModulePropsAndPropsConfig(
     dataBlock,
-    selectedModulePropsDetails
+    allAvailablePropsDetails
   );
   const moduleBlock = Module.dataBlock({
     rootBlockKey,

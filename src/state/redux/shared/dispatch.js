@@ -10,6 +10,7 @@ import {
   getModuleRootBlockKey,
 } from '../../../data/modules/state';
 import {
+  getAvailableDataBlockPropsDetails,
   getBlockBlocks,
   getBlockParentKey,
   getDataBlockPropsDetails,
@@ -37,21 +38,21 @@ export function dispatchCreateNewModuleFromSelectedBlock(
   const selectedBlock = getBlockFromModuleBlocks(blockKey, selectedModule);
   const blocks = getModuleBlocks(selectedModule);
   const newModuleBlocks = getBlockBlocks(selectedBlock.key, blocks);
-  const selectedModulePropsDetails = getDataBlockPropsDetails(getModuleRootBlock(selectedModule));
+  const allAvailablePropsDetails = getAvailableDataBlockPropsDetails(selectedBlock.key, blocks);
 
   const newModule = generateNewModule(
     newModuleBlocks,
     selectedBlock.key,
     selectedBlock.label,
     selectedBlock,
-    selectedModulePropsDetails
+    allAvailablePropsDetails
   );
 
   const newBlock = generateNewModuleTemplateBlock(
     newModule.key,
     selectedBlock.label,
     selectedBlock,
-    selectedModulePropsDetails
+    allAvailablePropsDetails
   );
 
   dispatch(createNewModuleFromSelectedBlock(moduleKey, blockKey, newModule, newBlock));

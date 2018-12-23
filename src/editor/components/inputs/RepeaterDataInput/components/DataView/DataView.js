@@ -11,7 +11,10 @@ import type {
   RepeaterDataItems,
   RepeaterDataValue,
 } from '../../../../../../blocks/groups/functional/Repeater/state';
-import { getSortedRepeaterDataItems } from '../../../../../../blocks/groups/functional/Repeater/state';
+import {
+  getRepeaterDataItems,
+  getSortedRepeaterDataItems,
+} from '../../../../../../blocks/groups/functional/Repeater/state';
 import Button from '../../../../../../components/Button/Button';
 
 export type DataField = {
@@ -83,7 +86,7 @@ class DataView extends Component<Props> {
             handleAddNew(0);
           }}
         />
-        {getRepeaterDataItemsArray(data.items).map(
+        {getRepeaterDataItemsArray(getRepeaterDataItems(data)).map(
           (dataValue: RepeaterDataValue, index: number) => {
             // eslint-disable-next-line no-underscore-dangle
             const dataValueKey = dataValue.key;

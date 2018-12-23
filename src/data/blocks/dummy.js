@@ -225,7 +225,7 @@ export const DUMMY_BLOCK_PAGE_INTRO_MODULE: DataBlockModel = {
   label: 'Site Intro',
   props: {
     children: null,
-    title: 'testing',
+    title: 'E1PNmVBg5EK.testing',
   },
   propsConfig: {
     title: {
@@ -246,7 +246,7 @@ export const DUMMY_BLOCK_PAGE_PARAGRAPH: DataBlockModel = {
   label: 'Site Description2',
   props: {
     element: 'p',
-    content: 'testing',
+    content: 'E1PNmVBg5EK.testing',
   },
   propsConfig: {
     content: {

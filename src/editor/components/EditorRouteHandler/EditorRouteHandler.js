@@ -8,6 +8,7 @@ import {
   setInitialSelectedModuleHistory,
   setSelectedModuleKey,
 } from '../../../state/redux/ui/reducer';
+import EditorModuleHandler from '../EditorModuleHandler/EditorModuleHandler';
 
 type Props = {
   setInitialHistory: (moduleKey: string, previousModuleKey: string) => void,
@@ -67,7 +68,11 @@ class EditorRouteHandler extends Component<Props> {
   }
 
   render() {
-    return <EditorBlockView />;
+    return (
+      <EditorModuleHandler redirectOnError>
+        <EditorBlockView />
+      </EditorModuleHandler>
+    );
   }
 }
 

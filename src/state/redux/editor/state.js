@@ -129,3 +129,7 @@ export function getAllPagePathsFromState(state: EditorReduxState): Array<string>
   const pages = getPagesFromState(state);
   return Object.keys(pages).map(pageKey => pages[pageKey].slug);
 }
+
+export function doesModuleKeyExistInModules(moduleKey: string, modules: DataModules): boolean {
+  return !!modules[moduleKey];
+}
