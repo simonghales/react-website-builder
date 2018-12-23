@@ -103,20 +103,26 @@ export const DUMMY_BLOCK_REPEATER: DataBlockModel = {
     data: {
       items: {
         '1': {
-          _key: '1',
-          _order: 0,
-          title: 'Hello',
-          subtitle: 'World!',
+          key: '1',
+          order: 0,
+          fields: {
+            title: 'Hello',
+            subtitle: 'World!',
+          },
         },
         '2': {
-          _key: '2',
-          _order: 1,
-          title: 'World',
+          key: '2',
+          order: 1,
+          fields: {
+            title: 'World',
+          },
         },
         '3': {
-          _key: '3',
-          _order: 2,
-          title: 'Boop woop!',
+          key: '3',
+          order: 2,
+          fields: {
+            title: 'Boop woop!',
+          },
         },
       },
     },

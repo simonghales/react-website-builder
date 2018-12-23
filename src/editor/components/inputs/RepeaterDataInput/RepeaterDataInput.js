@@ -7,7 +7,11 @@ import ModelView from './components/ModelView/ModelView';
 import DataView from './components/DataView/DataView';
 import type { ReduxState } from '../../../../state/redux/store';
 import type { FieldProps } from '../../EditorContent/components/EditorFields/components/EditorField/EditorField';
-import { getSelectedBlock } from '../../../../state/redux/editor/selector';
+import {
+  getCurrentModuleKey,
+  getSelectedBlock,
+  getSelectedBlockKey,
+} from '../../../../state/redux/editor/selector';
 import {
   getDataBlockCombinedPropsConfig,
   getPropConfigFromDataBlockCombinedPropsConfig,
@@ -16,12 +20,17 @@ import type { BlockModelPropsConfig } from '../../../../blocks/models';
 import {
   addNewItemToRepeaterData,
   changeItemOrderInRepeaterData,
+  getRepeaterDataModelFromPropConfig,
+  removeFieldDataFromRepeaterData,
+  removeFieldFromRepeaterDataModel,
   removeItemFromRepeaterData,
   updateRepeaterDataItemValue,
 } from '../../../../blocks/groups/functional/Repeater/state';
+import { updateBlockPropConfig } from '../../../../state/redux/editor/reducer';
 
 type Props = FieldProps & {
   propConfig: BlockModelPropsConfig,
+  updatePropConfig: (propConfig: BlockModelPropsConfig) => void,
 };
 
 class RepeaterDataInput extends Component<Props> {
@@ -45,6 +54,17 @@ class RepeaterDataInput extends Component<Props> {
     onChange(addNewItemToRepeaterData(index, value, propConfig));
   };
 
+  handleRemoveField = (fieldKey: string) => {
+    const { propConfig, updatePropConfig, onChange, value } = this.props;
+    const repeaterDataModel = getRepeaterDataModelFromPropConfig(propConfig);
+    const updatedRepeaterDataModel = removeFieldFromRepeaterDataModel(repeaterDataModel, fieldKey);
+    updatePropConfig({
+      ...propConfig,
+      repeaterDataModel: updatedRepeaterDataModel,
+    });
+    onChange(removeFieldDataFromRepeaterData(value, fieldKey));
+  };
+
   render() {
     const { propConfig, value } = this.props;
     console.log('this.props', this.props);
@@ -52,7 +72,7 @@ class RepeaterDataInput extends Component<Props> {
       <div className={styles.containerClass}>
         <EditorLayoutColumn columns={7}>
           <div className={styles.labelClass}>Model</div>
-          <ModelView propConfig={propConfig} />
+          <ModelView propConfig={propConfig} handleRemoveField={this.handleRemoveField} />
         </EditorLayoutColumn>
         <EditorLayoutColumn columns={7}>
           <div className={styles.labelClass}>Data</div>
@@ -76,7 +96,35 @@ const mapStateToProps = (state: ReduxState, { propKey }: Props) => {
   const propConfig = getPropConfigFromDataBlockCombinedPropsConfig(combinedPropsConfig, propKey);
   return {
     propConfig,
+    selectedBlockKey: dataBlock.key,
+    moduleKey: getCurrentModuleKey(state),
   };
 };
 
-export default connect(mapStateToProps)(RepeaterDataInput);
+const mapDispatchToProps = (dispatch: any) => ({
+  dispatchUpdatePropConfig: (
+    propKey: string,
+    propConfig: BlockModelPropsConfig,
+    moduleKey: string,
+    blockKey: string
+  ) => dispatch(updateBlockPropConfig(propKey, propConfig, moduleKey, blockKey)),
+});
+
+const mergeProps = (stateProps, dispatchProps, ownProps) => ({
+  ...ownProps,
+  ...stateProps,
+  ...dispatchProps,
+  updatePropConfig: (propConfig: BlockModelPropsConfig) =>
+    dispatchProps.dispatchUpdatePropConfig(
+      ownProps.propKey,
+      propConfig,
+      stateProps.moduleKey,
+      stateProps.selectedBlockKey
+    ),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+  mergeProps
+)(RepeaterDataInput);

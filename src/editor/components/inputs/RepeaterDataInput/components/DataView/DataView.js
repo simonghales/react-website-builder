@@ -38,7 +38,7 @@ function getDataFields(
   const allFields = Object.keys(repeaterDataModel);
   return allFields.map(dataValueKey => {
     const label = getDataValuePropLabel(dataValueKey, propConfig);
-    const value = dataValue[dataValueKey] ? dataValue[dataValueKey] : '';
+    const value = dataValue.fields[dataValueKey] ? dataValue.fields[dataValueKey] : '';
     return {
       key: dataValueKey,
       label,
@@ -86,7 +86,7 @@ class DataView extends Component<Props> {
         {getRepeaterDataItemsArray(data.items).map(
           (dataValue: RepeaterDataValue, index: number) => {
             // eslint-disable-next-line no-underscore-dangle
-            const dataValueKey = dataValue._key;
+            const dataValueKey = dataValue.key;
             return (
               <React.Fragment key={dataValueKey}>
                 <div className={styles.dataValueContainerClass} key={dataValueKey}>

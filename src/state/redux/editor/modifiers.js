@@ -3,6 +3,7 @@ import arrayMove from 'array-move';
 import type {
   DataBlockMixinStylesModel,
   DataBlockModel,
+  DataBlockPropsConfigModel,
   SitePageDataBlocks,
 } from '../../../data/blocks/models';
 import type { BlockStyles } from '../../../data/styles/models';
@@ -18,6 +19,7 @@ import {
   getDataBlockProps,
   getDataBlockPropsConfig,
 } from '../../../editor/components/EditorContent/components/EditorFields/state';
+import type { BlockModelPropsConfig } from '../../../blocks/models';
 
 export function updateBlockProp(
   block: DataBlockModel,
@@ -55,6 +57,17 @@ export function addNewDataBlockProp(
         type: propType,
       },
     },
+  };
+}
+
+export function updateDataBlockPropConfig(
+  propsConfig: DataBlockPropsConfigModel,
+  propKey: string,
+  propConfig: BlockModelPropsConfig
+): DataBlockPropsConfigModel {
+  return {
+    ...propsConfig,
+    [propKey]: propConfig,
   };
 }
 

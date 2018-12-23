@@ -31,11 +31,12 @@ function getModelFields(propConfig: BlockModelPropsConfig): Array<any> {
 
 type Props = {
   propConfig: BlockModelPropsConfig,
+  handleRemoveField: (fieldKey: string) => void,
 };
 
 class ModelView extends Component<Props> {
   render() {
-    const { propConfig } = this.props;
+    const { propConfig, handleRemoveField } = this.props;
     return (
       <div className={styles.containerClass}>
         <div className={styles.fieldsContainerClass}>
@@ -62,7 +63,9 @@ class ModelView extends Component<Props> {
               <div className={styles.fieldColumnClass}>
                 <IconButton
                   icon={<MdDelete size={18} />}
-                  onClick={() => {}}
+                  onClick={() => {
+                    handleRemoveField(field.key);
+                  }}
                   styleType={iconButtonStyleTypes.large}
                   highlighted={false}
                   disabled={false}

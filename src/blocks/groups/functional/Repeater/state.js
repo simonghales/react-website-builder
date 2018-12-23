@@ -4,10 +4,14 @@ import arrayMove from 'array-move';
 import type { BlockModelPropsConfig, RepeaterDataModel } from '../../../models';
 import { getBlockUniqueId, getRepeaterDataUniqueId } from '../../../utils';
 
-export type RepeaterDataValue = {
-  _key: string,
-  _order: number,
+export type RepeaterDataFields = {
   [string]: any,
+};
+
+export type RepeaterDataValue = {
+  key: string,
+  order: number,
+  fields: RepeaterDataFields,
 };
 
 export type RepeaterDataItems = {
@@ -18,20 +22,27 @@ export type RepeaterData = {
   items: RepeaterDataItems,
 };
 
+export function getRepeaterDataItemFields(item: RepeaterDataValue): RepeaterDataFields {
+  const { fields = {} } = item;
+  return fields;
+}
+
 export function updateRepeaterDataItemValue(
   itemKey: string,
   propKey: string,
   propValue: string,
   data: RepeaterData
 ): RepeaterData {
-  console.log('update', itemKey, propKey, propValue);
   return {
     ...data,
     items: {
       ...data.items,
       [itemKey]: {
         ...data.items[itemKey],
-        [propKey]: propValue,
+        fields: {
+          ...data.items[itemKey].fields,
+          [propKey]: propValue,
+        },
       },
     },
   };
@@ -47,7 +58,7 @@ export function getSortedRepeaterDataItems(items: RepeaterDataItems): Array<stri
     const itemA = items[itemKeyA];
     const itemB = items[itemKeyB];
     // eslint-disable-next-line no-underscore-dangle
-    return itemA._order - itemB._order;
+    return itemA.order - itemB.order;
   });
 }
 
@@ -59,7 +70,7 @@ export function removeItemFromRepeaterData(itemKey: string, data: RepeaterData):
   sortedItems.forEach((sortedItemKey: string, index: number) => {
     updatedItems[sortedItemKey] = {
       ...items[sortedItemKey],
-      _order: index,
+      order: index,
     };
   });
   return {
@@ -81,7 +92,7 @@ export function changeItemOrderInRepeaterData(
   updatedItemsOrder.forEach((updatedItemKey: string, index: number) => {
     updatedItems[updatedItemKey] = {
       ...items[updatedItemKey],
-      _order: index,
+      order: index,
     };
   });
   return {
@@ -104,9 +115,11 @@ export function generateNewRepeaterDataItem(propConfig: BlockModelPropsConfig, i
     dataFields[fieldKey] = '';
   });
   return {
-    _key: getRepeaterDataUniqueId(),
-    _order: index,
-    ...dataFields,
+    key: getRepeaterDataUniqueId(),
+    order: index,
+    fields: {
+      ...dataFields,
+    },
   };
 }
 
@@ -118,7 +131,7 @@ export function addNewItemToRepeaterData(
   const items = getRepeaterDataItems(data);
   const newItem = generateNewRepeaterDataItem(propConfig, index);
   // eslint-disable-next-line no-underscore-dangle
-  const newItemKey = newItem._key;
+  const newItemKey = newItem.key;
   const sortedItems = getSortedRepeaterDataItems(items);
   const updatedItemsOrder = sortedItems.slice();
   updatedItemsOrder.splice(index, 0, newItemKey);
@@ -130,9 +143,47 @@ export function addNewItemToRepeaterData(
   updatedItemsOrder.forEach((updatedItemKey: string, itemIndex: number) => {
     updatedItems[updatedItemKey] = {
       ...allItems[updatedItemKey],
-      _order: itemIndex,
+      order: itemIndex,
     };
   });
+  return {
+    ...data,
+    items: updatedItems,
+  };
+}
+
+export function removeFieldFromRepeaterDataModel(
+  repeaterDataModel: RepeaterDataModel,
+  fieldKey: string
+): RepeaterDataModel {
+  const updatedRepeaterDataModel = {
+    ...repeaterDataModel,
+  };
+  delete updatedRepeaterDataModel[fieldKey];
+  return updatedRepeaterDataModel;
+}
+
+export function removeFieldDataFromRepeaterData(
+  data: RepeaterData,
+  fieldKey: string
+): RepeaterData {
+  const items = getRepeaterDataItems(data);
+  const updatedItems = {};
+  Object.keys(items).forEach((itemKey: string) => {
+    const item = items[itemKey];
+    const fields = getRepeaterDataItemFields(item);
+    const updatedFields = {
+      ...fields,
+    };
+    if (updatedFields[fieldKey]) {
+      delete updatedFields[fieldKey];
+    }
+    updatedItems[itemKey] = {
+      ...item,
+      fields: updatedFields,
+    };
+  });
+  console.log('updatedItems', updatedItems);
   return {
     ...data,
     items: updatedItems,

@@ -32,8 +32,8 @@ export function getPropReferenceValue(
     if (propNameKey === 'data') {
       const dataItems = get(combinedProps, `${blockKey}.${splitPropPath[1]}.items`, {});
       const items = getRepeaterDataItemsArray(dataItems);
-      const itemKey = get(items, `[${repeaterIndex}]._key`, undefined);
-      propPath = `${blockKey}.${splitPropPath[1]}.items[${itemKey}].${splitPropPath
+      const itemKey = get(items, `[${repeaterIndex}].key`, undefined);
+      propPath = `${blockKey}.${splitPropPath[1]}.items[${itemKey}].fields.${splitPropPath
         .slice(2)
         .join('.')}`;
     } else {
