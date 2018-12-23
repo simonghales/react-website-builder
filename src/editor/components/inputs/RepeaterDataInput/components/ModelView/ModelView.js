@@ -32,11 +32,13 @@ function getModelFields(propConfig: BlockModelPropsConfig): Array<any> {
 type Props = {
   propConfig: BlockModelPropsConfig,
   handleRemoveField: (fieldKey: string) => void,
+  handleUpdateField: (fieldKey: string, fieldLabel: string) => void,
+  handleAddField: () => void,
 };
 
 class ModelView extends Component<Props> {
   render() {
-    const { propConfig, handleRemoveField } = this.props;
+    const { propConfig, handleRemoveField, handleUpdateField, handleAddField } = this.props;
     return (
       <div className={styles.containerClass}>
         <div className={styles.fieldsContainerClass}>
@@ -44,7 +46,9 @@ class ModelView extends Component<Props> {
             <div className={styles.fieldClass} key={index.toString()}>
               <div className={cx(styles.fieldInputClass, styles.fieldColumnClass)}>
                 <TextInput
-                  onChange={() => {}}
+                  onChange={(newValue: string) => {
+                    handleUpdateField(field.key, newValue);
+                  }}
                   value={field.label}
                   valueControlled
                   inheritedValue=""
@@ -75,7 +79,7 @@ class ModelView extends Component<Props> {
           ))}
         </div>
         <div>
-          <Button onClick={() => {}}>Add field</Button>
+          <Button onClick={handleAddField}>Add field</Button>
         </div>
       </div>
     );

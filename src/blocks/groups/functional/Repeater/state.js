@@ -1,8 +1,17 @@
 // @flow
 
 import arrayMove from 'array-move';
-import type { BlockModelPropsConfig, RepeaterDataModel } from '../../../models';
-import { getBlockUniqueId, getRepeaterDataUniqueId } from '../../../utils';
+import type {
+  BlockModelPropsConfig,
+  RepeaterDataModel,
+  RepeaterDataModelField,
+} from '../../../models';
+import {
+  getBlockUniqueId,
+  getRepeaterDataModelFieldUniqueId,
+  getRepeaterDataUniqueId,
+} from '../../../utils';
+import { blockPropsConfigTypes } from '../../../props';
 
 export type RepeaterDataFields = {
   [string]: any,
@@ -152,6 +161,38 @@ export function addNewItemToRepeaterData(
   };
 }
 
+export function generateRepeaterDataModelField(): RepeaterDataModelField {
+  return {
+    key: getRepeaterDataModelFieldUniqueId(),
+    label: '',
+    type: blockPropsConfigTypes.string,
+  };
+}
+
+export function addNewFieldToRepeaterDataModel(
+  repeaterDataModel: RepeaterDataModel
+): RepeaterDataModel {
+  const newField = generateRepeaterDataModelField();
+  return {
+    ...repeaterDataModel,
+    [newField.key]: newField,
+  };
+}
+
+export function updateFieldInRepeaterDataModel(
+  repeaterDataModel: RepeaterDataModel,
+  fieldKey: string,
+  fieldLabel: string
+): RepeaterDataModel {
+  return {
+    ...repeaterDataModel,
+    [fieldKey]: {
+      ...repeaterDataModel[fieldKey],
+      label: fieldLabel,
+    },
+  };
+}
+
 export function removeFieldFromRepeaterDataModel(
   repeaterDataModel: RepeaterDataModel,
   fieldKey: string
@@ -183,7 +224,6 @@ export function removeFieldDataFromRepeaterData(
       fields: updatedFields,
     };
   });
-  console.log('updatedItems', updatedItems);
   return {
     ...data,
     items: updatedItems,

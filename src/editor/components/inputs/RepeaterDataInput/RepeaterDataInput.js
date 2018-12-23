@@ -18,12 +18,14 @@ import {
 } from '../../EditorContent/components/EditorFields/state';
 import type { BlockModelPropsConfig } from '../../../../blocks/models';
 import {
+  addNewFieldToRepeaterDataModel,
   addNewItemToRepeaterData,
   changeItemOrderInRepeaterData,
   getRepeaterDataModelFromPropConfig,
   removeFieldDataFromRepeaterData,
   removeFieldFromRepeaterDataModel,
   removeItemFromRepeaterData,
+  updateFieldInRepeaterDataModel,
   updateRepeaterDataItemValue,
 } from '../../../../blocks/groups/functional/Repeater/state';
 import { updateBlockPropConfig } from '../../../../state/redux/editor/reducer';
@@ -65,14 +67,42 @@ class RepeaterDataInput extends Component<Props> {
     onChange(removeFieldDataFromRepeaterData(value, fieldKey));
   };
 
+  handleUpdateField = (fieldKey: string, fieldLabel: string) => {
+    const { propConfig, updatePropConfig } = this.props;
+    const repeaterDataModel = getRepeaterDataModelFromPropConfig(propConfig);
+    const updatedRepeaterDataModel = updateFieldInRepeaterDataModel(
+      repeaterDataModel,
+      fieldKey,
+      fieldLabel
+    );
+    updatePropConfig({
+      ...propConfig,
+      repeaterDataModel: updatedRepeaterDataModel,
+    });
+  };
+
+  handleAddField = () => {
+    const { propConfig, updatePropConfig } = this.props;
+    const repeaterDataModel = getRepeaterDataModelFromPropConfig(propConfig);
+    const updatedRepeaterDataModel = addNewFieldToRepeaterDataModel(repeaterDataModel);
+    updatePropConfig({
+      ...propConfig,
+      repeaterDataModel: updatedRepeaterDataModel,
+    });
+  };
+
   render() {
     const { propConfig, value } = this.props;
-    console.log('this.props', this.props);
     return (
       <div className={styles.containerClass}>
         <EditorLayoutColumn columns={7}>
           <div className={styles.labelClass}>Model</div>
-          <ModelView propConfig={propConfig} handleRemoveField={this.handleRemoveField} />
+          <ModelView
+            propConfig={propConfig}
+            handleRemoveField={this.handleRemoveField}
+            handleUpdateField={this.handleUpdateField}
+            handleAddField={this.handleAddField}
+          />
         </EditorLayoutColumn>
         <EditorLayoutColumn columns={7}>
           <div className={styles.labelClass}>Data</div>
