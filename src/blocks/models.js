@@ -4,8 +4,13 @@ import type { DataBlockModel } from '../data/blocks/models';
 import type { BlockPropsConfigTypes, BlockPropsDisplaySections } from './props';
 
 export type RepeaterDataModelField = {
+  key: string,
   label: string,
   type: BlockPropsConfigTypes,
+};
+
+export type RepeaterDataModel = {
+  [string]: RepeaterDataModelField,
 };
 
 export type BlockModelPropsConfig = {
@@ -17,9 +22,7 @@ export type BlockModelPropsConfig = {
   propReference?: boolean,
   repeaterReference?: boolean,
   repeaterReferenceKey?: string,
-  repeaterDataModel?: {
-    [string]: RepeaterDataModelField,
-  },
+  repeaterDataModel?: RepeaterDataModel,
 };
 
 export type BlockPropsConfigModel = {

@@ -35,7 +35,7 @@ export type FieldProps = {
   propKey: string,
   value: string,
   inheritedValue: string,
-  onChange: (value: string) => void,
+  onChange: (value: any) => void,
 };
 
 const mappedFieldTypes = {

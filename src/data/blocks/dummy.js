@@ -81,10 +81,12 @@ export const DUMMY_BLOCK_PARAGRAPH_TWO: DataBlockModel = {
   label: 'Site Description',
   props: {
     element: 'p',
-    content: 'Testing',
+    content: 'DUMMY_BLOCK_REPEATER.data.subtitle',
   },
   propsConfig: {
-    content: {},
+    content: {
+      propReference: true,
+    },
   },
   blockChildrenKeys: [],
   isParentModule: false,
@@ -123,10 +125,12 @@ export const DUMMY_BLOCK_REPEATER: DataBlockModel = {
     data: {
       repeaterDataModel: {
         title: {
+          key: 'title',
           label: 'Title',
           type: blockPropsConfigTypes.string,
         },
         subtitle: {
+          key: 'subtitle',
           label: 'Subtitle',
           type: blockPropsConfigTypes.string,
         },

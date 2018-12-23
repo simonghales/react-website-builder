@@ -23,3 +23,8 @@ export function getModuleUniqueId(): string {
 export function getPageUniqueId(): string {
   return getBlockUniqueId(); // todo - use firestore unique key
 }
+
+
+export function getRepeaterDataUniqueId(): string {
+  return getBlockUniqueId(); // todo - use firestore unique key
+}

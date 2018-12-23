@@ -13,14 +13,41 @@ import {
   getPropConfigFromDataBlockCombinedPropsConfig,
 } from '../../EditorContent/components/EditorFields/state';
 import type { BlockModelPropsConfig } from '../../../../blocks/models';
+import {
+  addNewItemToRepeaterData,
+  changeItemOrderInRepeaterData,
+  removeItemFromRepeaterData,
+  updateRepeaterDataItemValue,
+} from '../../../../blocks/groups/functional/Repeater/state';
 
 type Props = FieldProps & {
   propConfig: BlockModelPropsConfig,
 };
 
 class RepeaterDataInput extends Component<Props> {
+  handleUpdateDataItem = (itemKey: string, propKey: string, propValue: string) => {
+    const { value, onChange } = this.props;
+    onChange(updateRepeaterDataItemValue(itemKey, propKey, propValue, value));
+  };
+
+  handleDeleteDataItem = (itemKey: string) => {
+    const { value, onChange } = this.props;
+    onChange(removeItemFromRepeaterData(itemKey, value));
+  };
+
+  handleUpdateDataItemOrder = (itemKey: string, newIndex: number) => {
+    const { value, onChange } = this.props;
+    onChange(changeItemOrderInRepeaterData(itemKey, newIndex, value));
+  };
+
+  handleAddNewDataItem = (index: number) => {
+    const { propConfig, value, onChange } = this.props;
+    onChange(addNewItemToRepeaterData(index, value, propConfig));
+  };
+
   render() {
     const { propConfig, value } = this.props;
+    console.log('this.props', this.props);
     return (
       <div className={styles.containerClass}>
         <EditorLayoutColumn columns={7}>
@@ -29,7 +56,14 @@ class RepeaterDataInput extends Component<Props> {
         </EditorLayoutColumn>
         <EditorLayoutColumn columns={7}>
           <div className={styles.labelClass}>Data</div>
-          <DataView data={value} propConfig={propConfig} />
+          <DataView
+            data={value}
+            propConfig={propConfig}
+            handleUpdate={this.handleUpdateDataItem}
+            handleDelete={this.handleDeleteDataItem}
+            handleUpdateOrder={this.handleUpdateDataItemOrder}
+            handleAddNew={this.handleAddNewDataItem}
+          />
         </EditorLayoutColumn>
       </div>
     );

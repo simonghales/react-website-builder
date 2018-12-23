@@ -14,6 +14,7 @@ const dataContainerClass = css`
 const dataValueContainerClass = css`
   background-color: rgba(0, 0, 0, 0.15);
   padding: ${spacing.tiny}px;
+  margin-bottom: ${spacing.tiny}px;
 
   &:not(:first-of-type) {
     margin-top: ${spacing.tiny}px;
@@ -54,6 +55,15 @@ const dataValueOptionsButtonClass = css`
   }
 `;
 
+const addItemContainerClass = css`
+  display: flex;
+  justify-content: center;
+
+  &:last-child {
+    margin-bottom: ${spacing.tiny}px;
+  }
+`;
+
 export default {
   dataContainerClass,
   dataValueContainerClass,
@@ -62,4 +72,5 @@ export default {
   dataValueOptionsClass,
   dataValueOptionsDirectionsClass,
   dataValueOptionsButtonClass,
+  addItemContainerClass,
 };
