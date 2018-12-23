@@ -3,12 +3,13 @@ import arrayMove from 'array-move';
 import type {
   DataBlockMixinStylesModel,
   DataBlockModel,
+  DataBlockPropsConfigModel,
   SitePageDataBlocks,
 } from '../../../data/blocks/models';
 import type { BlockStyles } from '../../../data/styles/models';
 import { getBlockStyles } from '../../../data/styles/state';
 import { getBlockFromDataBlock } from '../../../blocks/blocks';
-import { getBlockFromBlocks } from '../../../data/blocks/models';
+import { getDataBlockFromBlocks } from '../../../data/blocks/models';
 import {
   getBlockIndexWithinBlock,
   getBlockParentKey,
@@ -18,6 +19,7 @@ import {
   getDataBlockProps,
   getDataBlockPropsConfig,
 } from '../../../editor/components/EditorContent/components/EditorFields/state';
+import type { BlockModelPropsConfig } from '../../../blocks/models';
 
 export function updateBlockProp(
   block: DataBlockModel,
@@ -55,6 +57,17 @@ export function addNewDataBlockProp(
         type: propType,
       },
     },
+  };
+}
+
+export function updateDataBlockPropConfig(
+  propsConfig: DataBlockPropsConfigModel,
+  propKey: string,
+  propConfig: BlockModelPropsConfig
+): DataBlockPropsConfigModel {
+  return {
+    ...propsConfig,
+    [propKey]: propConfig,
   };
 }
 
@@ -260,7 +273,7 @@ export function addNewBlockToBlocks(
   if (selectedBlockBlock.childrenAllowed) {
     parentBlock = selectedBlock;
   } else if (parentBlockKey !== '') {
-    parentBlock = getBlockFromBlocks(blocks, parentBlockKey);
+    parentBlock = getDataBlockFromBlocks(blocks, parentBlockKey);
   }
 
   const updatedBlocks = {
@@ -276,7 +289,7 @@ export function removeBlockFromBlocks(
   blockToRemoveKey: string,
   pushChildrenToParent: boolean
 ): SitePageDataBlocks {
-  const blockToRemove = getBlockFromBlocks(blocks, blockToRemoveKey);
+  const blockToRemove = getDataBlockFromBlocks(blocks, blockToRemoveKey);
   const blockToRemoveChildren = blockToRemove.blockChildrenKeys
     ? blockToRemove.blockChildrenKeys
     : [];
@@ -299,13 +312,39 @@ export function removeBlockFromBlocks(
   return updatedBlocks;
 }
 
+export function wrapBlockWithBlock(
+  blocks: SitePageDataBlocks,
+  blockToReplaceKey: string,
+  newBlock: DataBlockModel
+): SitePageDataBlocks {
+  const blockToWrapParentKey = getBlockParentKey(blockToReplaceKey, blocks);
+  const blockToWrapParent = getDataBlockFromBlocks(blocks, blockToWrapParentKey);
+  const blockToWrapWithinParentIndex = getBlockIndexWithinBlock(
+    blockToWrapParent,
+    blockToReplaceKey
+  );
+  const finalBlocks = {
+    [newBlock.key]: newBlock,
+  };
+  Object.keys(blocks).forEach(blockKey => {
+    const block = blocks[blockKey];
+    if (blockKey === blockToWrapParentKey) {
+      const updatedChildrenKeys = block.blockChildrenKeys;
+      updatedChildrenKeys.splice(blockToWrapWithinParentIndex, 1, newBlock.key);
+      block.blockChildrenKeys = updatedChildrenKeys;
+    }
+    finalBlocks[blockKey] = block;
+  });
+  return finalBlocks;
+}
+
 export function replaceBlocksWithBlock(
   blocks: SitePageDataBlocks,
   blockToReplaceKey: string,
   newBlock: DataBlockModel
 ): SitePageDataBlocks {
   const blockToReplaceParentKey = getBlockParentKey(blockToReplaceKey, blocks);
-  const blockToReplaceParent = getBlockFromBlocks(blocks, blockToReplaceParentKey);
+  const blockToReplaceParent = getDataBlockFromBlocks(blocks, blockToReplaceParentKey);
   const blockToReplaceWithinParentIndex = getBlockIndexWithinBlock(
     blockToReplaceParent,
     blockToReplaceKey

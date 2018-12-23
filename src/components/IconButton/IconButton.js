@@ -18,6 +18,7 @@ type Props = {
   styleType?: IconButtonStyleTypes,
   highlighted?: boolean,
   disabled?: boolean,
+  addPreventOffclick?: boolean,
 };
 
 const IconButton = ({
@@ -28,6 +29,7 @@ const IconButton = ({
   styleType,
   highlighted,
   disabled,
+  addPreventOffclick,
 }: Props) => (
   <button
     className={cx(styles.buttonClass, className, {
@@ -37,6 +39,7 @@ const IconButton = ({
     })}
     data-tip={tooltip}
     onClick={onClick}
+    data-prevent-offclick={addPreventOffclick}
   >
     {icon}
   </button>
@@ -48,6 +51,7 @@ IconButton.defaultProps = {
   styleType: iconButtonStyleTypes.default,
   highlighted: false,
   disabled: false,
+  addPreventOffclick: false,
 };
 
 export default IconButton;

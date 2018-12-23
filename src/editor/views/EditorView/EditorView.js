@@ -4,9 +4,11 @@ import { Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { cx } from 'emotion';
 import styles from './styles';
-import EditorBlockView from '../EditorBlockView/EditorBlockView';
 import type { ReduxState } from '../../../state/redux/store';
-import { getAddingBlock } from '../../../state/redux/ui/state';
+import {
+  getAddingBlockFromUIState,
+  getCreatingPageFromUIState,
+} from '../../../state/redux/ui/state';
 import Tooltip from '../../../components/Tooltip/Tooltip';
 import EditorSidebar from '../../components/EditorSidebar/EditorSidebar';
 import EditorLogo from '../../components/EditorLogo/EditorLogo';
@@ -16,12 +18,18 @@ import { editorRoutes, getEditorRoutingMatchParam } from '../../routing';
 import { matchPageKeyViaNameSlug } from '../../../data/pages/state';
 import type { PageDataModel } from '../../../data/pages/models';
 import { getPagesSelector } from '../../../state/redux/editor/selector';
-import { setSelectedPageKey } from '../../../state/redux/ui/reducer';
+import {
+  setAddingBlock,
+  setCreatingPageRedux,
+  setSelectedPageKey,
+} from '../../../state/redux/ui/reducer';
 import type { EditorRoutingMatch } from '../../routing';
+import EditorRouteHandler from '../../components/EditorRouteHandler/EditorRouteHandler';
 
 type Props = {
-  addingBlock: boolean,
+  showBlocker: boolean,
   completeAddingBlock: () => void,
+  completeCreatingPage: () => void,
   match: EditorRoutingMatch,
   selectPage: (pageKey: string) => void,
   pages: PageDataModel,
@@ -47,7 +55,8 @@ class EditorView extends Component<Props> {
   }
 
   checkUpdatedUrlParams(nextProps: Props) {
-    const { pages, selectPage } = this.props;
+    const { selectPage } = this.props;
+    const { pages } = nextProps;
     const pageNameSlug = getEditorRoutingMatchParam('pageNameSlug', nextProps.match);
     const previousPageNameSlug = getEditorRoutingMatchParam('pageNameSlug', this.props.match);
     if (pageNameSlug !== previousPageNameSlug) {
@@ -58,8 +67,14 @@ class EditorView extends Component<Props> {
     }
   }
 
+  closeSlideouts = () => {
+    const { completeAddingBlock, completeCreatingPage } = this.props;
+    completeAddingBlock();
+    completeCreatingPage();
+  };
+
   render() {
-    const { addingBlock, completeAddingBlock } = this.props;
+    const { showBlocker } = this.props;
     return (
       <React.Fragment>
         <Tooltip />
@@ -79,14 +94,14 @@ class EditorView extends Component<Props> {
             <div className={styles.previewClass}>
               <div
                 className={cx(styles.previewContentClass, {
-                  [styles.previewContentDisabledClass]: addingBlock,
+                  [styles.previewContentDisabledClass]: showBlocker,
                 })}
               >
                 <Route exact path={editorRoutes.page} component={EditorPageView} />
-                <Route exact path={editorRoutes.pageWithModule} component={EditorBlockView} />
+                <Route exact path={editorRoutes.pageWithModule} component={EditorRouteHandler} />
               </div>
-              {addingBlock && (
-                <div className={styles.previewBlockerClass} onClick={completeAddingBlock} />
+              {showBlocker && (
+                <div className={styles.previewBlockerClass} onClick={this.closeSlideouts} />
               )}
             </div>
           </main>
@@ -96,13 +111,20 @@ class EditorView extends Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ReduxState) => ({
-  addingBlock: getAddingBlock(state.ui),
-  pages: getPagesSelector(state),
-});
+const mapStateToProps = (state: ReduxState) => {
+  const addingBlock = getAddingBlockFromUIState(state.ui);
+  const creatingPage = getCreatingPageFromUIState(state.ui);
+  const pages = getPagesSelector(state);
+  return {
+    showBlocker: addingBlock || creatingPage,
+    pages,
+  };
+};
 
 const mapDispatchToProps = {
   selectPage: (pageKey: string) => setSelectedPageKey(pageKey),
+  completeAddingBlock: () => setAddingBlock(false),
+  completeCreatingPage: () => setCreatingPageRedux(false),
 };
 
 export default withRouter(

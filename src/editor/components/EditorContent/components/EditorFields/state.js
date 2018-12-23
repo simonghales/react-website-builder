@@ -1,7 +1,11 @@
 // @flow
 
 import type { EditorFieldModel } from './model';
-import type { BlockModel, BlockPropsConfigModel } from '../../../../../blocks/models';
+import type {
+  BlockModel,
+  BlockModelPropsConfig,
+  BlockPropsConfigModel,
+} from '../../../../../blocks/models';
 import { getBlockContentPropsKeys, getBlockHtmlPropsKeys } from '../../../../../blocks/state';
 import type {
   DataBlockModel,
@@ -13,6 +17,7 @@ import { blockPropsConfigTypes } from '../../../../../blocks/props';
 import type { BlockPropsConfigTypes } from '../../../../../blocks/props';
 import type { EditorInputTypes } from './components/EditorField/EditorField';
 import { getBlockFromDataBlock } from '../../../../../blocks/blocks';
+import { isValueDefined } from '../../../../../utils/validation';
 
 export function getDataBlockPropsConfig(dataBlock: DataBlockModel): DataBlockPropsConfigModel {
   const { propsConfig = {} } = dataBlock;
@@ -51,6 +56,18 @@ export function getDataBlockCombinedPropsConfig(
     }
   });
   return combinedPropsConfig;
+}
+
+export function getPropConfigFromDataBlockCombinedPropsConfig(
+  combinedPropsConfig: DataBlockPropsConfigModel,
+  propKey: string
+): BlockModelPropsConfig {
+  const propConfig = combinedPropsConfig[propKey];
+  if (propConfig) {
+    return propConfig;
+  }
+  console.warn(`Couldn't match propKey "${propKey}" to combinedPropsConfig.`);
+  return {};
 }
 
 export function getDataBlockProps(dataBlock: DataBlockModel): DataBlockPropsModel {
@@ -194,12 +211,11 @@ export function getPropFieldType(
 export function getDataBlockPropValue(propKey: string, dataBlock: DataBlockModel): string {
   const props = getDataBlockProps(dataBlock);
   const prop = props[propKey];
-  if (prop) {
-    // todo - check if not undefined, not truthy
-    return prop;
+  if (!isValueDefined(prop)) {
+    console.warn(`No prop found for ${propKey}.`, dataBlock);
+    return '';
   }
-  console.warn(`No prop found for ${propKey}.`);
-  return '';
+  return prop;
 }
 
 const mappedPropTypeToInputType = {
@@ -208,6 +224,7 @@ const mappedPropTypeToInputType = {
   [blockPropsConfigTypes.module]: editorInputTypes.string,
   [blockPropsConfigTypes.blocks]: editorInputTypes.string,
   [blockPropsConfigTypes.htmlAttribute]: editorInputTypes.string,
+  [blockPropsConfigTypes.repeaterData]: editorInputTypes.repeaterData,
 };
 
 export function getFieldInputTypeFromPropType(propType: BlockPropsConfigTypes): EditorInputTypes {
@@ -216,6 +233,20 @@ export function getFieldInputTypeFromPropType(propType: BlockPropsConfigTypes): 
     throw new Error(`No input type matched to propType "${propType}"`);
   }
   return inputType;
+}
+
+export function getPropConfigFromCombinedPropsConfig(propKey: string, dataBlock: DataBlockModel) {
+  const combinedPropsConfig = getDataBlockCombinedPropsConfig(dataBlock);
+  return combinedPropsConfig[propKey];
+}
+
+export function canPropBeLinked(propKey: string, dataBlock: DataBlockModel): boolean {
+  const propConfig = getPropConfigFromCombinedPropsConfig(propKey, dataBlock);
+  return propConfig.type !== blockPropsConfigTypes.repeaterData;
+}
+
+export function isFieldNoLabelWrapper(propType: BlockPropsConfigTypes): boolean {
+  return propType === blockPropsConfigTypes.repeaterData;
 }
 
 export function mapHtmlPropField(
@@ -230,6 +261,7 @@ export function mapHtmlPropField(
   const inputType = getFieldInputTypeFromPropType(type);
   const isPropReference = isFieldPropReference(propKey, block, dataBlock);
   const linkedPropKey = isPropReference ? value : '';
+  const isPropLinkable = canPropBeLinked(propKey, dataBlock);
   return {
     key: propKey,
     label,
@@ -238,10 +270,11 @@ export function mapHtmlPropField(
     inheritedValue: '',
     inputType,
     onChange: (newValue: string) => updateValue(propKey, newValue),
-    noLabelWrapper: false,
+    noLabelWrapper: isFieldNoLabelWrapper(type),
     columns: 0,
     isPropReference,
     linkedPropKey,
+    isLinkable: isPropLinkable,
   };
 }
 
@@ -257,6 +290,7 @@ export function mapModuleHtmlPropField(
   const inputType = getFieldInputTypeFromPropType(type);
   const isPropReference = getDataBlockPropReference(propKey, dataBlock);
   const linkedPropKey = isPropReference ? value : '';
+  const isPropLinkable = canPropBeLinked(propKey, dataBlock);
   return {
     key: propKey,
     label,
@@ -269,6 +303,7 @@ export function mapModuleHtmlPropField(
     columns: 0,
     isPropReference,
     linkedPropKey,
+    isLinkable: isPropLinkable,
   };
 }
 

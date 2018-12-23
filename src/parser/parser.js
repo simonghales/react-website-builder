@@ -6,11 +6,13 @@ import type {
   MappedDataBlocks,
 } from '../data/blocks/models';
 import { getBlock, getBlockGroup } from '../blocks/blocks';
-import type { BlockModel } from '../blocks/models';
+import type { BlockModel, BlockModelPropsConfig } from '../blocks/models';
 import { parsePropValue } from './props';
 import type { MappedDataModule } from '../data/modules/models';
 import { isBlockModuleBlock, isBlockModuleImportBlock } from '../blocks/state';
-import { blockPropsConfigTypes } from '../blocks/props';
+import { BLOCK_REPEATER_DATA_CHILDREN, blockPropsConfigTypes } from '../blocks/props';
+import { getDataBlockCombinedPropsConfig } from '../editor/components/EditorContent/components/EditorFields/state';
+import type { RepeaterIndexes } from './props';
 
 export function geSplitPropsKeys(
   props: DataBlockPropsModel,
@@ -28,7 +30,8 @@ export function geSplitPropsKeys(
     };
     if (
       (propConfig.type && propConfig.type === blockPropsConfigTypes.blocks) ||
-      (propConfig.type && propConfig.type === blockPropsConfigTypes.module)
+      (propConfig.type && propConfig.type === blockPropsConfigTypes.module) ||
+      (propConfig.type && propConfig.type === blockPropsConfigTypes.repeaterData)
     ) {
       childPropKeys.push(propKey);
     } else {
@@ -38,6 +41,14 @@ export function geSplitPropsKeys(
   return [nonChildPropKeys, childPropKeys];
 }
 
+export type ParsePropsGrouped = {
+  [string]: DataBlockPropsModel,
+};
+
+export function isPropRepeaterField(propConfig: BlockModelPropsConfig): boolean {
+  return propConfig.type && propConfig.type === blockPropsConfigTypes.repeaterData;
+}
+
 function getParsedProps(
   block: BlockModel,
   blockData: MappedDataBlockModel,
@@ -45,7 +56,9 @@ function getParsedProps(
   propKeys: Array<string>,
   props: DataBlockPropsModel,
   passedProps: DataBlockPropsModel = {},
-  isModule?: boolean = false
+  combinedProps: ParsePropsGrouped = {},
+  isModule: boolean = false,
+  repeaterIndexes: RepeaterIndexes
 ): {
   [string]: any,
 } {
@@ -57,15 +70,34 @@ function getParsedProps(
       ...sourcePropConfig,
       ...dataPropConfig,
     };
-    parsedProps[propKey] = parsePropValue(
+    const originalValue = props[propKey];
+    const isRepeaterField = isPropRepeaterField(combinedPropConfig);
+    if (isRepeaterField) {
+      combinedProps = {
+        ...combinedProps,
+        [blockData.key]: {
+          ...combinedProps[blockData.key],
+          [propKey]: originalValue,
+        },
+      };
+    }
+    const parsedPropValue = parsePropValue(
       blockData,
       propKey,
-      props[propKey],
+      originalValue,
       combinedPropConfig,
       hoveredBlockKey,
       passedProps,
-      isModule
+      combinedProps,
+      isModule,
+      repeaterIndexes
     );
+    if (!isPropRepeaterField(combinedPropConfig)) {
+      parsedProps[propKey] = parsedPropValue;
+    } else {
+      parsedProps[propKey] = originalValue;
+      parsedProps[BLOCK_REPEATER_DATA_CHILDREN] = parsedPropValue;
+    }
   });
   return parsedProps;
 }
@@ -74,7 +106,9 @@ function getProps(
   block: BlockModel,
   blockData: MappedDataBlockModel,
   hoveredBlockKey: string,
-  moduleProps: DataBlockPropsModel = {}
+  moduleProps: DataBlockPropsModel,
+  previousCombinedProps: ParsePropsGrouped,
+  repeaterIndexes: RepeaterIndexes
 ): {
   [string]: any,
 } {
@@ -82,11 +116,17 @@ function getProps(
     ...block.defaultProps,
     ...blockData.props,
   };
+
+  // get non child and child props keys
   const [nonChildPropsKeys, childPropsKeys] = geSplitPropsKeys(props, block, blockData);
 
   const isModule = isBlockModuleBlock(block);
   const isModuleImport = isBlockModuleImportBlock(block);
 
+  // console.log('nonChildPropsKeys', nonChildPropsKeys);
+  // console.log('childPropsKeys', childPropsKeys);
+
+  // parse the non child props
   const nonChildProps = getParsedProps(
     block,
     blockData,
@@ -94,10 +134,22 @@ function getProps(
     nonChildPropsKeys,
     props,
     moduleProps,
-    isModule
+    previousCombinedProps,
+    isModule,
+    repeaterIndexes
   );
 
+  // console.log('moduleProps', moduleProps);
+
+  const combinedProps = {
+    ...previousCombinedProps,
+    [blockData.key]: nonChildProps,
+  };
+
   const passedProps = isModule || isModuleImport ? nonChildProps : moduleProps;
+
+  // console.log('nonChildProps', nonChildProps);
+  // console.log('combinedProps', combinedProps);
 
   const childProps = getParsedProps(
     block,
@@ -105,7 +157,10 @@ function getProps(
     hoveredBlockKey,
     childPropsKeys,
     props,
-    passedProps
+    passedProps,
+    combinedProps,
+    false,
+    repeaterIndexes
   );
 
   const parsedProps = {
@@ -121,7 +176,9 @@ function getProps(
 function renderBlock(
   blockData: MappedDataBlockModel,
   hoveredBlockKey: string,
-  passedProps?: DataBlockPropsModel
+  passedProps: DataBlockPropsModel = {},
+  combinedProps: ParsePropsGrouped = {},
+  repeaterIndexes: RepeaterIndexes = {}
 ) {
   const blockGroup = getBlockGroup(blockData.groupKey);
   if (!blockGroup) {
@@ -133,7 +190,14 @@ function renderBlock(
     console.warn(`Unable to match block blockKey "${blockData.blockKey}"`);
     return null;
   }
-  const props = getProps(block, blockData, hoveredBlockKey, passedProps);
+  const props = getProps(
+    block,
+    blockData,
+    hoveredBlockKey,
+    passedProps,
+    combinedProps,
+    repeaterIndexes
+  );
   // return h(block.component, {
   //   ...props,
   //   blockHighlighterKey: blockData.key,
@@ -155,19 +219,36 @@ function renderBlock(
   );
 }
 
+export function previewRepeaterBlocksParser(
+  blocks: MappedDataBlocks,
+  hoveredBlockKey: string,
+  passedProps: DataBlockPropsModel,
+  combinedProps: ParsePropsGrouped,
+  repeaterIndexes: RepeaterIndexes
+) {
+  return blocks.map(block =>
+    renderBlock(block, hoveredBlockKey, passedProps, combinedProps, repeaterIndexes)
+  );
+}
+
 export function previewBlocksParser(
   blocks: MappedDataBlocks,
   hoveredBlockKey: string,
-  passedProps?: DataBlockPropsModel
+  passedProps?: DataBlockPropsModel,
+  combinedProps?: ParsePropsGrouped,
+  repeaterIndexes?: RepeaterIndexes
 ) {
-  return blocks.map(block => renderBlock(block, hoveredBlockKey, passedProps));
+  return blocks.map(block =>
+    renderBlock(block, hoveredBlockKey, passedProps, combinedProps, repeaterIndexes)
+  );
 }
 
 export function previewModuleParser(
   module: MappedDataModule,
   hoveredBlockKey: string,
-  passedProps?: DataBlockPropsModel
+  passedProps?: DataBlockPropsModel,
+  combinedProps?: ParsePropsGrouped
 ) {
   const { blocks } = module;
-  return previewBlocksParser(blocks, hoveredBlockKey, passedProps);
+  return previewBlocksParser(blocks, hoveredBlockKey, passedProps, combinedProps);
 }

@@ -1,28 +1,40 @@
 // @flow
+import { get } from 'lodash';
 import Module from 'blocks/groups/module/Module/Module';
 import type { DataBlockModel, SitePageDataBlocks } from '../blocks/models';
 import type { DataModule } from './models';
-import { getBlockUniqueId } from '../../blocks/utils';
+import { getBlockUniqueId, getModuleUniqueId } from '../../blocks/utils';
 import {
   getDataBlockCombinedProps,
   getDataBlockCombinedPropsConfig,
-  getDataBlockProps,
-  getDataBlockPropsConfig,
 } from '../../editor/components/EditorContent/components/EditorFields/state';
-import type { DataBlockPropsDetails } from '../blocks/state';
+import type {
+  AvailableDataBlockPropsDetails,
+  DataBlockPropDetail,
+  DataBlockPropsDetails,
+} from '../blocks/state';
+import { generateNewEmptyModuleBlock } from '../blocks/generator';
 
 export function getDataBlockLinkedPropsKeys(dataBlock: DataBlockModel): Array<string> {
   const combinedPropsConfig = getDataBlockCombinedPropsConfig(dataBlock);
-  console.log('combinedPropsConfig', combinedPropsConfig);
-
   return Object.keys(combinedPropsConfig).filter(
     propKey => !!combinedPropsConfig[propKey].propReference
   );
 }
 
+export function getReferencedPropFromAllPropsDetails(
+  referencedPropKey: string,
+  allAvailablePropsDetails: AvailableDataBlockPropsDetails
+): DataBlockPropDetail | null {
+  const splitPropPath = referencedPropKey.split('.');
+  const blockKey = splitPropPath[0];
+  const blockProps = get(allAvailablePropsDetails[blockKey], 'props', undefined);
+  return get(blockProps, referencedPropKey, null);
+}
+
 export function getNewModulePropsAndPropsConfig(
   dataBlock: DataBlockModel,
-  selectedModulePropsDetails: DataBlockPropsDetails
+  allAvailablePropsDetails: AvailableDataBlockPropsDetails
 ) {
   const dataBlockLinkedPropsKeys = getDataBlockLinkedPropsKeys(dataBlock);
   const props = getDataBlockCombinedProps(dataBlock);
@@ -31,15 +43,17 @@ export function getNewModulePropsAndPropsConfig(
   const newModulePropsConfig = {};
   dataBlockLinkedPropsKeys.forEach(propKey => {
     const referencedPropKey = props[propKey];
-    const referencedPropLabel = selectedModulePropsDetails[referencedPropKey].label;
-    const referencedPropValue = selectedModulePropsDetails[referencedPropKey].value;
-    if (props[propKey]) {
-      newModuleProps[referencedPropKey] = referencedPropValue;
+    const referencedProp = getReferencedPropFromAllPropsDetails(
+      referencedPropKey,
+      allAvailablePropsDetails
+    );
+    if (referencedProp) {
+      newModuleProps[propKey] = referencedProp.value;
     }
     if (propsConfig[propKey]) {
-      newModulePropsConfig[referencedPropKey] = {
+      newModulePropsConfig[propKey] = {
         ...propsConfig[propKey],
-        label: referencedPropLabel,
+        label: referencedProp.label,
         propReference: false,
       };
     }
@@ -50,25 +64,13 @@ export function getNewModulePropsAndPropsConfig(
   };
 }
 
-export function generateNewModule(
-  blocks: SitePageDataBlocks,
-  rootBlockKey: string,
+export function generateModule(
   name: string,
-  dataBlock: DataBlockModel,
-  selectedModulePropsDetails: DataBlockPropsDetails
+  blocks: SitePageDataBlocks,
+  moduleBlock: DataBlockModel
 ): DataModule {
-  const { props, propsConfig } = getNewModulePropsAndPropsConfig(
-    dataBlock,
-    selectedModulePropsDetails
-  );
-  const moduleBlock = Module.dataBlock({
-    rootBlockKey,
-    label: name,
-    props,
-    propsConfig,
-  });
   return {
-    key: getBlockUniqueId(),
+    key: getModuleUniqueId(),
     groupKey: 'Site',
     name,
     blocks: {
@@ -77,4 +79,29 @@ export function generateNewModule(
     },
     rootBlock: moduleBlock.key,
   };
+}
+
+export function generateNewModule(
+  blocks: SitePageDataBlocks,
+  rootBlockKey: string,
+  name: string,
+  dataBlock: DataBlockModel,
+  allAvailablePropsDetails: AvailableDataBlockPropsDetails
+): DataModule {
+  const { props, propsConfig } = getNewModulePropsAndPropsConfig(
+    dataBlock,
+    allAvailablePropsDetails
+  );
+  const moduleBlock = Module.dataBlock({
+    rootBlockKey,
+    label: name,
+    props,
+    propsConfig,
+  });
+  return generateModule(name, blocks, moduleBlock);
+}
+
+export function generateNewEmptyModule(name: string): DataModule {
+  const emptyRootBlock = generateNewEmptyModuleBlock(name);
+  return generateModule(name, [], emptyRootBlock);
 }

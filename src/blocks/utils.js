@@ -15,3 +15,19 @@ export function getBlockUniqueId(): string {
   return id;
   // return uniqueId('block_');
 }
+
+export function getModuleUniqueId(): string {
+  return getBlockUniqueId(); // todo - use firestore unique key
+}
+
+export function getPageUniqueId(): string {
+  return getBlockUniqueId(); // todo - use firestore unique key
+}
+
+export function getRepeaterDataUniqueId(): string {
+  return getBlockUniqueId(); // todo - use firestore unique key
+}
+
+export function getRepeaterDataModelFieldUniqueId(): string {
+  return getBlockUniqueId(); // todo - use firestore unique key
+}

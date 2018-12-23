@@ -3,6 +3,16 @@
 import type { DataBlockModel } from '../data/blocks/models';
 import type { BlockPropsConfigTypes, BlockPropsDisplaySections } from './props';
 
+export type RepeaterDataModelField = {
+  key: string,
+  label: string,
+  type: BlockPropsConfigTypes,
+};
+
+export type RepeaterDataModel = {
+  [string]: RepeaterDataModelField,
+};
+
 export type BlockModelPropsConfig = {
   label?: string,
   type?: BlockPropsConfigTypes,
@@ -10,6 +20,9 @@ export type BlockModelPropsConfig = {
   displaySection?: BlockPropsDisplaySections,
   custom?: boolean,
   propReference?: boolean,
+  repeaterReference?: boolean,
+  repeaterReferenceKey?: string,
+  repeaterDataModel?: RepeaterDataModel,
 };
 
 export type BlockPropsConfigModel = {

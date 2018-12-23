@@ -73,3 +73,7 @@ export const fieldLabel = css`
   padding-left: 3px;
   margin-bottom: 5px;
 `;
+
+export const fieldInactive = css`
+  color: ${colors.lightFaint};
+`;

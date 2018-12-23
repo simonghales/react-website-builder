@@ -2,24 +2,22 @@
 
 import type { DataBlockModel } from './models';
 import ModuleImport from '../../blocks/groups/module/ModuleImport/ModuleImport';
-import { getDataBlockLinkedPropsKeys } from '../modules/generator';
+import Module from '../../blocks/groups/module/Module/Module';
+import {
+  getDataBlockLinkedPropsKeys,
+  getReferencedPropFromAllPropsDetails,
+} from '../modules/generator';
 import {
   getDataBlockCombinedProps,
   getDataBlockCombinedPropsConfig,
 } from '../../editor/components/EditorContent/components/EditorFields/state';
-import type { DataBlockPropsDetails } from './state';
+import type { AvailableDataBlockPropsDetails, DataBlockPropsDetails } from './state';
 
 export function getNewModuleImportPropsAndPropsConfig(
   dataBlock: DataBlockModel,
-  selectedModulePropsDetails: DataBlockPropsDetails
+  allAvailablePropsDetails: AvailableDataBlockPropsDetails
 ) {
-  console.log('getNewModuleImportPropsAndPropsConfig: dataBlock', dataBlock);
-  console.log(
-    'getNewModuleImportPropsAndPropsConfig: selectedModulePropsDetails',
-    selectedModulePropsDetails
-  );
   const linkedPropsKeys = getDataBlockLinkedPropsKeys(dataBlock);
-  console.log('linkedPropsKeys', linkedPropsKeys);
   const props = getDataBlockCombinedProps(dataBlock);
   const propsConfig = getDataBlockCombinedPropsConfig(dataBlock);
   const newProps = {};
@@ -27,14 +25,15 @@ export function getNewModuleImportPropsAndPropsConfig(
 
   linkedPropsKeys.forEach(propKey => {
     const referencedPropKey = props[propKey];
-    const referencedPropLabel = selectedModulePropsDetails[referencedPropKey].label;
-    if (props[propKey]) {
-      newProps[referencedPropKey] = referencedPropKey;
-    }
-    if (propsConfig[propKey]) {
-      newPropsConfig[referencedPropKey] = {
+    const referencedProp = getReferencedPropFromAllPropsDetails(
+      referencedPropKey,
+      allAvailablePropsDetails
+    );
+    if (referencedProp) {
+      newProps[propKey] = referencedPropKey;
+      newPropsConfig[propKey] = {
         ...propsConfig[propKey],
-        label: referencedPropLabel,
+        label: referencedProp.label,
       };
     }
   });
@@ -48,11 +47,19 @@ export function generateNewModuleTemplateBlock(
   moduleKey: string,
   label: string,
   dataBlock: DataBlockModel,
-  selectedModulePropsDetails: DataBlockPropsDetails
+  allAvailablePropsDetails: AvailableDataBlockPropsDetails
 ): DataBlockModel {
   const { props, propsConfig } = getNewModuleImportPropsAndPropsConfig(
     dataBlock,
-    selectedModulePropsDetails
+    allAvailablePropsDetails
   );
   return ModuleImport.dataBlock({ moduleKey, label, props, propsConfig });
+}
+
+export function generateNewEmptyModuleBlock(label: string): DataBlockModel {
+  return Module.dataBlock({
+    label,
+    props: {},
+    propsConfig: {},
+  });
 }

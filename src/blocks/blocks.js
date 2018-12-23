@@ -13,6 +13,7 @@ import type { DataModule, DataModules } from '../data/modules/models';
 import { isBlockModuleImportBlock } from './state';
 import { getModuleFromModules, getModuleRootBlock } from '../data/modules/state';
 import { getDataBlockPropsConfig } from '../editor/components/EditorContent/components/EditorFields/state';
+import Repeater from './groups/functional/Repeater/Repeater';
 
 export const basicBlocks: BlockGroupModel = {
   key: blockGroups.Basic,
@@ -38,6 +39,13 @@ export const htmlBlocks: BlockGroupModel = {
   },
 };
 
+export const functionalBlocks: BlockGroupModel = {
+  key: blockGroups.Functional,
+  blocks: {
+    [Repeater.key]: Repeater,
+  },
+};
+
 type AllBlocksModel = {
   [string]: BlockGroupModel,
 };
@@ -46,6 +54,7 @@ export const allBlocks: AllBlocksModel = {
   [basicBlocks.key]: basicBlocks,
   [moduleBlocks.key]: moduleBlocks,
   [htmlBlocks.key]: htmlBlocks,
+  [functionalBlocks.key]: functionalBlocks,
 };
 
 export const addableBlocks: AllBlocksModel = {
@@ -64,7 +73,7 @@ export function getBlock(blockGroup: BlockGroupModel, blockKey: string): BlockMo
 export function getBlockFromDataBlock(dataBlock: DataBlockModel): BlockModel {
   const blockGroup = getBlockGroup(dataBlock.groupKey);
   if (!blockGroup) {
-    throw new Error(`Couldn't match block group.`);
+    throw new Error(`Couldn't match block group. ${dataBlock.groupKey}`);
   }
   const block = getBlock(blockGroup, dataBlock.blockKey);
   if (!block) {

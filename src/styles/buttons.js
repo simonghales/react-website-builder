@@ -28,3 +28,38 @@ export const squareButton = css`
     //color: ${colors.blackBlue};
   }
 `;
+
+const solidButtonBackground = css`
+  background: linear-gradient(to bottom, ${colors.blackInactiveBlue}, ${colors.darkBlue});
+`;
+
+export const solidButton = css`
+  ${solidButtonBackground};
+  border-top: 3px solid ${colors.brightBlue};
+  height: 60px;
+  padding: 10px 10px 12px 10px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: ${colors.brightBlue};
+
+  &:hover {
+    background: ${colors.brightBlue};
+    color: ${colors.white};
+  }
+`;
+
+export const solidButtonDisabled = css`
+  cursor: default;
+  color: ${colors.lightFaint};
+  border-color: ${colors.lightFaint};
+
+  &:hover {
+    ${solidButtonBackground};
+    color: ${colors.lightFaint};
+  }
+`;

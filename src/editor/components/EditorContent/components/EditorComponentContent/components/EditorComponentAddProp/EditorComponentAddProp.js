@@ -17,7 +17,7 @@ import type { ReduxState } from '../../../../../../../state/redux/store';
 import { addNewPropToBlock } from '../../../../../../../state/redux/editor/reducer';
 import { getCurrentModuleKey } from '../../../../../../../state/redux/editor/selector';
 
-const selectInputOptions: Array<SelectOption> = blockPropsCustomAllowedTypes.map(
+export const propTypeSelectInputOptions: Array<SelectOption> = blockPropsCustomAllowedTypes.map(
   (type: string) => ({
     value: type,
     label: type,
@@ -38,7 +38,7 @@ type State = {
   propType: string,
 };
 
-const defaultPropType = selectInputOptions[0].value;
+export const defaultPropType = propTypeSelectInputOptions[0].value;
 
 class EditorComponentAddProp extends Component<Props, State> {
   constructor(props: Props) {
@@ -159,7 +159,7 @@ class EditorComponentAddProp extends Component<Props, State> {
             <div className={styles.columnLabelClass}>Prop Type</div>
             <div>
               <SelectInput
-                options={selectInputOptions}
+                options={propTypeSelectInputOptions}
                 updateStyle={this.handleSetPropType}
                 styleValue={propType}
                 isMulti={false}

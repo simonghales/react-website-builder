@@ -14,6 +14,8 @@ import {
   updateBlockPropIsLinked,
   updateBlockStyle,
   updateBlockStylesMixinsOrderByKeys,
+  updateDataBlockPropConfig,
+  wrapBlockWithBlock,
 } from './modifiers';
 import type { BlocksOrder } from './modifiers';
 import type { DataModule, DataModules } from '../../../data/modules/models';
@@ -21,7 +23,9 @@ import type { MixinsModel } from '../../../data/mixins/models';
 import { getBlockFromModuleBlocks, getModuleRootBlockKey } from '../../../data/modules/state';
 import { getBlockDefaultDataBlock } from '../../../blocks/state';
 import type { DataBlockModel } from '../../../data/blocks/models';
-import type { PagesDataModel } from '../../../data/pages/models';
+import type { PageDataModel, PagesDataModel } from '../../../data/pages/models';
+import type { BlockModelPropsConfig } from '../../../blocks/models';
+import { getDataBlockPropsConfig } from '../../../editor/components/EditorContent/components/EditorFields/state';
 
 export type EditorReduxState = {
   pages: PagesDataModel,
@@ -30,6 +34,147 @@ export type EditorReduxState = {
 };
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
+
+const ADD_NEW_PAGE = 'ADD_NEW_PAGE';
+
+type AddNewPagePayload = {
+  page: PageDataModel,
+  module: DataModule,
+};
+
+type AddNewPageAction = {
+  type: string,
+  payload: AddNewPagePayload,
+};
+
+export function addNewPageReducer(page: PageDataModel, module: DataModule): AddNewPageAction {
+  return {
+    type: ADD_NEW_PAGE,
+    payload: {
+      page,
+      module,
+    },
+  };
+}
+
+function handleAddNewPageReducer(
+  state: EditorReduxState,
+  { page, module }: AddNewPagePayload
+): EditorReduxState {
+  return {
+    ...state,
+    pages: {
+      ...state.pages,
+      [page.key]: page,
+    },
+    modules: {
+      ...state.modules,
+      [module.key]: module,
+    },
+  };
+}
+
+const WRAP_BLOCK_WITH_NEW_BLOCK = 'WRAP_BLOCK_WITH_NEW_BLOCK';
+
+type WrapBlockWithNewBlockPayload = {
+  blockKey: string,
+  newBlock: DataBlockModel,
+  moduleKey: string,
+};
+
+type WrapBlockWithNewBlockAction = {
+  type: string,
+  payload: WrapBlockWithNewBlockPayload,
+};
+
+export function wrapBlockWithNewBlockRedux(
+  blockKey: string,
+  newBlock: DataBlockModel,
+  moduleKey: string
+): WrapBlockWithNewBlockAction {
+  return {
+    type: WRAP_BLOCK_WITH_NEW_BLOCK,
+    payload: {
+      blockKey,
+      newBlock,
+      moduleKey,
+    },
+  };
+}
+
+function handleWrapBlockWithNewBlockRedux(
+  state: EditorReduxState,
+  { blockKey, newBlock, moduleKey }: WrapBlockWithNewBlockPayload
+): EditorReduxState {
+  const selectedModule = getModuleFromState(state, moduleKey);
+  const selectedBlock = getBlockFromModuleBlocks(blockKey, selectedModule);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [selectedModule.key]: {
+        ...selectedModule,
+        blocks: wrapBlockWithBlock(selectedModule.blocks, selectedBlock.key, newBlock),
+      },
+    },
+  };
+}
+
+const UPDATE_BLOCK_PROP_CONFIG = 'UPDATE_BLOCK_PROP_CONFIG';
+
+type UpdateBlockPropConfigPayload = {
+  propKey: string,
+  propConfig: BlockModelPropsConfig,
+  moduleKey: string,
+  blockKey: string,
+};
+
+type UpdateBlockPropConfigAction = {
+  type: string,
+  payload: UpdateBlockPropConfigPayload,
+};
+
+export function updateBlockPropConfig(
+  propKey: string,
+  propConfig: BlockModelPropsConfig,
+  moduleKey: string,
+  blockKey: string
+): UpdateBlockPropConfigAction {
+  return {
+    type: UPDATE_BLOCK_PROP_CONFIG,
+    payload: {
+      propKey,
+      propConfig,
+      moduleKey,
+      blockKey,
+    },
+  };
+}
+
+function handleUpdateBlockPropConfig(
+  state: EditorReduxState,
+  { propKey, propConfig, moduleKey, blockKey }: UpdateBlockPropConfigPayload
+): EditorReduxState {
+  const module = getModuleFromState(state, moduleKey);
+  const dataBlock = getBlockFromModuleBlocks(blockKey, module);
+  const propsConfig = getDataBlockPropsConfig(dataBlock);
+  return {
+    ...state,
+    modules: {
+      ...state.modules,
+      [module.key]: {
+        ...module,
+        blocks: {
+          ...module.blocks,
+          [blockKey]: {
+            ...dataBlock,
+            propsConfig: updateDataBlockPropConfig(propsConfig, propKey, propConfig),
+          },
+        },
+      },
+    },
+  };
+}
 
 const ADD_NEW_PROP_TO_BLOCK = 'ADD_NEW_PROP_TO_BLOCK';
 
@@ -696,6 +841,9 @@ type Actions =
   | CreateNewModuleFromSelectedBlockAction;
 
 const ACTION_HANDLERS = {
+  [WRAP_BLOCK_WITH_NEW_BLOCK]: handleWrapBlockWithNewBlockRedux,
+  [ADD_NEW_PAGE]: handleAddNewPageReducer,
+  [UPDATE_BLOCK_PROP_CONFIG]: handleUpdateBlockPropConfig,
   [ADD_NEW_PROP_TO_BLOCK]: handleAddNewPropToBlock,
   [SET_PROP_LINKED_REFERENCE]: handleSetPropLinkedReference,
   [SET_INITIAL_MODULE_HISTORY]: handleSetInitialModuleHistory,

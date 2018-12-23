@@ -6,6 +6,13 @@ import styles from './styles';
 import EditorSidebarPage from './components/EditorSidebarPage/EditorSidebarPage';
 import EditorSidebarSave from './components/EditorSidebarSave/EditorSidebarSave';
 import { editorRoutes } from '../../routing';
+import EditorModuleHandler from '../EditorModuleHandler/EditorModuleHandler';
+
+const EditorSidebarModuleHandler = () => (
+  <EditorModuleHandler>
+    <EditorSidebarModule />
+  </EditorModuleHandler>
+);
 
 class EditorSidebar extends Component<{}> {
   render() {
@@ -13,7 +20,7 @@ class EditorSidebar extends Component<{}> {
       <div className={styles.containerClass}>
         <div className={styles.contentClass}>
           <Route exact path={editorRoutes.page} component={EditorSidebarPage} />
-          <Route exact path={editorRoutes.pageWithModule} component={EditorSidebarModule} />
+          <Route exact path={editorRoutes.pageWithModule} component={EditorSidebarModuleHandler} />
         </div>
         <div className={styles.actionClass}>
           <EditorSidebarSave />

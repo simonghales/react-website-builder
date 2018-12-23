@@ -7,9 +7,13 @@ import styles from '../../styles';
 import type { ReduxState } from '../../../../../../../../../state/redux/store';
 import {
   getCurrentModuleKey,
+  getDataBlockAllAvailablePropsDetailsSelector,
   getModuleBlockPropsDetails,
 } from '../../../../../../../../../state/redux/editor/selector';
-import { getPropLabelFromDataBlocksPropsDetails } from '../../../../../../../../../data/blocks/state';
+import {
+  getPropDisplayLabelFromAllPropsDetails,
+  getPropLabelFromDataBlocksPropsDetails,
+} from '../../../../../../../../../data/blocks/state';
 import { setPropLinkedReference } from '../../../../../../../../../state/redux/editor/reducer';
 
 type Props = {
@@ -67,10 +71,13 @@ LinkedHeader.defaultProps = {
 };
 
 const mapStateToProps = (state: ReduxState, { linkedPropKey }: Props) => {
-  const rootBlockPropsList = getModuleBlockPropsDetails(state);
+  const allAvailablePropsDetails = getDataBlockAllAvailablePropsDetailsSelector(state);
   return {
     moduleKey: getCurrentModuleKey(state),
-    linkedPropLabel: getPropLabelFromDataBlocksPropsDetails(linkedPropKey, rootBlockPropsList),
+    linkedPropLabel: getPropDisplayLabelFromAllPropsDetails(
+      allAvailablePropsDetails,
+      linkedPropKey
+    ),
   };
 };
 

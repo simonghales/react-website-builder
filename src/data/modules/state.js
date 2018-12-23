@@ -2,7 +2,7 @@
 
 import type { DataModule, DataModules, MappedDataModule } from './models';
 import type { DataBlockModel, SitePageDataBlocks } from '../blocks/models';
-import { getBlockFromBlocks, getMappedDataBlocks } from '../blocks/models';
+import { getDataBlockFromBlocks, getMappedDataBlocks } from '../blocks/models';
 import type { MixinsModel } from '../mixins/models';
 import { isDataBlockAModuleTemplate } from '../blocks/state';
 
@@ -19,7 +19,7 @@ export function getModuleBlocks(module: DataModule): SitePageDataBlocks {
 export function getModuleRootBlock(module: DataModule): DataBlockModel {
   const { rootBlock: rootBlockKey } = module;
   const blocks = getModuleBlocks(module);
-  const rootBlock = getBlockFromBlocks(blocks, rootBlockKey);
+  const rootBlock = getDataBlockFromBlocks(blocks, rootBlockKey);
   if (!rootBlock) {
     throw new Error(`No root block found within module.`);
   }

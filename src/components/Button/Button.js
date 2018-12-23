@@ -4,6 +4,7 @@ import { cx } from 'emotion';
 import styles from './styles';
 
 export const buttonTypes = {
+  solid: 'solid',
   slim: 'slim',
   slimIcon: 'slimIcon',
 };
@@ -12,24 +13,29 @@ type ButtonTypes = $Keys<typeof buttonTypes>;
 
 type Props = {
   children: any,
-  type: ButtonTypes,
+  disabled?: boolean,
+  buttonType?: ButtonTypes,
   onClick: () => void,
 };
 
-const Button = ({ children, type, onClick }: Props) => (
+const Button = ({ children, buttonType, onClick, disabled, ...otherProps }: Props) => (
   <button
     className={cx(styles.buttonClass, {
-      [styles.buttonSlimClass]: type === buttonTypes.slim,
-      [styles.buttonSlimIconClass]: type === buttonTypes.slimIcon,
+      [styles.buttonSlimClass]: buttonType === buttonTypes.slim,
+      [styles.buttonSlimIconClass]: buttonType === buttonTypes.slimIcon,
+      [styles.buttonSolidClass]: buttonType === buttonTypes.solid,
+      [styles.classNames.buttonDisabled]: disabled,
     })}
     onClick={onClick}
+    {...otherProps}
   >
     {children}
   </button>
 );
 
 Button.defaultProps = {
-  type: buttonTypes.slim,
+  disabled: false,
+  buttonType: buttonTypes.slim,
 };
 
 export default Button;

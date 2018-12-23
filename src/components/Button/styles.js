@@ -1,9 +1,12 @@
 // @flow
-import { transparentize } from 'polished';
 import { css } from 'emotion';
 import colors from '../../styles/config/colors';
 import fontWeights from '../../styles/config/fontWeights';
-import { buttonReset } from '../../styles/buttons';
+import { buttonReset, solidButton, solidButtonDisabled } from '../../styles/buttons';
+
+const classNames = {
+  buttonDisabled: 'buttonDisabled',
+};
 
 const buttonClass = css`
   ${buttonReset};
@@ -33,8 +36,21 @@ const buttonSlimIconClass = css`
   }
 `;
 
+const buttonSolidClass = css`
+  ${solidButton};
+  display: block;
+  text-align: center;
+  width: 100%;
+
+  &.${classNames.buttonDisabled} {
+    ${solidButtonDisabled};
+  }
+`;
+
 export default {
+  classNames,
   buttonClass,
   buttonSlimClass,
   buttonSlimIconClass,
+  buttonSolidClass,
 };

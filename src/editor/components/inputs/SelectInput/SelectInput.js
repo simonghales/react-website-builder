@@ -5,23 +5,29 @@ import CreatableSelect from 'react-select/lib/Creatable';
 import colors from '../../../../styles/config/colors';
 import measurements from '../../../../styles/config/measurements';
 import { parseSelectInputStyleValue } from './state';
-import { inputStylesConfig } from "../TextInput/styles";
+import { inputStylesConfig } from '../../../../styles/inputs';
 
 const customStyles = {
   control: (baseStyles, state) => ({
     ...baseStyles,
-    backgroundColor: state.isFocused ? inputStylesConfig.backgroundHoverColor : inputStylesConfig.backgroundColor,
+    backgroundColor: state.isFocused
+      ? inputStylesConfig.backgroundHoverColor
+      : inputStylesConfig.backgroundColor,
     borderWidth: 2,
     borderStyle: 'solid',
-    borderColor: state.isFocused ? inputStylesConfig.borderFocusedColor :inputStylesConfig.backgroundColor,
+    borderColor: state.isFocused
+      ? inputStylesConfig.borderFocusedColor
+      : inputStylesConfig.backgroundColor,
     boxShadow: 0,
     borderRadius: 3,
     minHeight: `${inputStylesConfig.minHeight}px`,
     transition: '',
     ':hover': {
-      borderColor: state.isFocused ? inputStylesConfig.borderFocusedColor :inputStylesConfig.backgroundHoverColor,
+      borderColor: state.isFocused
+        ? inputStylesConfig.borderFocusedColor
+        : inputStylesConfig.backgroundHoverColor,
       backgroundColor: inputStylesConfig.backgroundHoverColor,
-    }
+    },
   }),
   placeholder: baseStyles => ({
     ...baseStyles,
@@ -112,6 +118,11 @@ function formatGroupLabel() {
 export type SelectOption = {
   value: string,
   label: string,
+};
+
+export type SelectGroup = {
+  label: string,
+  options: Array<SelectOption>,
 };
 
 type Props = {

@@ -10,6 +10,7 @@ export type ModulesSelectedBlockKeys = {
 
 export type UiReduxState = {
   addingBlock: boolean,
+  creatingPage: boolean,
   hoveredBlockKey: string,
   selectedModuleKey: string,
   selectedModulesHistory: Array<string>,
@@ -20,13 +21,46 @@ export type UiReduxState = {
 
 export const initialUiReduxState: UiReduxState = {
   addingBlock: false,
+  creatingPage: false,
   hoveredBlockKey: '',
   selectedModuleKey: '',
   selectedModulesHistory: [],
-  modulesSelectedBlockKeys: {},
+  modulesSelectedBlockKeys: {
+    DUMMY_INTRO_MODULE: 'DUMMY_BLOCK_REPEATER',
+  },
   selectedPageKey: '',
   pageEditorMode: pageEditorModes.edit,
 };
+
+const SET_CREATING_PAGE = 'SET_CREATING_PAGE';
+
+type SetCreatingPagePayload = {
+  isCreating: boolean,
+};
+
+type SetCreatingPageAction = {
+  type: string,
+  payload: SetCreatingPagePayload,
+};
+
+export function setCreatingPageRedux(isCreating: boolean): SetCreatingPageAction {
+  return {
+    type: SET_CREATING_PAGE,
+    payload: {
+      isCreating,
+    },
+  };
+}
+
+function handleSetCreatingPage(
+  state: UiReduxState,
+  { isCreating }: SetCreatingPagePayload
+): UiReduxState {
+  return {
+    ...state,
+    creatingPage: isCreating,
+  };
+}
 
 const SET_PAGE_EDITOR_MODE = 'SET_PAGE_EDITOR_MODE';
 
@@ -274,6 +308,7 @@ function handleSetAddingBlock(
 type Actions = SetAddingBlockAction;
 
 const ACTION_HANDLERS = {
+  [SET_CREATING_PAGE]: handleSetCreatingPage,
   [SET_PAGE_EDITOR_MODE]: handleSetPageEditorMode,
   [SET_SELECTED_PAGE_KEY]: handleSetSelectedPageKey,
   [SET_INITIAL_SELECTED_MODULE_HISTORY]: handleSetInitialSelectedModuleHistory,
