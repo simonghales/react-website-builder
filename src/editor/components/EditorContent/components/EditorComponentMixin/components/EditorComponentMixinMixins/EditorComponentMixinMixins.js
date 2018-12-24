@@ -3,13 +3,11 @@ import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 import EditorStylesMixins from '../../../EditorStylesView/components/EditorStylesMixins/EditorStylesMixins';
 import type { ReduxState } from '../../../../../../../state/redux/store';
-import { getSelectedModuleSelectedBlockMappedMixins } from '../../../../../../../state/redux/editor/state';
-import { getCurrentModuleKey } from '../../../../../../../state/redux/editor/selector';
-import {
-  removeBlockStylesMixin,
-  updateBlockStylesMixinsOrder,
-} from '../../../../../../../state/redux/editor/reducer';
 import EditorComponentMixinAddMixinsDropdown from '../EditorComponentMixinAddMixinsDropdown/EditorComponentMixinAddMixinsDropdown';
+import {
+  removeMixinFromMixinsRedux,
+  updateMixinMixinsOrderRedux,
+} from '../../../../../../../state/redux/editor/reducer';
 
 const EditorComponentMixinMixins = (props: {}) => (
   <EditorStylesMixins {...props} AddMixinsDropdown={EditorComponentMixinAddMixinsDropdown} />
@@ -17,14 +15,21 @@ const EditorComponentMixinMixins = (props: {}) => (
 
 const mapStateToProps = (state: ReduxState) => ({});
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  dispatchUpdateMixinsOrder: (mixinKey: string, mixinKeys: Array<string>) =>
+    updateMixinMixinsOrderRedux(mixinKey, mixinKeys),
+  dispatchRemoveMixin: (mixinKey: string, mixinToRemoveKey: string) =>
+    removeMixinFromMixinsRedux(mixinKey, mixinToRemoveKey),
+};
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
   ...stateProps,
   ...dispatchProps,
-  updateMixinsOrder: (blockKey: string, mixinKeys: Array<string>) => {}, // todo
-  removeMixin: (blockKey: string, mixinKey: string) => {}, // todo
+  updateMixinsOrder: (mixinKeys: Array<string>) =>
+    dispatchProps.dispatchUpdateMixinsOrder(ownProps.mixinKey, mixinKeys),
+  removeMixin: (mixinToRemoveKey: string) =>
+    dispatchProps.dispatchRemoveMixin(ownProps.mixinKey, mixinToRemoveKey),
 });
 
 export default connect(

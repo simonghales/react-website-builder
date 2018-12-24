@@ -8,7 +8,6 @@ import type { SelectListGroupModel } from '../../../../../../../SelectList/model
 
 type Props = {
   addMixinGroups: AddMixinGroupsModel,
-  blockKey: string,
   addMixin: (blockKey: string, mixinKey: string) => void,
   close: () => void,
 };
@@ -24,8 +23,8 @@ class AddMixinDropdown extends Component<Props> {
   };
 
   handleAddMixin = (mixinKey: string) => {
-    const { addMixin, blockKey } = this.props;
-    addMixin(blockKey, mixinKey);
+    const { addMixin } = this.props;
+    addMixin(mixinKey);
     this.handleClose();
   };
 

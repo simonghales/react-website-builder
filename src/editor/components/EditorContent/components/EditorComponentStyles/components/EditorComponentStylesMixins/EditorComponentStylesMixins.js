@@ -9,8 +9,15 @@ import {
   removeBlockStylesMixin,
   updateBlockStylesMixinsOrder,
 } from '../../../../../../../state/redux/editor/reducer';
+import EditorComponentStylesAddMixinsDropdown from '../EditorComponentStylesAddMixinsDropdown/EditorComponentStylesAddMixinsDropdown';
 
-const EditorComponentStylesMixins = (props: {}) => <EditorStylesMixins {...props} createMixinEnabled />;
+const EditorComponentStylesMixins = (props: {}) => (
+  <EditorStylesMixins
+    {...props}
+    createMixinEnabled
+    AddMixinsDropdown={EditorComponentStylesAddMixinsDropdown}
+  />
+);
 
 const mapStateToProps = (state: ReduxState) => ({
   mixins: getSelectedModuleSelectedBlockMappedMixins(state),
@@ -28,10 +35,10 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
   ...stateProps,
   ...dispatchProps,
-  updateMixinsOrder: (blockKey: string, mixinKeys: Array<string>) =>
-    dispatchProps.dispatchUpdateMixinsOrder(blockKey, mixinKeys, stateProps.moduleKey),
-  removeMixin: (blockKey: string, mixinKey: string) =>
-    dispatchProps.dispatchRemoveMixin(blockKey, mixinKey, stateProps.moduleKey),
+  updateMixinsOrder: (mixinKeys: Array<string>) =>
+    dispatchProps.dispatchUpdateMixinsOrder(ownProps.blockKey, mixinKeys, stateProps.moduleKey),
+  removeMixin: (mixinKey: string) =>
+    dispatchProps.dispatchRemoveMixin(ownProps.blockKey, mixinKey, stateProps.moduleKey),
 });
 
 export default connect(

@@ -3,28 +3,22 @@ import React from 'react';
 import connect from 'react-redux/es/connect/connect';
 import EditorStylesView from '../EditorStylesView/EditorStylesView';
 import type { ReduxState } from '../../../../../state/redux/store';
-import {
-  getCurrentModuleKey,
-  getMixins,
-  getSelectedBlockStyle,
-} from '../../../../../state/redux/editor/selector';
-import { getSelectedModuleSelectedBlockMixins } from '../../../../../state/redux/editor/state';
+import { getCurrentModuleKey, getMixins } from '../../../../../state/redux/editor/selector';
 import { getEditorMappedBlockStyles } from '../../../../../data/styles/state';
-import { setBlockStyleValue } from '../../../../../state/redux/editor/reducer';
 import {
   getMixinFromMixins,
   getMixinFullMixins,
   getMixinStyles,
 } from '../../../../../data/mixins/state';
-import EditorComponentStylesMixins from '../EditorComponentStyles/components/EditorComponentStylesMixins/EditorComponentStylesMixins';
 import EditorComponentMixinMixins from './components/EditorComponentMixinMixins/EditorComponentMixinMixins';
+import { setMixinStyleValueRedux } from '../../../../../state/redux/editor/reducer';
 
 const EditorComponentMixin = (props: {}) => {
-  const { mixinMixins } = props;
+  const { mixinMixins, mixinKey } = props;
   return (
     <EditorStylesView
       {...props}
-      mixinsSection={<EditorComponentMixinMixins mixins={mixinMixins} />}
+      mixinsSection={<EditorComponentMixinMixins mixins={mixinMixins} mixinKey={mixinKey} />}
     />
   );
 };
@@ -42,13 +36,23 @@ const mapStateToProps = (state: ReduxState, { mixinKey }: { mixinKey: string }) 
   };
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  dispatchUpdateStyle: (
+    cssKey: string,
+    modifier: string,
+    section: string,
+    value: string,
+    mixinKey: string
+  ) => setMixinStyleValueRedux(cssKey, modifier, section, value, mixinKey),
+};
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
   ...stateProps,
   ...dispatchProps,
-  updateStyle: () => {}, // todo
+  updateStyle: (cssKey: string, modifier: string, section: string, value: string) => {
+    dispatchProps.dispatchUpdateStyle(cssKey, modifier, section, value, ownProps.mixinKey);
+  },
 });
 
 export default connect(

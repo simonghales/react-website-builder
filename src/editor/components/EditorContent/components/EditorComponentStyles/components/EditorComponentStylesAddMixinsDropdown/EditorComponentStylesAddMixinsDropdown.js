@@ -34,8 +34,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
   ...stateProps,
   ...dispatchProps,
-  addMixin: (blockKey: string, mixinKey: string) =>
-    dispatchProps.dispatchAddMixin(blockKey, mixinKey, stateProps.moduleKey),
+  addMixin: (mixinKey: string) =>
+    dispatchProps.dispatchAddMixin(stateProps.blockKey, mixinKey, stateProps.moduleKey),
 });
 
 export default connect(

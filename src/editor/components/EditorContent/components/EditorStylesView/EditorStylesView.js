@@ -146,7 +146,6 @@ const dimensionsCssProperties: {
 };
 
 type Props = {
-  blockKey: string,
   disabled: boolean,
   editorMappedStyles: EditorMappedStylesContainer,
   updateStyle: (
@@ -163,8 +162,8 @@ class EditorStylesView extends Component<Props> {
   handleUpdateStyle = (cssKey: string, value: string) => {
     const modifier = 'default'; // todo - variable
     const section = 'editor'; // todo - variable
-    const { updateStyle, blockKey } = this.props;
-    updateStyle(blockKey, cssKey, modifier, section, value);
+    const { updateStyle } = this.props;
+    updateStyle(cssKey, modifier, section, value);
   };
 
   getStyleUpdate = (cssKey: string) => (value: string) => {
@@ -227,14 +226,14 @@ class EditorStylesView extends Component<Props> {
   }
 
   render() {
-    const { blockKey, disabled, mixinsSection } = this.props;
+    const { disabled, mixinsSection } = this.props;
     if (disabled) {
       return <DisabledMessage message="This block cannot be styled." />;
     }
     return (
       <EditorLayout>
         <EditorLayoutColumn columns={8}>
-          <EditorFields fieldGroups={this.getMainFieldGroups()} blockKey={blockKey} />
+          <EditorFields fieldGroups={this.getMainFieldGroups()} />
         </EditorLayoutColumn>
         <EditorLayoutColumn columns={1} />
         <EditorLayoutColumn columns={5}>{mixinsSection}</EditorLayoutColumn>

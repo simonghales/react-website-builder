@@ -9,6 +9,7 @@ import {
   getCurrentModuleKey,
   getDataBlockAllAvailablePropsDetailsSelector,
   getModuleBlockPropsDetails,
+  getSelectedBlockKey,
 } from '../../../../../../../../../state/redux/editor/selector';
 import {
   getPropDisplayLabelFromAllPropsDetails,
@@ -18,7 +19,6 @@ import { setPropLinkedReference } from '../../../../../../../../../state/redux/e
 
 type Props = {
   propKey: string,
-  blockKey: string,
   isLinked: boolean,
   linkedPropKey?: string,
   linkedPropLabel: string,
@@ -73,6 +73,7 @@ LinkedHeader.defaultProps = {
 const mapStateToProps = (state: ReduxState, { linkedPropKey }: Props) => {
   const allAvailablePropsDetails = getDataBlockAllAvailablePropsDetailsSelector(state);
   return {
+    blockKey: getSelectedBlockKey(state),
     moduleKey: getCurrentModuleKey(state),
     linkedPropLabel: getPropDisplayLabelFromAllPropsDetails(
       allAvailablePropsDetails,
@@ -91,7 +92,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...stateProps,
   ...dispatchProps,
   setLinked: (propKey: string, isLinked: boolean) =>
-    dispatchProps.dispatchSetLinked(propKey, isLinked, ownProps.blockKey, stateProps.moduleKey),
+    dispatchProps.dispatchSetLinked(propKey, isLinked, stateProps.blockKey, stateProps.moduleKey),
 });
 
 export default connect(

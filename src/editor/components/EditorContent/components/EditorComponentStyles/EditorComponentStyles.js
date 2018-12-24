@@ -49,15 +49,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   ...ownProps,
   ...stateProps,
   ...dispatchProps,
-  updateStyle: (
-    blockKey: string,
-    cssKey: string,
-    modifier: string,
-    section: string,
-    value: string
-  ) =>
+  updateStyle: (cssKey: string, modifier: string, section: string, value: string) =>
     dispatchProps.dispatchUpdateStyle(
-      blockKey,
+      ownProps.blockKey,
       cssKey,
       modifier,
       section,

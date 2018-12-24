@@ -3,14 +3,12 @@ import React, { Component } from 'react';
 import { MdAdd, MdClose } from 'react-icons/md';
 import type { DataBlockMappedMixinsModel } from '../../../../../../../data/blocks/models';
 import MixinList from './components/MixinList/MixinList';
-import AddMixinDropdown from './components/AddMixinDropdown/AddMixinDropdown';
 import EditorFieldGroup from '../../../EditorFields/components/EditorFieldGroup/EditorFieldGroup';
 import IconButton from '../../../../../../../components/IconButton/IconButton';
 import Button from '../../../../../../../components/Button/Button';
 import styles from './styles';
 
 type Props = {
-  blockKey: string,
   mixins: DataBlockMappedMixinsModel,
   createMixinEnabled?: boolean,
   AddMixinsDropdown: any,
@@ -64,7 +62,6 @@ class EditorStylesMixins extends Component<Props, State> {
 
   render() {
     const {
-      blockKey,
       mixins,
       removeMixin,
       updateMixinsOrder,
@@ -92,9 +89,9 @@ class EditorStylesMixins extends Component<Props, State> {
         )}
         <MixinList
           mixins={mixins}
-          removeMixin={(mixinKey: string) => removeMixin(blockKey, mixinKey)}
+          removeMixin={(mixinKey: string) => removeMixin(mixinKey)}
           onChange={(mixinKeys: Array<string>) => {
-            updateMixinsOrder(blockKey, mixinKeys);
+            updateMixinsOrder(mixinKeys);
           }}
         />
         {addingMixin && <AddMixinsDropdown close={this.closeAddMixin} addedMixins={mixins} />}
