@@ -1,23 +1,19 @@
 // @flow
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { MdAdd, MdClose } from 'react-icons/md';
-import type { ReduxState } from '../../../../../../../state/redux/store';
-import { getSelectedModuleSelectedBlockMappedMixins } from '../../../../../../../state/redux/editor/state';
 import type { DataBlockMappedMixinsModel } from '../../../../../../../data/blocks/models';
-import {
-  removeBlockStylesMixin,
-  updateBlockStylesMixinsOrder,
-} from '../../../../../../../state/redux/editor/reducer';
 import MixinList from './components/MixinList/MixinList';
 import AddMixinDropdown from './components/AddMixinDropdown/AddMixinDropdown';
 import EditorFieldGroup from '../../../EditorFields/components/EditorFieldGroup/EditorFieldGroup';
 import IconButton from '../../../../../../../components/IconButton/IconButton';
-import { getCurrentModuleKey } from '../../../../../../../state/redux/editor/selector';
+import Button from '../../../../../../../components/Button/Button';
+import styles from './styles';
 
 type Props = {
   blockKey: string,
   mixins: DataBlockMappedMixinsModel,
+  createMixinEnabled?: boolean,
+  AddMixinsDropdown: any,
   removeMixin: (blockKey: string, mixinKey: string) => void,
   updateMixinsOrder: (blockKey: string, mixinKeys: Array<string>) => void,
 };
@@ -43,6 +39,10 @@ const AddButton = ({
 );
 
 class EditorStylesMixins extends Component<Props, State> {
+  static defaultProps = {
+    createMixinEnabled: false,
+  };
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -63,7 +63,14 @@ class EditorStylesMixins extends Component<Props, State> {
   };
 
   render() {
-    const { blockKey, mixins, removeMixin, updateMixinsOrder } = this.props;
+    const {
+      blockKey,
+      mixins,
+      removeMixin,
+      updateMixinsOrder,
+      createMixinEnabled,
+      AddMixinsDropdown,
+    } = this.props;
     const { addingMixin } = this.state;
     return (
       <EditorFieldGroup
@@ -78,6 +85,11 @@ class EditorStylesMixins extends Component<Props, State> {
           />
         }
       >
+        {createMixinEnabled && (
+          <div className={styles.createMixinContainerClass}>
+            <Button onClick={() => {}}>Create mixin</Button>
+          </div>
+        )}
         <MixinList
           mixins={mixins}
           removeMixin={(mixinKey: string) => removeMixin(blockKey, mixinKey)}
@@ -85,36 +97,10 @@ class EditorStylesMixins extends Component<Props, State> {
             updateMixinsOrder(blockKey, mixinKeys);
           }}
         />
-        {addingMixin && <AddMixinDropdown close={this.closeAddMixin} />}
+        {addingMixin && <AddMixinsDropdown close={this.closeAddMixin} addedMixins={mixins} />}
       </EditorFieldGroup>
     );
   }
 }
 
-const mapStateToProps = (state: ReduxState) => ({
-  mixins: getSelectedModuleSelectedBlockMappedMixins(state),
-  moduleKey: getCurrentModuleKey(state),
-});
-
-const mapDispatchToProps = {
-  dispatchUpdateMixinsOrder: (blockKey: string, mixinKeys: Array<string>, moduleKey: string) =>
-    updateBlockStylesMixinsOrder(blockKey, mixinKeys, moduleKey),
-  dispatchRemoveMixin: (blockKey: string, mixinKey: string, moduleKey: string) =>
-    removeBlockStylesMixin(blockKey, mixinKey, moduleKey),
-};
-
-const mergeProps = (stateProps, dispatchProps, ownProps) => ({
-  ...ownProps,
-  ...stateProps,
-  ...dispatchProps,
-  updateMixinsOrder: (blockKey: string, mixinKeys: Array<string>) =>
-    dispatchProps.dispatchUpdateMixinsOrder(blockKey, mixinKeys, stateProps.moduleKey),
-  removeMixin: (blockKey: string, mixinKey: string) =>
-    dispatchProps.dispatchRemoveMixin(blockKey, mixinKey, stateProps.moduleKey),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-  mergeProps
-)(EditorStylesMixins);
+export default EditorStylesMixins;

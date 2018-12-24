@@ -39,7 +39,13 @@ type Props = {
   wrapBlockWithRepeater: (blockKey: string) => void,
 };
 
-class EditorBlockView extends Component<Props> {
+type State = {};
+
+class EditorBlockView extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+  }
+
   componentDidUpdate() {
     ReactTooltip.rebuild();
   }

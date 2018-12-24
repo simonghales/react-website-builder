@@ -96,24 +96,28 @@ const EditorFieldInner = ({
 }: Props) => {
   const Input = getInput(inputType, isPropReference);
   const isModuleBlock = block ? isBlockModuleBlock(block) : false;
-  console.log('value', value);
   return (
     <React.Fragment>
-      <div
-        className={cx(styles.labelClass, {
-          [styles.labelInactiveClass]: !value,
-        })}
-      >
-        <div>{label}</div>
-        {!isModuleBlock && linkedPropEnabled && (
-          <LinkedHeader
-            blockKey={blockKey}
-            propKey={propKey}
-            isLinked={isPropReference}
-            linkedPropKey={linkedPropKey}
-          />
-        )}
-      </div>
+      <header className={styles.headerClass}>
+        <div
+          className={cx(styles.labelClass, {
+            [styles.labelInactiveClass]: !value,
+          })}
+        >
+          <div>{label}</div>
+          {!isModuleBlock && linkedPropEnabled && (
+            <LinkedHeader
+              blockKey={blockKey}
+              propKey={propKey}
+              isLinked={isPropReference}
+              linkedPropKey={linkedPropKey}
+            />
+          )}
+        </div>
+        {/* <div className={styles.deleteOptionClass}> */}
+        {/* <div>Delete</div> */}
+        {/* </div> */}
+      </header>
       <div className={styles.inputContainerClass}>
         {Input(
           {

@@ -8,10 +8,18 @@ import type { DataBlockMappedMixinModel } from '../../../../../../../../../data/
 type Props = {
   mixin: DataBlockMappedMixinModel,
   removeMixin: (mixinKey: string) => void,
+  setEditingMixin: (mixinKey: string) => void,
 };
 
-const Mixin = ({ mixin, removeMixin }: Props) => (
-  <div className={cx(styles.mixinClass, styles.classNames.mixin)} key={mixin.key}>
+const Mixin = ({ mixin, removeMixin, setEditingMixin }: Props) => (
+  <div
+    className={cx(styles.mixinClass, styles.classNames.mixin)}
+    key={mixin.key}
+    onClick={event => {
+      setEditingMixin(mixin.key);
+      event.stopPropagation();
+    }}
+  >
     <div className={styles.mixinIconClass}>
       <MdFormatColorText />
     </div>

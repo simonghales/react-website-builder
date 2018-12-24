@@ -235,13 +235,24 @@ export function getFieldInputTypeFromPropType(propType: BlockPropsConfigTypes): 
   return inputType;
 }
 
-export function getPropConfigFromCombinedPropsConfig(propKey: string, dataBlock: DataBlockModel) {
+export function getPropConfigFromCombinedPropsConfig(
+  propKey: string,
+  dataBlock: DataBlockModel
+): BlockModelPropsConfig | null {
   const combinedPropsConfig = getDataBlockCombinedPropsConfig(dataBlock);
-  return combinedPropsConfig[propKey];
+  const propConfig = combinedPropsConfig[propKey];
+  if (!propConfig) {
+    console.warn(`No prop config available for propKey "${propKey}"`);
+    return null;
+  }
+  return propConfig;
 }
 
 export function canPropBeLinked(propKey: string, dataBlock: DataBlockModel): boolean {
   const propConfig = getPropConfigFromCombinedPropsConfig(propKey, dataBlock);
+  if (!propConfig) {
+    return false;
+  }
   return propConfig.type !== blockPropsConfigTypes.repeaterData;
 }
 

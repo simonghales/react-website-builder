@@ -6,6 +6,8 @@ import type {
   DataBlockMappedMixinsModel,
 } from '../../../../../../../../../data/blocks/models';
 import Mixin from '../Mixin/Mixin';
+import { EditorContentContext } from '../../../../../../context';
+import type { EditorContentContextState } from '../../../../../../context';
 
 type NestItem = {
   id: string,
@@ -16,19 +18,21 @@ type NestItem = {
 
 function mapMixinsToNestItems(
   mixins: DataBlockMappedMixinsModel,
-  removeMixin: (mixinKey: string) => void
+  removeMixin: (mixinKey: string) => void,
+  setEditingMixin: (mixinKey: string) => void
 ): Array<NestItem> {
   return mixins.map(mixin => ({
     id: mixin.key,
     mixin,
     childrenEnabled: false,
     removeMixin,
+    setEditingMixin,
   }));
 }
 
 function renderNestItem({ item }: { item: NestItem }) {
-  const { mixin, removeMixin } = item;
-  return <Mixin mixin={mixin} removeMixin={removeMixin} />;
+  const { mixin, removeMixin, setEditingMixin } = item;
+  return <Mixin mixin={mixin} removeMixin={removeMixin} setEditingMixin={setEditingMixin} />;
 }
 
 type Props = {
@@ -38,14 +42,18 @@ type Props = {
 };
 
 const MixinList = ({ mixins, removeMixin, onChange }: Props) => (
-  <Nestable
-    items={mapMixinsToNestItems(mixins, removeMixin)}
-    renderItem={renderNestItem}
-    onChange={(items: Array<NestItem>) => {
-      onChange(items.map(item => item.id));
-    }}
-    maxDepth={1}
-  />
+  <EditorContentContext.Consumer>
+    {({ setEditingMixin }: EditorContentContextState) => (
+      <Nestable
+        items={mapMixinsToNestItems(mixins, removeMixin, setEditingMixin)}
+        renderItem={renderNestItem}
+        onChange={(items: Array<NestItem>) => {
+          onChange(items.map(item => item.id));
+        }}
+        maxDepth={1}
+      />
+    )}
+  </EditorContentContext.Consumer>
 );
 
 export default MixinList;
