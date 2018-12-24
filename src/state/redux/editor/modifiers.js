@@ -20,6 +20,8 @@ import {
   getDataBlockPropsConfig,
 } from '../../../editor/components/EditorContent/components/EditorFields/state';
 import type { BlockModelPropsConfig } from '../../../blocks/models';
+import type { MixinModel } from '../../../data/mixins/models';
+import { DUMMY_STYLE_EMPTY } from '../../../data/styles/dummy';
 
 export function updateBlockProp(
   block: DataBlockModel,
@@ -120,6 +122,24 @@ export function addMixinToBlockStylesMixins(
   ]);
 }
 
+export function replaceDataBlockStylesWithMixin(
+  dataBlock: DataBlockModel,
+  mixinKey: string
+): DataBlockModel {
+  return {
+    ...dataBlock,
+    rawStyles: {
+      ...DUMMY_STYLE_EMPTY,
+    },
+    mixinStyles: [
+      {
+        key: mixinKey,
+        disabledModifiers: {},
+      },
+    ],
+  };
+}
+
 export function removeBlockStylesMixinViaKey(
   dataBlock: DataBlockModel,
   mixinKey: string
@@ -142,6 +162,7 @@ export function updateBlockStyle(
   return {
     ...blockStyles,
     styles: {
+      ...blockStyles.styles,
       [modifier]: {
         ...blockStyles.styles[modifier],
         [section]: {
@@ -363,4 +384,62 @@ export function replaceBlocksWithBlock(
     finalBlocks[blockKey] = block;
   });
   return finalBlocks;
+}
+
+export function updateMixinStyleValue(
+  mixin: MixinModel,
+  cssKey: string,
+  modifier: string,
+  section: string,
+  value: string
+): MixinModel {
+  return {
+    ...mixin,
+    styles: {
+      ...mixin.styles,
+      [modifier]: {
+        ...mixin.styles[modifier],
+        [section]: {
+          ...mixin.styles[modifier][section],
+          [cssKey]: value,
+        },
+      },
+    },
+  };
+}
+
+export function updateMixinMixinsOrder(mixin: MixinModel, mixinKeys: Array<string>): MixinModel {
+  const { mixins = [] } = mixin;
+  const updatedMixins = mixinKeys.map(mixinKey =>
+    mixins.find(findMixin => findMixin.key === mixinKey)
+  );
+  return {
+    ...mixin,
+    mixins: updatedMixins,
+  };
+}
+
+export function removeMixinFromMixinMixins(
+  mixin: MixinModel,
+  mixinToRemoveKey: string
+): MixinModel {
+  const { mixins = [] } = mixin;
+  const updatedMixins = mixins.filter(mixinToFilter => mixinToFilter.key !== mixinToRemoveKey);
+  return {
+    ...mixin,
+    mixins: updatedMixins,
+  };
+}
+
+export function addMixinToMixin(mixin: MixinModel, mixinToAddKey: string): MixinModel {
+  const { mixins = [] } = mixin;
+  const addedMixin = {
+    key: mixinToAddKey,
+    disabledModifiers: {},
+  };
+  const updatedMixins = mixins.slice().concat([addedMixin]);
+  return {
+    ...mixin,
+    mixins: updatedMixins,
+  };
 }

@@ -283,14 +283,17 @@ export const DUMMY_BLOCK_PAGE_MODULE: DataBlockModel = {
     testing: {
       label: 'Testing',
       type: blockPropsConfigTypes.string,
+      custom: true,
     },
     testing2: {
       label: 'Testing 2',
       type: blockPropsConfigTypes.string,
+      custom: true,
     },
     testing3: {
       label: 'HTML',
       type: blockPropsConfigTypes.html,
+      custom: true,
     },
   },
   blockChildrenKeys: [DUMMY_BLOCK_PAGE_INTRO_MODULE.key, DUMMY_BLOCK_PAGE_PARAGRAPH.key],

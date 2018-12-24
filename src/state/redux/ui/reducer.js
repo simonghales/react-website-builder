@@ -17,6 +17,7 @@ export type UiReduxState = {
   modulesSelectedBlockKeys: ModulesSelectedBlockKeys,
   selectedPageKey: string,
   pageEditorMode: PageEditorModes,
+  editingMixinKey: string | null,
 };
 
 export const initialUiReduxState: UiReduxState = {
@@ -27,10 +28,42 @@ export const initialUiReduxState: UiReduxState = {
   selectedModulesHistory: [],
   modulesSelectedBlockKeys: {
     DUMMY_INTRO_MODULE: 'DUMMY_BLOCK_REPEATER',
+    DUMMY_PAGE_MODULE: 'z7ykJn5ym2',
   },
   selectedPageKey: '',
   pageEditorMode: pageEditorModes.edit,
+  editingMixinKey: null,
 };
+
+const SET_EDITING_MIXIN_KEY = 'SET_EDITING_MIXIN_KEY';
+
+type SetEditingMixinKeyPayload = {
+  mixinKey: string,
+};
+
+type SetEditingMixinKeyAction = {
+  type: string,
+  payload: SetEditingMixinKeyPayload,
+};
+
+export function setEditingMixinKeyRedux(mixinKey: string): SetEditingMixinKeyAction {
+  return {
+    type: SET_EDITING_MIXIN_KEY,
+    payload: {
+      mixinKey,
+    },
+  };
+}
+
+function handleSetEditingMixinKey(
+  state: UiReduxState,
+  { mixinKey }: SetEditingMixinKeyPayload
+): UiReduxState {
+  return {
+    ...state,
+    editingMixinKey: mixinKey,
+  };
+}
 
 const SET_CREATING_PAGE = 'SET_CREATING_PAGE';
 
@@ -308,6 +341,7 @@ function handleSetAddingBlock(
 type Actions = SetAddingBlockAction;
 
 const ACTION_HANDLERS = {
+  [SET_EDITING_MIXIN_KEY]: handleSetEditingMixinKey,
   [SET_CREATING_PAGE]: handleSetCreatingPage,
   [SET_PAGE_EDITOR_MODE]: handleSetPageEditorMode,
   [SET_SELECTED_PAGE_KEY]: handleSetSelectedPageKey,

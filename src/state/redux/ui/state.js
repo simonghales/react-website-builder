@@ -46,3 +46,7 @@ export function getSelectedPageKeyFromState(state: UiReduxState): string {
 export function getPageEditorModeFromUIState(state: UiReduxState): PageEditorModes {
   return state.pageEditorMode;
 }
+
+export function getEditingMixinKeyFromUIState(state: UiReduxState): string | null {
+  return state.editingMixinKey;
+}

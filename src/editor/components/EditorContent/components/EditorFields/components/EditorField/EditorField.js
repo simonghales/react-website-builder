@@ -15,7 +15,6 @@ import LinkedHeader from './components/LinkedHeader/LinkedHeader';
 import { isBlockModuleBlock } from '../../../../../../../blocks/state';
 import PropReferenceSelector from '../../../../../inputs/extended/PropReferenceSelector/PropReferenceSelector';
 import RepeaterDataInput from '../../../../../inputs/RepeaterDataInput/RepeaterDataInput';
-import type { DataBlockModel } from '../../../../../../../data/blocks/models';
 
 export const editorInputTypes = {
   string: 'string',
@@ -69,7 +68,6 @@ type Props = {
   propKey: string,
   label: string,
   value: string,
-  blockKey: string,
   inheritedValue: string,
   inputType: string,
   onChange: (value: string) => void,
@@ -86,7 +84,6 @@ const EditorFieldInner = ({
   label,
   inputType,
   value,
-  blockKey,
   inheritedValue,
   onChange,
   block,
@@ -96,24 +93,27 @@ const EditorFieldInner = ({
 }: Props) => {
   const Input = getInput(inputType, isPropReference);
   const isModuleBlock = block ? isBlockModuleBlock(block) : false;
-  console.log('value', value);
   return (
     <React.Fragment>
-      <div
-        className={cx(styles.labelClass, {
-          [styles.labelInactiveClass]: !value,
-        })}
-      >
-        <div>{label}</div>
-        {!isModuleBlock && linkedPropEnabled && (
-          <LinkedHeader
-            blockKey={blockKey}
-            propKey={propKey}
-            isLinked={isPropReference}
-            linkedPropKey={linkedPropKey}
-          />
-        )}
-      </div>
+      <header className={styles.headerClass}>
+        <div
+          className={cx(styles.labelClass, {
+            [styles.labelInactiveClass]: !value,
+          })}
+        >
+          <div>{label}</div>
+          {!isModuleBlock && linkedPropEnabled && (
+            <LinkedHeader
+              propKey={propKey}
+              isLinked={isPropReference}
+              linkedPropKey={linkedPropKey}
+            />
+          )}
+        </div>
+        {/* <div className={styles.deleteOptionClass}> */}
+        {/* <div>Delete</div> */}
+        {/* </div> */}
+      </header>
       <div className={styles.inputContainerClass}>
         {Input(
           {

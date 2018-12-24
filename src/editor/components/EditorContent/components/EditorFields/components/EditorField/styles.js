@@ -58,6 +58,22 @@ const linkedHeaderIconActiveClass = css`
   color: ${colors.light};
 `;
 
+const headerClass = css`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const deleteOptionClass = css`
+  ${fieldLabel};
+  color: ${colors.lightMid};
+  cursor: pointer;
+
+  &:hover {
+    color: ${colors.light};
+  }
+`;
+
 export default {
   classNames,
   containerClass,
@@ -68,4 +84,6 @@ export default {
   linkedHeaderActiveClass,
   linkedHeaderIconClass,
   linkedHeaderIconActiveClass,
+  headerClass,
+  deleteOptionClass,
 };

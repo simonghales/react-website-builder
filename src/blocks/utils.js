@@ -31,3 +31,8 @@ export function getRepeaterDataUniqueId(): string {
 export function getRepeaterDataModelFieldUniqueId(): string {
   return getBlockUniqueId(); // todo - use firestore unique key
 }
+
+
+export function getMixinUniqueId(): string {
+  return getBlockUniqueId(); // todo - use firestore unique key
+}

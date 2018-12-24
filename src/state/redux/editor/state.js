@@ -97,8 +97,11 @@ export function getModulesFromState(state: EditorReduxState): DataModules {
 }
 
 export function getCurrentBlockAddedMixins(state: ReduxState): Array<string> {
-  const currentBlockMixins = getSelectedBlockMixinsStyles(state);
-  return currentBlockMixins.map(mixin => mixin.key);
+  return getSelectedBlockMixinsStyles(state);
+}
+
+export function getMixinsKeys(mixins: MixinsModel): Array<string> {
+  return mixins.map(mixin => mixin.key);
 }
 
 export type DataBlockPreviewProps = {

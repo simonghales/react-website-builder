@@ -13,13 +13,17 @@ import {
   getAvailableDataBlockPropsDetails,
   getBlockBlocks,
   getBlockParentKey,
+  getDataBlockMixinStyles,
   getDataBlockPropsDetails,
+  getDataBlockStyles,
 } from '../../../data/blocks/state';
 import {
+  addNewMixinRedux,
   addNewModule,
   addNewPageReducer,
   createNewModuleFromSelectedBlock,
   removeBlockFromModule,
+  replaceBlockStylesWithMixinRedux,
   wrapBlockWithNewBlockRedux,
 } from '../editor/reducer';
 import type { DataModule, DataModules } from '../../../data/modules/models';
@@ -28,6 +32,8 @@ import { getBlockFromModule } from '../../../blocks/state';
 import { generateNewPage } from '../../../data/pages/generator';
 import type { PageDataModel } from '../../../data/pages/models';
 import Repeater from '../../../blocks/groups/functional/Repeater/Repeater';
+import type { DataBlockModel } from '../../../data/blocks/models';
+import { generateNewMixin } from '../../../data/mixins/generator';
 
 export function dispatchCreateNewModuleFromSelectedBlock(
   moduleKey: string,
@@ -113,4 +119,16 @@ export function dispatchWrapSelectedBlockWithRepeaterBlock(
   });
   dispatch(wrapBlockWithNewBlockRedux(blockKey, newBlock, moduleKey));
   dispatch(setModuleSelectedBlockKey(moduleKey, newBlock.key));
+}
+
+export function dispatchConvertDataBlockStylesToMixin(
+  dataBlock: DataBlockModel,
+  moduleKey: string,
+  dispatch: any
+) {
+  const { styles } = getDataBlockStyles(dataBlock);
+  const mixins = getDataBlockMixinStyles(dataBlock);
+  const newMixin = generateNewMixin(dataBlock.label, styles, mixins);
+  dispatch(addNewMixinRedux(newMixin));
+  dispatch(replaceBlockStylesWithMixinRedux(moduleKey, dataBlock.key, newMixin.key));
 }

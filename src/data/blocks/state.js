@@ -29,6 +29,7 @@ import { blockPropsConfigTypes } from '../../blocks/props';
 import Module from '../../blocks/groups/module/Module/Module';
 import Page from '../../blocks/groups/module/Page/Page';
 import Repeater from '../../blocks/groups/functional/Repeater/Repeater';
+import { EMPTY_BLOCK_STYLES } from '../styles/defaults';
 
 export function doesBlockAllowStyles(dataBlock: DataBlockModel): boolean {
   const block = getBlockFromDataBlock(dataBlock);
@@ -310,6 +311,11 @@ export function getPropLabelFromDataBlocksPropsDetails(
   }
   console.warn(`Couldn't match "${propKey}" within data block's props details.`, propsDetails);
   return propKey;
+}
+
+export function getDataBlockStyles(dataBlock: DataBlockModel): DataBlockMixinStylesModel {
+  const { rawStyles = { ...EMPTY_BLOCK_STYLES } } = dataBlock;
+  return rawStyles;
 }
 
 export function getDataBlockMixinStyles(dataBlock: DataBlockModel): DataBlockMixinStylesModel {

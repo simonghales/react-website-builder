@@ -1,5 +1,6 @@
 // @flow
 import { css } from 'emotion';
+import spacing from '../../../../../../../styles/config/spacing';
 import colors from '../../../../../../../styles/config/colors';
 import { squareButton } from '../../../../../../../styles/buttons';
 
@@ -16,6 +17,7 @@ const addButtonClass = css`
 const mixinClass = css`
   display: flex;
   align-items: center;
+  cursor: pointer;
 
   &:not(:first-of-type) {
     margin-top: 5px;
@@ -68,6 +70,10 @@ const mixinRemoveClass = css`
   }
 `;
 
+const createMixinContainerClass = css`
+  margin-bottom: ${spacing.tiny}px;
+`;
+
 export default {
   classNames,
   addButtonClass,
@@ -76,4 +82,5 @@ export default {
   mixinTextClass,
   mixinLabelClass,
   mixinRemoveClass,
+  createMixinContainerClass,
 };
