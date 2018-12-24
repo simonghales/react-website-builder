@@ -32,7 +32,7 @@ export const initialUiReduxState: UiReduxState = {
   },
   selectedPageKey: '',
   pageEditorMode: pageEditorModes.edit,
-  editingMixinKey: 'DUMMY_MIXIN_RANDOM',
+  editingMixinKey: null,
 };
 
 const SET_EDITING_MIXIN_KEY = 'SET_EDITING_MIXIN_KEY';

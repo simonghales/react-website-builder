@@ -34,7 +34,7 @@ class EditorContent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      selectedTab: editorComponentTabs.Mixin, // todo - set to Props
+      selectedTab: editorComponentTabs.Content,
       context: {
         setEditingMixin: this.handleSetEditingMixin,
       },

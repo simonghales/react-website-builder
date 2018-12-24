@@ -21,6 +21,7 @@ import {
 } from '../../../editor/components/EditorContent/components/EditorFields/state';
 import type { BlockModelPropsConfig } from '../../../blocks/models';
 import type { MixinModel } from '../../../data/mixins/models';
+import { DUMMY_STYLE_EMPTY } from '../../../data/styles/dummy';
 
 export function updateBlockProp(
   block: DataBlockModel,
@@ -119,6 +120,24 @@ export function addMixinToBlockStylesMixins(
       disabledModifiers: {},
     },
   ]);
+}
+
+export function replaceDataBlockStylesWithMixin(
+  dataBlock: DataBlockModel,
+  mixinKey: string
+): DataBlockModel {
+  return {
+    ...dataBlock,
+    rawStyles: {
+      ...DUMMY_STYLE_EMPTY,
+    },
+    mixinStyles: [
+      {
+        key: mixinKey,
+        disabledModifiers: {},
+      },
+    ],
+  };
 }
 
 export function removeBlockStylesMixinViaKey(

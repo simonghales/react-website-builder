@@ -4,13 +4,15 @@ import type { BlockModifierStyles } from '../styles/models';
 import type { DataBlockMixinModel, DataBlockMixinStylesModel } from '../blocks/models';
 import { getMixinFromMixins, getMixinMixins } from './state';
 
+export type MixinStylesModel = {
+  [string]: BlockModifierStyles,
+};
+
 export type MixinModel = {
   key: string,
   groupKey: string,
   name: string,
-  styles: {
-    [string]: BlockModifierStyles,
-  },
+  styles: MixinStylesModel,
   mixins?: DataBlockMixinStylesModel,
 };
 

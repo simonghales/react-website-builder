@@ -11,6 +11,7 @@ import styles from './styles';
 type Props = {
   mixins: DataBlockMappedMixinsModel,
   createMixinEnabled?: boolean,
+  createMixin?: () => void,
   AddMixinsDropdown: any,
   removeMixin: (blockKey: string, mixinKey: string) => void,
   updateMixinsOrder: (blockKey: string, mixinKeys: Array<string>) => void,
@@ -39,6 +40,7 @@ const AddButton = ({
 class EditorStylesMixins extends Component<Props, State> {
   static defaultProps = {
     createMixinEnabled: false,
+    createMixin: undefined,
   };
 
   constructor(props: Props) {
@@ -66,6 +68,7 @@ class EditorStylesMixins extends Component<Props, State> {
       removeMixin,
       updateMixinsOrder,
       createMixinEnabled,
+      createMixin,
       AddMixinsDropdown,
     } = this.props;
     const { addingMixin } = this.state;
@@ -84,7 +87,7 @@ class EditorStylesMixins extends Component<Props, State> {
       >
         {createMixinEnabled && (
           <div className={styles.createMixinContainerClass}>
-            <Button onClick={() => {}}>Create mixin</Button>
+            <Button onClick={createMixin}>Create mixin</Button>
           </div>
         )}
         <MixinList
