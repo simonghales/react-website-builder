@@ -6,7 +6,11 @@ import type {
   BlockModelPropsConfig,
   BlockPropsConfigModel,
 } from '../../../../../blocks/models';
-import { getBlockContentPropsKeys, getBlockHtmlPropsKeys } from '../../../../../blocks/state';
+import {
+  getBlockContentPropsKeys,
+  getBlockHtmlPropsKeys,
+  isBlockModuleImportBlock,
+} from '../../../../../blocks/state';
 import type {
   DataBlockModel,
   DataBlockPropsConfigModel,
@@ -248,8 +252,18 @@ export function getPropConfigFromCombinedPropsConfig(
   return propConfig;
 }
 
-export function canPropBeLinked(propKey: string, dataBlock: DataBlockModel): boolean {
-  const propConfig = getPropConfigFromCombinedPropsConfig(propKey, dataBlock);
+export function canPropBeLinked(
+  propKey: string,
+  dataBlock: DataBlockModel,
+  propsConfig: DataBlockPropsConfigModel
+): boolean {
+  if (!propsConfig) return false;
+  const propConfig = propsConfig[propKey];
+  // const propConfig = getPropConfigFromCombinedPropsConfig(propKey, dataBlock);
+  // const block = getBlockFromDataBlock(dataBlock);
+  // if (isBlockModuleImportBlock(block)) {
+  //   return true; // todo - check imported module props config
+  // }
   if (!propConfig) {
     return false;
   }
@@ -301,7 +315,7 @@ export function mapModuleHtmlPropField(
   const inputType = getFieldInputTypeFromPropType(type);
   const isPropReference = getDataBlockPropReference(propKey, dataBlock);
   const linkedPropKey = isPropReference ? value : '';
-  const isPropLinkable = canPropBeLinked(propKey, dataBlock);
+  const isPropLinkable = canPropBeLinked(propKey, dataBlock, propsConfig);
   return {
     key: propKey,
     label,
