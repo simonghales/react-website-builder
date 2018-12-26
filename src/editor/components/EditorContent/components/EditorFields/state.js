@@ -6,7 +6,11 @@ import type {
   BlockModelPropsConfig,
   BlockPropsConfigModel,
 } from '../../../../../blocks/models';
-import { getBlockContentPropsKeys, getBlockHtmlPropsKeys } from '../../../../../blocks/state';
+import {
+  getBlockContentPropsKeys,
+  getBlockHtmlPropsKeys,
+  isBlockModuleImportBlock,
+} from '../../../../../blocks/state';
 import type {
   DataBlockModel,
   DataBlockPropsConfigModel,
@@ -250,6 +254,10 @@ export function getPropConfigFromCombinedPropsConfig(
 
 export function canPropBeLinked(propKey: string, dataBlock: DataBlockModel): boolean {
   const propConfig = getPropConfigFromCombinedPropsConfig(propKey, dataBlock);
+  const block = getBlockFromDataBlock(dataBlock);
+  if (isBlockModuleImportBlock(block)) {
+    return true; // todo - check imported module props config
+  }
   if (!propConfig) {
     return false;
   }

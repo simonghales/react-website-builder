@@ -93,6 +93,7 @@ const EditorFieldInner = ({
 }: Props) => {
   const Input = getInput(inputType, isPropReference);
   const isModuleBlock = block ? isBlockModuleBlock(block) : false;
+  console.log('linkedPropEnabled', linkedPropEnabled);
   return (
     <React.Fragment>
       <header className={styles.headerClass}>
