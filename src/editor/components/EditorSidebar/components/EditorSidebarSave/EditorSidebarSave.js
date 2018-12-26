@@ -16,6 +16,7 @@ class EditorSidebarSave extends Component<{}, State> {
   }
 
   handleSaveChanges = () => {
+    return;
     const { saving } = this.state;
     if (saving) return;
     this.setState({
