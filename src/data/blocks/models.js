@@ -78,7 +78,7 @@ function mapDataBlockModule(dataBlock: DataBlockModel, modules: DataModules, mix
   if (dataBlock.moduleKey) {
     return getMappedDataModule(dataBlock.moduleKey, modules, mixins);
   }
-  return undefined;
+  return null;
 }
 
 export function mapDataBlockModuleKey(dataBlock: DataBlockModel): string {
@@ -102,7 +102,7 @@ export function mapDataBlock(
     blockChildren: dataBlock.blockChildrenKeys.map((childBlockKey: string) =>
       mapDataBlock(childBlockKey, blocks, mapModule, modules, mixins)
     ),
-    module: mapModule ? mapDataBlockModule(dataBlock, modules, mixins) : undefined,
+    module: mapModule ? mapDataBlockModule(dataBlock, modules, mixins) : null,
     moduleKey: mapDataBlockModuleKey(dataBlock),
     styles: getMappedBlockStyles(dataBlock, mixins),
     childrenAllowed: block.childrenAllowed,

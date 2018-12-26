@@ -7,7 +7,7 @@ export type PageProps = {
 };
 
 export const pageDefaultProps = {
-  children: undefined,
+  children: null,
 };
 
 export const pagePropsConfig = {

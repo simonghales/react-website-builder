@@ -8,8 +8,8 @@ export type ModuleImportProps = {
 };
 
 export const moduleImportDefaultProps = {
-  children: undefined,
-  module: undefined,
+  children: null,
+  module: null,
 };
 
 export const moduleImportPropsConfig = {

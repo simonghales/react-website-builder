@@ -26,10 +26,7 @@ export const initialUiReduxState: UiReduxState = {
   hoveredBlockKey: '',
   selectedModuleKey: '',
   selectedModulesHistory: [],
-  modulesSelectedBlockKeys: {
-    DUMMY_INTRO_MODULE: 'DUMMY_BLOCK_REPEATER',
-    DUMMY_PAGE_MODULE: 'z7ykJn5ym2',
-  },
+  modulesSelectedBlockKeys: {},
   selectedPageKey: '',
   pageEditorMode: pageEditorModes.edit,
   editingMixinKey: null,
