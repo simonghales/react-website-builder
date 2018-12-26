@@ -7,7 +7,7 @@ export type ModuleProps = {
 };
 
 export const moduleDefaultProps = {
-  children: undefined,
+  children: null,
 };
 
 export const modulePropsConfig = {

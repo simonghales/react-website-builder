@@ -1,8 +1,7 @@
 // @flow
 
 import type { MappedStyleModel } from '../../../../data/styles/models';
-import { blockPropsConfigTypes } from '../../../props';
-import { blockPropsDisplaySections } from '../../../props';
+import { blockPropsConfigTypes, blockPropsDisplaySections } from '../../../props';
 
 export type ElementProps = {
   element: string,
@@ -14,7 +13,7 @@ export type ElementProps = {
 
 export const elementDefaultProps = {
   element: 'div',
-  children: undefined,
+  children: null,
 };
 
 export const elementPropsConfig = {

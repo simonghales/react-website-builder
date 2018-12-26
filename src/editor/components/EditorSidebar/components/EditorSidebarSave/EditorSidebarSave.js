@@ -1,7 +1,47 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 import styles from './styles';
+import { updateFirestoreSiteData } from '../../../../../firebase/data/site';
 
-const EditorSidebarSave = () => <div className={styles.buttonClass}>Save Changes</div>;
+type State = {
+  saving: boolean,
+};
+
+class EditorSidebarSave extends Component<{}, State> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      saving: false,
+    };
+  }
+
+  handleSaveChanges = () => {
+    const { saving } = this.state;
+    if (saving) return;
+    this.setState({
+      saving: true,
+    });
+    updateFirestoreSiteData()
+      .then(() => {
+        this.setState({
+          saving: false,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          saving: false,
+        });
+      });
+  };
+
+  render() {
+    const { saving } = this.state;
+    return (
+      <div className={styles.buttonClass} onClick={this.handleSaveChanges}>
+        {saving ? 'Saving...' : 'Save Changes'}
+      </div>
+    );
+  }
+}
 
 export default EditorSidebarSave;
