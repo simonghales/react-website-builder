@@ -257,9 +257,15 @@ export function canPropBeLinked(
   dataBlock: DataBlockModel,
   propsConfig: DataBlockPropsConfigModel
 ): boolean {
-  if (!propsConfig) return false;
-  const propConfig = propsConfig[propKey];
-  // const propConfig = getPropConfigFromCombinedPropsConfig(propKey, dataBlock);
+  // todo - work out what's going on with propsConfig vs propConfig
+  if (propsConfig) {
+    const propConfig = propsConfig[propKey];
+    if (propConfig.type !== blockPropsConfigTypes.repeaterData) {
+      return true;
+    }
+  }
+  // const propConfig = propsConfig[propKey];
+  const propConfig = getPropConfigFromCombinedPropsConfig(propKey, dataBlock);
   // const block = getBlockFromDataBlock(dataBlock);
   // if (isBlockModuleImportBlock(block)) {
   //   return true; // todo - check imported module props config
