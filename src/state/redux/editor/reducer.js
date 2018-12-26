@@ -41,6 +41,37 @@ export type EditorReduxState = {
 
 export const initialEditorReduxState: EditorReduxState = DUMMY_PAGE_DATA;
 
+const SET_EDITOR_REDUX_STATE = 'SET_EDITOR_REDUX_STATE';
+
+type SetEditorReduxStatePayload = {
+  state: EditorReduxState,
+};
+
+type SetEditorReduxStateAction = {
+  type: string,
+  payload: SetEditorReduxStatePayload,
+};
+
+export function setEditorReduxStateRedux(state: EditorReduxState): SetEditorReduxStateAction {
+  console.log('state', state);
+  return {
+    type: SET_EDITOR_REDUX_STATE,
+    payload: {
+      state,
+    },
+  };
+}
+
+function handleSetEditorReduxState(
+  state: EditorReduxState,
+  { state: newState }: SetEditorReduxStatePayload
+): EditorReduxState {
+  return {
+    ...state,
+    ...newState,
+  };
+}
+
 const ADD_NEW_PAGE = 'ADD_NEW_PAGE';
 
 type AddNewPagePayload = {
@@ -1098,6 +1129,7 @@ type Actions =
   | CreateNewModuleFromSelectedBlockAction;
 
 const ACTION_HANDLERS = {
+  [SET_EDITOR_REDUX_STATE]: handleSetEditorReduxState,
   [REPLACE_BLOCK_STYLES_WITH_MIXIN]: handleReplaceBlockStylesWithMixin,
   [ADD_NEW_MIXIN]: handleAddNewMixin,
   [ADD_MIXIN_TO_MIXIN]: handleAddMixinToMixin,
